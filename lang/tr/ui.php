@@ -63,6 +63,19 @@ return [
     'charts' => 'Grafik',
     'photo_news_upper' => 'FOTO HABER',
 
+    // Grafik arşivi / trendler / modüller (Bölüm 8)
+    'chart_archive' => 'Grafik Arşivi',
+    'latest_charts' => 'Son Eklenen Grafikler',
+    'related_charts' => 'İlgili Grafikler',
+    'no_charts' => 'Grafik bulunmuyor.',
+    'businessweek_charts' => 'Businessweek Grafik Arşivi',
+    'categories' => 'Kategoriler',
+    'commodity_news' => 'Emtia Haberleri',
+    'trend_all' => 'Tümü',
+    'pagination' => 'Sayfalama',
+    'page' => 'Sayfa',
+    'breadcrumb' => 'Sayfa yolu',
+
     // Piyasa widget sekmeleri / tabloları
     'market' => [
         'borsa' => 'Borsa',

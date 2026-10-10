@@ -1961,3 +1961,91 @@ img[data-src].b-lazy-loaded {
     .video-detail-title { font-size: 1.4rem; }
     .video-hero-title { font-size: 2rem; }
 }
+
+/* ============================================================
+   CH-15 — GRAFİK ARŞİVİ, TRENDLER & GLOBAL WIDGET'LAR
+   (Bölüm 4, 6, 8 / 15.13-15.14, 17.3)
+   ============================================================ */
+
+/* ---------- Grafik arşivi ---------- */
+.charts-page { margin-bottom: 32px; }
+.charts-latest { margin-bottom: 28px; }
+.chart-grid { align-items: start; }
+.chart-card { margin-bottom: 0; padding-bottom: 8px; }
+.chart-card .chart-figure { margin: 0; }
+.chart-card .chart-img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: var(--gray-bg); display: block; }
+.chart-card .chart-caption { padding-top: 8px; }
+.chart-card .chart-caption .category { color: #777; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
+.chart-card .chart-title { font-size: 18px; line-height: 1.3; }
+.chart-card a:hover .chart-title { text-decoration: underline; }
+.chart-empty { color: #777; }
+
+.chart-categories { margin-bottom: 20px; }
+.chart-tabs-head { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.chart-tabs-label { font-weight: 600; font-size: 14px; }
+.chart-category-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.chart-category-tab { text-decoration: none; }
+
+.charts-businessweek {
+    display: block; background: #000; color: #fff; text-align: center;
+    padding: 28px 16px; margin: 28px 0; font-weight: 700;
+    font-family: Unna, Georgia, serif; font-size: 20px;
+}
+.charts-businessweek:hover { background: #222; }
+
+/* ---------- Grafik detay ---------- */
+.chart-detail { margin-bottom: 32px; }
+.chart-breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #777; margin-bottom: 10px; }
+.chart-breadcrumb a { color: #777; }
+.chart-breadcrumb a:hover { text-decoration: underline; }
+.chart-detail-title { font-size: 2rem; margin: 0 0 6px; line-height: 1.2; }
+.chart-detail-category { color: #777; font-weight: 600; text-transform: uppercase; margin-bottom: 16px; }
+.chart-detail-figure { margin: 0 0 18px; background: var(--gray-bg); }
+.chart-detail-img { width: 100%; height: auto; display: block; }
+.chart-detail-summary { color: #333; }
+.chart-detail-date { color: #888; font-size: 13px; margin: 12px 0 26px; }
+.chart-related { margin-top: 32px; }
+
+/* ---------- /trendler ---------- */
+.trendler-layout { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 28px; align-items: start; }
+.trendler-main { min-width: 0; }
+.trend-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.trend-chip { text-decoration: none; }
+.trend-panel { min-width: 0; }
+.trend-description { color: #555; font-size: 15px; margin: 0 0 16px; padding-bottom: 12px; border-bottom: 1px solid var(--gray-border); }
+.trend-empty { color: #777; }
+
+.trend-news-item { border-bottom: 1px solid var(--gray-border); padding: 14px 0; }
+.trend-news-link { display: flex; gap: 16px; align-items: flex-start; }
+.trend-news-figure { flex: 0 0 160px; margin: 0; }
+.trend-news-img { width: 160px; height: 160px; object-fit: cover; }
+.trend-news-body { flex: 1; min-width: 0; }
+.trend-news-body .category { color: #777; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
+.trend-news-title { font-size: 20px; line-height: 1.3; margin: 0 0 6px; }
+.trend-news-spot { color: #555; font-size: 14px; margin: 0; }
+
+/* ---------- En Çok Okunanlar (global, thumb'lu) ---------- */
+.most-read-widget .most-read-list a { align-items: center; }
+.most-read-figure { flex: 0 0 64px; margin: 0; }
+.most-read-img { width: 64px; height: 64px; object-fit: cover; display: block; }
+.most-read-body { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.most-read-body .category { color: #777; font-weight: 600; text-transform: uppercase; }
+.most-read-empty { padding: 10px 0; }
+.charts-most-read { margin-top: 36px; }
+
+/* ---------- Haber modülü (Piyasa/Emtia/Sektör/Siyaset) ---------- */
+.category-news-module { margin-bottom: 32px; }
+.category-news-module .news-module-empty { color: #777; }
+
+/* ---------- Öne Çıkanlar sidebar ---------- */
+.featured-widget-sidebar .featured-sidebar { display: flex; flex-direction: column; }
+
+@media (max-width: 999px) {
+    .trendler-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+    .chart-tabs-head { align-items: flex-start; }
+    .trend-news-figure { flex: 0 0 110px; }
+    .trend-news-img { width: 110px; height: 110px; }
+    .trend-news-title { font-size: 17px; }
+}

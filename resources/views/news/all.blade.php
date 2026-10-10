@@ -18,6 +18,11 @@
 
         <aside class="borsa-aside">
             @include('partials.market-widget-compact')
+
+            @isset($mostReadTabs)
+                <x-most-read class="aside-most-read"
+                             :tabs="['today' => $mostReadTabs['today'], 'week' => $mostReadTabs['week'], 'month' => $mostReadTabs['month']]" />
+            @endisset
         </aside>
     </div>
 @endsection

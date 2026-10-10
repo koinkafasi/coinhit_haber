@@ -63,6 +63,19 @@ return [
     'charts' => 'Charts',
     'photo_news_upper' => 'PHOTO NEWS',
 
+    // Chart archive / trends / modules (Section 8)
+    'chart_archive' => 'Chart Archive',
+    'latest_charts' => 'Latest Charts',
+    'related_charts' => 'Related Charts',
+    'no_charts' => 'No charts available.',
+    'businessweek_charts' => 'Businessweek Chart Archive',
+    'categories' => 'Categories',
+    'commodity_news' => 'Commodity News',
+    'trend_all' => 'All',
+    'pagination' => 'Pagination',
+    'page' => 'Page',
+    'breadcrumb' => 'Breadcrumb',
+
     // Market widget tabs / tables
     'market' => [
         'borsa' => 'Equities',

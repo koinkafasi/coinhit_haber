@@ -124,12 +124,7 @@
         </div>
 
         <aside class="article-sidebar">
-            <section class="headlines-widget" data-widget-type="headlinesOfTheDay">
-                <x-section-head title="Öne Çıkanlar" />
-                @foreach ($featured as $i => $item)
-                    <x-news-card :news="$item" :type="$i < 2 ? 'type1' : 'type2'" />
-                @endforeach
-            </section>
+            <x-featured-widget variant="sidebar" title="Öne Çıkanlar" :items="$featured" class="headlines-widget" />
         </aside>
     </div>
 @endsection

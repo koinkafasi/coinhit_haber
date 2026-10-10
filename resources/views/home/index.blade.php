@@ -107,15 +107,13 @@
     <x-ad-zone :zone="2167" :index="2" />
     <x-ad-zone :zone="1265" :index="3" />
 
-    {{-- Modül 10: ÖNE ÇIKANLAR — kategori etiketli haber kartları --}}
-    <section class="home-featured-cards">
-        <x-section-head :title="__('ui.featured')" :href="\App\Support\Locale::url('/haberler')" />
-        <div class="news-card-grid cols-3">
-            @foreach ($featuredCards as $item)
-                <x-news-card :news="$item" type="type2" :showSpot="true" />
-            @endforeach
-        </div>
-    </section>
+    {{-- Modül 10: ÖNE ÇIKANLAR — kategori etiketli haber kartları (global widget) --}}
+    <x-featured-widget id="home-featured-cards"
+                       :title="__('ui.featured')"
+                       :href="\App\Support\Locale::url('/haberler')"
+                       :items="$featuredCards"
+                       :columns="3"
+                       :showSpot="true" />
 
     {{-- Modül 11: TÜM HABERLER --}}
     <section class="home-all-news">
@@ -261,13 +259,11 @@
     <x-ad-zone :zone="2129" :index="9" />
 
     {{-- Modül 22: SEKTÖR HABERLERİ (+ Siyaset Haberleri) --}}
-    <section class="home-sector">
-        <x-section-head :title="__('ui.sector_news')" :href="\App\Support\Locale::url('/haberler/sektor-haberleri')" />
-        <div class="news-card-grid cols-2">
-            @foreach ($sectorNews as $item)
-                <x-news-card :news="$item" type="type2" :showSpot="true" />
-            @endforeach
-        </div>
+    <section class="home-sector" id="home-sector">
+        <x-news-module :title="__('ui.sector_news')"
+                       :items="$sectorNews"
+                       :href="\App\Support\Locale::url('/haberler/sektor-haberleri')"
+                       :columns="2" />
 
         <div class="politics-block">
             <x-section-head :title="__('ui.politics_news')" :href="\App\Support\Locale::url('/haberler/sektor-haberleri')" level="h3" />
@@ -283,6 +279,13 @@
             </ul>
         </div>
     </section>
+
+    {{-- Modül 22b: EMTİA HABERLERİ — Reuters/piyasa haber modülü bileşeni --}}
+    <x-news-module id="home-commodity-news"
+                   :title="__('ui.commodity_news')"
+                   :items="$commodityNews"
+                   :href="\App\Support\Locale::url('/emtia')"
+                   :columns="3" />
 
     {{-- Modül 23: KRİPTO PARA — fiyat swiper'ı --}}
     <section class="home-crypto">
@@ -303,28 +306,13 @@
     <x-ad-zone :zone="22801" :index="10" />
     <x-ad-zone :zone="22802" :index="11" />
 
-    {{-- Modül 25: EN ÇOK OKUNANLAR — Bugün | Bu Hafta | Bu Ay --}}
-    <section class="home-most-read" data-widget-type="most-read">
-        <x-section-head :title="__('ui.most_read')" :href="null" />
-        <div class="most-read-tabs tab-menu" role="tablist">
-            <button type="button" role="tab" class="tab-button font-unna font-bold is-active" data-tab="today" aria-selected="true">{{ __('ui.today') }}</button>
-            <button type="button" role="tab" class="tab-button font-unna font-bold" data-tab="week" aria-selected="false">{{ __('ui.this_week') }}</button>
-            <button type="button" role="tab" class="tab-button font-unna font-bold" data-tab="month" aria-selected="false">{{ __('ui.this_month') }}</button>
-        </div>
-        @foreach (['today' => $mostReadToday, 'week' => $mostReadWeek, 'month' => $mostReadMonth] as $period => $items)
-            <ol class="most-read-list tab-content {{ $period === 'today' ? '' : 'hidden' }}" data-id="{{ $period }}">
-                @foreach ($items as $rank => $item)
-                    <li>
-                        <a href="{{ $item->url }}">
-                            <span class="most-read-rank">{{ $rank + 1 }}</span>
-                            <span class="most-read-title font-unna font-bold">{{ $item->title }}</span>
-                            <span class="most-read-cat">{{ $item->category?->name }}</span>
-                        </a>
-                    </li>
-                @endforeach
-            </ol>
-        @endforeach
-    </section>
+    {{-- Modül 25: EN ÇOK OKUNANLAR — Bugün | Bu Hafta | Bu Ay (global widget) --}}
+    <x-most-read class="home-most-read"
+                 :tabs="[
+                     'today' => $mostReadTabs['today'],
+                     'week' => $mostReadTabs['week'],
+                     'month' => $mostReadTabs['month'],
+                 ]" />
 
 </div>
 @endsection

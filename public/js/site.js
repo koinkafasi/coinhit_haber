@@ -148,6 +148,10 @@
             bindTabs(container, '.most-read-tabs > [data-tab]', '[data-id]');
         });
 
+        document.querySelectorAll('[data-widget-type="trend-tabs"]').forEach(function (container) {
+            bindTabs(container, '.trend-tabs > [data-tab]', '.trend-panels > [data-id]');
+        });
+
         document.querySelectorAll('[data-widget-type="fund-classes"]').forEach(function (container) {
             bindTabs(container, '.fund-class-tabs > [data-tab]', '.fund-class-panels > [data-id]');
         });

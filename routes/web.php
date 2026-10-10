@@ -28,6 +28,7 @@ use App\Http\Controllers\PhotoGalleryController;
 use App\Http\Controllers\PodcastController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\TrendController;
 use App\Http\Controllers\TvController;
 use App\Http\Controllers\VideoController;
 use App\Http\Middleware\EnsureAdmin;
@@ -56,6 +57,14 @@ $frontRoutes = function (): void {
         ->where('newsId', '[0-9]+')->name('news.infinite');
     Route::get('/sondakika', [BreakingNewsController::class, 'index'])->name('breaking.index');
     Route::get('/grafik-arsivi', [ChartArchiveController::class, 'index'])->name('charts.index');
+    Route::get('/grafik-arsivi/{page}', [ChartArchiveController::class, 'index'])
+        ->where('page', '[0-9]+')->name('charts.page');
+    Route::get('/grafik-arsivi/{slug}-{id}', [ChartArchiveController::class, 'show'])
+        ->where('slug', '[^/]+')
+        ->where('id', '[0-9]+')->name('charts.show');
+    Route::get('/trendler', [TrendController::class, 'index'])->name('trends.index');
+    Route::get('/trendler/{slug}', [TrendController::class, 'show'])
+        ->where('slug', '[A-Za-z0-9\-]+')->name('trends.show');
     Route::get('/yazarlar', [AuthorController::class, 'index'])->name('authors.index');
     Route::get('/gorus', [AuthorController::class, 'opinions'])->name('authors.opinions');
     Route::get('/yorum/{author}/{segment}', [AuthorController::class, 'archive'])

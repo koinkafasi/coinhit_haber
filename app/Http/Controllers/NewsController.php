@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\BuildsHomeWidgets;
 use App\Http\Controllers\Concerns\BuildsMarketWidget;
 use App\Models\Category;
 use App\Models\News;
@@ -11,7 +12,7 @@ use Illuminate\Http\Response;
 
 class NewsController extends Controller
 {
-    use BuildsMarketWidget;
+    use BuildsHomeWidgets, BuildsMarketWidget;
 
     /**
      * /haberler — 2 sütunlu masonry haber grid'i (spec §8 / §15.10).
@@ -41,6 +42,7 @@ class NewsController extends Controller
 
         return view('news.all', array_merge([
             'news' => $news,
+            'mostReadTabs' => $this->mostReadTabs(8),
         ], $this->marketWidgetData(), $this->layoutData()));
     }
 

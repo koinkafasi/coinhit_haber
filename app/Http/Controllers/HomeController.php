@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\BuildsHomeWidgets;
 use App\Models\BreakingNews;
 use App\Models\BroadcastSchedule;
 use App\Models\Category;
@@ -21,6 +22,8 @@ use Illuminate\Support\Collection;
 
 class HomeController extends Controller
 {
+    use BuildsHomeWidgets;
+
     public function __construct(private readonly MarketDataService $market) {}
 
     public function index(): View
@@ -58,9 +61,9 @@ class HomeController extends Controller
             'sectorNews' => $this->categoryNews('sektor-haberleri', 5),
             'politicsNews' => $this->categoryNews('siyaset', 4),
             'marketNews' => $this->categoryNews('piyasalar', 5),
-            'mostReadToday' => $this->mostRead('today'),
-            'mostReadWeek' => $this->mostRead('week'),
-            'mostReadMonth' => $this->mostRead('month'),
+            'mostReadTabs' => $this->mostReadTabs(8),
+            'featuredNews' => $this->featuredNews(6),
+            'commodityNews' => $this->categoryNewsModule('emtia', 4),
             'marketWidget' => $this->marketWidget(),
             'marketTables' => $this->marketTables(),
             'cryptoQuotes' => $this->market->quotes('crypto')->take(12)->values(),
@@ -118,37 +121,6 @@ class HomeController extends Controller
             ->orderByDesc('published_at')
             ->take($take)
             ->get();
-    }
-
-    /**
-     * En Çok Okunanlar sekmeleri: Bugün | Bu Hafta | Bu Ay (Bölüm 6, 7 modül 24).
-     *
-     * @return Collection<int, News>
-     */
-    private function mostRead(string $period): Collection
-    {
-        $since = match ($period) {
-            'today' => CarbonImmutable::now()->subDay(),
-            'week' => CarbonImmutable::now()->subWeek(),
-            default => CarbonImmutable::now()->subMonth(),
-        };
-
-        $items = News::where('status', 'published')
-            ->with('category')
-            ->where('published_at', '>=', $since)
-            ->orderByDesc('views')
-            ->take(8)
-            ->get();
-
-        if ($items->isEmpty()) {
-            $items = News::where('status', 'published')
-                ->with('category')
-                ->orderByDesc('views')
-                ->take(8)
-                ->get();
-        }
-
-        return $items;
     }
 
     /**
