@@ -24,7 +24,7 @@ class DataModelTest extends TestCase
         $this->assertDatabaseCount('galleries', 5);
         $this->assertDatabaseCount('gallery_items', 30);
         $this->assertDatabaseCount('programs', 23);
-        $this->assertDatabaseCount('program_episodes', 46);
+        $this->assertDatabaseCount('program_episodes', 50);
         $this->assertDatabaseCount('broadcast_schedules', 115);
         $this->assertDatabaseCount('podcasts', 12);
         $this->assertDatabaseCount('podcast_episodes', 36);

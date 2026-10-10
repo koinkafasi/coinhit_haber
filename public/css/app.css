@@ -1680,3 +1680,107 @@ img[data-src].b-lazy-loaded {
     .pageskin { display: none; }
     .share-menu { right: auto; left: 0; }
 }
+
+/* ---------- YATIRIM FONLARI BÖLÜMÜ (spec §8, §15.8) ---------- */
+.fund-page { padding-bottom: 24px; }
+.fund-page .page-title { font-size: 2rem; margin: 0 0 12px; }
+
+/* Fon haberleri grid — 9 kart, 640x360 */
+.fund-news { margin-bottom: 28px; }
+.fund-news-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.fund-news-card { border-bottom: 1px solid var(--gray-border); padding-bottom: 10px; }
+.fund-news-link { display: block; }
+.fund-news-figure { position: relative; margin: 0 0 8px; overflow: hidden; }
+.fund-news-img { width: 100%; aspect-ratio: 640 / 360; object-fit: cover; background: var(--gray-bg); }
+.fund-news-caption .category { color: #777; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
+.fund-news-title { font-size: 18px; line-height: 1.3; margin: 2px 0 0; }
+
+/* Alt-tool nav (3 buton) */
+.fund-tool-nav { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 28px; }
+.fund-tool-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--gray-border); background: #fff; border-radius: 4px;
+    padding: 10px 16px; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.fund-tool-link:hover { background: var(--bht-yellow); }
+.fund-tool-link.is-anchor { background: var(--gray-bg); }
+
+/* Fon Saati */
+.fund-saati { margin-bottom: 32px; }
+
+/* Günün Özeti KPI */
+.fund-kpi { margin-bottom: 32px; }
+.fund-kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.fund-kpi-card {
+    border: 1px solid var(--gray-border); border-top: 3px solid var(--bht-yellow);
+    border-radius: 6px; background: #fff; padding: 16px; display: flex; flex-direction: column; gap: 8px;
+}
+.fund-kpi-label { font-size: 12px; font-weight: 600; text-transform: uppercase; color: #777; letter-spacing: .05em; }
+.fund-kpi-value { font-size: 22px; font-weight: 700; }
+
+/* Fon Sınıflarında Bugün */
+.fund-classes { margin-bottom: 32px; }
+.fund-class-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.fund-direction-toggle { display: inline-flex; gap: 0; margin-bottom: 16px; }
+.fund-direction-button {
+    border: 1px solid var(--gray-border); background: #fff; padding: 8px 18px; font-size: 14px; font-weight: 600;
+}
+.fund-direction-button:first-child { border-radius: 4px 0 0 4px; }
+.fund-direction-button:last-child { border-radius: 0 4px 4px 0; border-left: 0; }
+.fund-direction-button.is-active { background: var(--navy); color: #fff; border-color: var(--navy); }
+.fund-leader-table a:hover, .fund-returns-table a:hover { text-decoration: underline; }
+
+/* Karşılaştırmalı Fon Getirileri */
+.fund-returns { margin-bottom: 32px; }
+.fund-returns-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+.fund-returns-count { font-size: 13px; color: #777; }
+.fund-returns-all { font-size: 14px; font-weight: 700; }
+.fund-returns-all:hover { color: var(--red); }
+
+/* Fon detay */
+.fund-detail-head { margin-bottom: 24px; }
+.fund-detail-head h1 { font-size: 2rem; margin: 0 0 8px; }
+.fund-detail-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; font-size: 13px; }
+.fund-detail-code { background: var(--navy); color: #fff; padding: 2px 8px; border-radius: 3px; font-weight: 700; }
+.fund-detail-class, .fund-detail-type { background: var(--gray-bg); padding: 2px 8px; border-radius: 3px; }
+.fund-detail-quote { display: flex; flex-wrap: wrap; align-items: baseline; gap: 18px; }
+.fund-detail-price { font-size: 28px; }
+.fund-detail-change { font-size: 15px; font-weight: 600; }
+.fund-portfolio-text { font-size: 16px; line-height: 1.6; }
+.fund-portfolio-text a { color: var(--red); font-weight: 600; text-decoration: underline; }
+
+/* Araç sayfaları: Fon Karşılaştır / Fon Portföy Dağılımı */
+.fund-tool-page .page-title { font-size: 2rem; margin: 0 0 12px; }
+.fund-compare-form, .fund-portfolio-form {
+    display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px;
+    border: 1px solid var(--gray-border); border-radius: 6px; background: #fff; padding: 16px; margin-bottom: 24px;
+}
+.fund-compare-field { display: flex; flex-direction: column; gap: 6px; flex: 1 1 280px; }
+.fund-compare-field label { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #777; }
+.fund-compare-field select { border: 1px solid var(--gray-border); border-radius: 4px; padding: 10px; font-size: 14px; background: #fff; }
+.fund-compare-submit {
+    background: var(--red); color: #fff; border: 0; border-radius: 4px; padding: 11px 26px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+}
+.fund-compare-submit:hover { background: #a00207; }
+.fund-compare-better { background: #eaf7f0; font-weight: 700; }
+.fund-portfolio-quote { display: flex; flex-wrap: wrap; align-items: baseline; gap: 16px; margin-bottom: 20px; }
+
+/* Portföy dağılım çubukları */
+.fund-distribution { display: flex; flex-direction: column; gap: 14px; }
+.fund-distribution-row { display: grid; grid-template-columns: 180px minmax(0, 1fr) 70px; align-items: center; gap: 14px; }
+.fund-distribution-label { font-size: 14px; font-weight: 600; }
+.fund-distribution-bar-track { height: 18px; background: var(--gray-bg); border-radius: 4px; overflow: hidden; }
+.fund-distribution-bar { display: block; height: 100%; background: linear-gradient(90deg, var(--navy), var(--bht-yellow)); }
+.fund-distribution-value { font-size: 14px; font-weight: 700; text-align: right; }
+
+@media (max-width: 1023px) {
+    .fund-news-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .fund-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 767px) {
+    .fund-news-grid { grid-template-columns: 1fr; }
+    .fund-kpi-grid { grid-template-columns: 1fr; }
+    .fund-page .page-title, .fund-detail-head h1, .fund-tool-page .page-title { font-size: 1.5rem; }
+    .fund-distribution-row { grid-template-columns: 120px minmax(0, 1fr) 60px; gap: 8px; }
+}

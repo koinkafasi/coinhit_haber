@@ -17,6 +17,7 @@ use App\Http\Controllers\ChartArchiveController;
 use App\Http\Controllers\DovizController;
 use App\Http\Controllers\EmtiaController;
 use App\Http\Controllers\FaizBonoController;
+use App\Http\Controllers\FundController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\IpoCalendarController;
@@ -165,6 +166,17 @@ $frontRoutes = function (): void {
     Route::get('/emtia', [EmtiaController::class, 'index'])->name('emtia.index');
     Route::get('/emtia/{slug}', [EmtiaController::class, 'detail'])
         ->where('slug', '[A-Za-z0-9\-]+')->name('emtia.detail');
+
+    /*
+    |----------------------------------------------------------------------
+    | Yatırım Fonları bölümü (Bölüm 6, 8, 15.8 — fonlar + araç sayfaları)
+    |----------------------------------------------------------------------
+    */
+    Route::get('/yatirim-fonlari', [FundController::class, 'index'])->name('fund.index');
+    Route::get('/yatirim-fonlari/fon-karsilastirma', [FundController::class, 'compare'])->name('fund.compare');
+    Route::get('/yatirim-fonlari/fon-portfoy-dagilim', [FundController::class, 'portfolio'])->name('fund.portfolio');
+    Route::get('/yatirim-fonlari/{slug}', [FundController::class, 'show'])
+        ->where('slug', '[A-Za-z0-9\-]+')->name('fund.show');
 
     /*
     |----------------------------------------------------------------------

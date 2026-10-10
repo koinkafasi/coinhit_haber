@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call(IpoCalendarSeeder::class);
         $this->call(TrendSeeder::class);
         $this->call(MarketInstrumentSeeder::class);
+        $this->call(FundSeeder::class);
         $this->call(TranslationSeeder::class);
     }
 }

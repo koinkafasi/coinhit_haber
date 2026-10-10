@@ -60,15 +60,28 @@ class ProgramSeeder extends Seeder
                 ]
             );
 
-            for ($e = 0; $e < 2; $e++) {
-                $episodeTitle = 'Piyasa değerlendirmesi';
+            // Fon Saati programı 6 bölümle listelenir (spec §8 fon bölümü).
+            $episodeCount = $program->slug === 'fon-saati' ? 6 : 2;
+            $episodeTitles = $program->slug === 'fon-saati'
+                ? [
+                    'Piyasa değerlendirmesi',
+                    'Fon seçiminde dikkat edilecekler',
+                    'Portföy dağılımı nasıl yapılır',
+                    'Faiz indiriminin fonlara etkisi',
+                    'Altın fonlarında son durum',
+                    'Katılım fonları ve getirileri',
+                ]
+                : [];
+
+            for ($e = 0; $e < $episodeCount; $e++) {
+                $episodeTitle = $episodeTitles[$e] ?? 'Piyasa değerlendirmesi';
                 $airAt = now()->subDays($e)->setTime((int) substr($airTime, 0, 2), (int) substr($airTime, 3, 2));
 
                 ProgramEpisode::updateOrCreate(
                     ['program_id' => $program->id, 'slug' => Str::slug($episodeTitle.' '.$airAt->format('Ymd'))],
                     [
                         'title' => $episodeTitle,
-                        'guest' => 'Konuk Analist',
+                        'guest' => $e === 0 ? 'Konuk Analist' : 'Fon Ekibi',
                         'duration_seconds' => 60 * (28 + $e * 4),
                         'thumbnail' => '/img/placeholders/placeholder-'.(($index % 8) + 1).'.svg',
                         'video_url' => 'https://vmcdn.ciner.com.tr/demo/'.$program->slug.'-'.$e.'.mp4',

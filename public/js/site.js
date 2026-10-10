@@ -147,6 +147,10 @@
         document.querySelectorAll('[data-widget-type="most-read"]').forEach(function (container) {
             bindTabs(container, '.most-read-tabs > [data-tab]', '[data-id]');
         });
+
+        document.querySelectorAll('[data-widget-type="fund-classes"]').forEach(function (container) {
+            bindTabs(container, '.fund-class-tabs > [data-tab]', '.fund-class-panels > [data-id]');
+        });
     }
 
     /**
