@@ -238,19 +238,238 @@
      * KAP paylaş çubuğu "bağlantıyı kopyala".
      */
     function initShareCopy() {
-        document.querySelectorAll('[data-copy-link]').forEach(function (button) {
-            button.addEventListener('click', function () {
-                var link = button.getAttribute('data-copy-link');
+        document.addEventListener('click', function (event) {
+            var button = event.target.closest ? event.target.closest('[data-copy-link]') : null;
 
-                if (!link || !navigator.clipboard) {
+            if (!button) {
+                return;
+            }
+
+            var link = button.getAttribute('data-copy-link');
+
+            if (!link || !navigator.clipboard) {
+                return;
+            }
+
+            navigator.clipboard.writeText(link).then(function () {
+                button.classList.add('is-copied');
+            }).catch(function () { /* yoksay */ });
+        });
+    }
+
+    /**
+     * Makale "yazı boyutunu artır" (text-increase, spec §9, §10).
+     */
+    function initTextIncrease() {
+        document.addEventListener('click', function (event) {
+            var button = event.target.closest ? event.target.closest('[data-text-increase]') : null;
+
+            if (!button) {
+                return;
+            }
+
+            var article = button.closest('.article-detail');
+            var wrapper = article ? article.querySelector('.article-wrapper') : null;
+
+            if (!wrapper) {
+                return;
+            }
+
+            var level = wrapper.classList.contains('text-size-xlarge')
+                ? 2
+                : (wrapper.classList.contains('text-size-large') ? 1 : 0);
+
+            level = (level + 1) % 3;
+
+            wrapper.classList.remove('text-size-large', 'text-size-xlarge');
+
+            if (level === 1) {
+                wrapper.classList.add('text-size-large');
+            } else if (level === 2) {
+                wrapper.classList.add('text-size-xlarge');
+            }
+        });
+    }
+
+    /**
+     * Paylaş dropdown (hover CSS + dokunmatik için tıklama, spec §9).
+     */
+    function initShareDropdown() {
+        document.addEventListener('click', function (event) {
+            var target = event.target;
+            var trigger = target.closest ? target.closest('.share-trigger') : null;
+
+            if (trigger) {
+                var dropdown = trigger.closest('.share-dropdown');
+                var open = dropdown.classList.toggle('is-open');
+                trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+
+                document.querySelectorAll('.share-dropdown.is-open').forEach(function (other) {
+                    if (other !== dropdown) {
+                        other.classList.remove('is-open');
+                        var otherTrigger = other.querySelector('.share-trigger');
+                        if (otherTrigger) {
+                            otherTrigger.setAttribute('aria-expanded', 'false');
+                        }
+                    }
+                });
+
+                return;
+            }
+
+            if (!target.closest || !target.closest('.share-menu')) {
+                document.querySelectorAll('.share-dropdown.is-open').forEach(function (dropdown) {
+                    dropdown.classList.remove('is-open');
+                });
+            }
+        });
+    }
+
+    /**
+     * İlgili Haberler karuseli (masaüstü yatay, 4sn otomatik; spec §9).
+     */
+    function initRelatedSlider() {
+        document.querySelectorAll('[data-related-slider]').forEach(function (slider) {
+            var track = slider.querySelector('[data-related-track]');
+
+            if (!track) {
+                return;
+            }
+
+            var slides = Array.prototype.slice.call(track.children);
+
+            if (slides.length < 2) {
+                return;
+            }
+
+            var index = 0;
+            var timer = null;
+
+            function step() {
+                return (slides[0].getBoundingClientRect().width || 288) + 16;
+            }
+
+            function perView() {
+                var width = slider.clientWidth || 0;
+
+                return Math.max(1, Math.floor(width / step()));
+            }
+
+            function maxIndex() {
+                return Math.max(0, slides.length - perView());
+            }
+
+            function render() {
+                if (window.innerWidth <= 767) {
+                    track.style.transform = '';
                     return;
                 }
 
-                navigator.clipboard.writeText(link).then(function () {
-                    button.classList.add('is-copied');
-                }).catch(function () { /* yoksay */ });
+                track.style.transform = 'translateX(-' + (index * step()) + 'px)';
+            }
+
+            function next() {
+                index = index >= maxIndex() ? 0 : index + 1;
+                render();
+            }
+
+            function start() {
+                timer = window.setInterval(next, 4000);
+            }
+
+            function stop() {
+                window.clearInterval(timer);
+            }
+
+            slider.addEventListener('mouseenter', stop);
+            slider.addEventListener('mouseleave', start);
+            window.addEventListener('resize', function () {
+                index = Math.min(index, maxIndex());
+                render();
             });
+
+            render();
+            start();
         });
+    }
+
+    /**
+     * Sonsuz kaydırma — `/infinite/news/{id}` parçalarını IntersectionObserver
+     * ile ekler; önceki/sonraki butonu YOK (spec §3, §9, §15.15).
+     */
+    function initInfiniteArticle() {
+        var sentinel = document.querySelector('[data-infinite-sentinel]');
+        var article = document.querySelector('[data-infinite-article]');
+
+        if (!sentinel || !article) {
+            return;
+        }
+
+        function readState(element) {
+            try {
+                return JSON.parse(element.getAttribute('data-it') || '{}');
+            } catch (e) {
+                return {};
+            }
+        }
+
+        var state = readState(article);
+        var loading = false;
+
+        function load() {
+            if (loading || !state || !state.next) {
+                return;
+            }
+
+            loading = true;
+
+            fetch(state.next, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(function (response) { return response.ok ? response.text() : Promise.reject(); })
+                .then(function (html) {
+                    var doc = new DOMParser().parseFromString(html, 'text/html');
+                    var fresh = doc.querySelector('[data-infinite-article]');
+
+                    if (!fresh) {
+                        state.next = '';
+                        return;
+                    }
+
+                    var node = document.importNode(fresh, true);
+                    sentinel.parentNode.insertBefore(node, sentinel);
+                    state = readState(node);
+
+                    if (window.history && state.url) {
+                        window.history.replaceState({}, '', state.url);
+                    }
+                    if (state.title) {
+                        document.title = state.title;
+                    }
+
+                    if (typeof window.bhtLazyScan === 'function') {
+                        window.bhtLazyScan();
+                    }
+                })
+                .catch(function () { /* sonraki denemede tekrar */ })
+                .then(function () { loading = false; });
+        }
+
+        if ('IntersectionObserver' in window) {
+            var observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        load();
+                    }
+                });
+            }, { rootMargin: '800px 0px' });
+
+            observer.observe(sentinel);
+        } else {
+            window.addEventListener('scroll', function () {
+                if (sentinel.getBoundingClientRect().top < window.innerHeight + 800) {
+                    load();
+                }
+            }, { passive: true });
+        }
     }
 
     /**
@@ -497,10 +716,14 @@
         initHeroSlider();
         initRangeTabs();
         initShareCopy();
+        initTextIncrease();
+        initShareDropdown();
         initCurrencyConverter();
         initGoldCalculator();
         initLoadMore();
         initGallerySlideshow();
+        initRelatedSlider();
+        initInfiniteArticle();
     }
 
     if (document.readyState === 'loading') {

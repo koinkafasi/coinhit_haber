@@ -1543,3 +1543,140 @@ img[data-src].b-lazy-loaded {
     .author-corner, .archive-author { flex-direction: column; }
     .opinion-grid { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   CH-12 — MAKALE DETAY + SONSUZ KAYDIRMA (Bölüm 9, 11, 15.15)
+   İki kolon (ana + 400px aside), spot listesi, paylaş dropdown,
+   metin büyütme, Google CTA, ilgili haber karusel, pageskin.
+   ============================================================ */
+
+.article-layout { display: flex; gap: 28px; align-items: flex-start; }
+.article-main { width: calc(100% - 400px); min-width: 0; padding-right: 28px; }
+.article-sidebar { width: 400px; flex: 0 0 400px; position: relative; }
+
+.article-detail { position: relative; }
+.article-detail-infinite { margin-top: 48px; padding-top: 32px; border-top: 2px solid #000; }
+
+.article-detail .article-title {
+    font-family: Unna, Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 44px;
+    line-height: 1.08;
+    margin: 12px 0 18px;
+}
+
+/* Spot — madde işaretli liste (ul > li > h2.description) */
+.article-spot-list { list-style: none; padding: 0; margin: 0 0 20px; }
+.article-spot-list li { position: relative; padding-left: 22px; margin-bottom: 14px; }
+.article-spot-list li::before {
+    content: ''; position: absolute; left: 0; top: .55em; width: 8px; height: 8px; background: #000;
+}
+.article-spot-list .description {
+    margin: 0; font-size: 18px; line-height: 1.5; font-weight: 500; font-family: Poppins, sans-serif;
+}
+
+/* Google News promo */
+.google-news-bar {
+    display: block; background: #1f2937; color: #fff; text-align: center;
+    padding: 16px 18px; min-height: 54px; font-weight: 600; font-size: 15px;
+    margin: 0 0 18px; border: 1px solid transparent; transition: background .2s, color .2s, border-color .2s;
+}
+.google-news-bar:hover { background: #fff; color: #111; border-color: var(--gray-border); }
+
+.article-image { margin: 0 0 12px; }
+.article-image img { width: 100%; height: auto; }
+
+.article-meta { display: flex; flex-wrap: wrap; gap: 10px; color: #555; font-size: 13px; margin: 0 0 20px; }
+.article-updated { color: #777; }
+
+/* Gövde tipografisi + inline anahtar kelime bağlantıları */
+.article-wrapper p { font-size: 16px; line-height: 1.6; margin: 0 0 16px; }
+.article-wrapper a[href^="/haberleri/"] { color: #1C64A8; text-decoration: underline; text-underline-offset: 2px; }
+.article-wrapper a[href^="/haberleri/"]:hover { color: #134B80; }
+.article-inline-image { margin: 18px 0; }
+.article-inline-image img { width: 100%; height: auto; }
+.flourish-embed { margin: 20px 0; }
+
+/* Metin büyütme durumları (text-increase) */
+.article-wrapper.text-size-large p { font-size: 19px; line-height: 1.72; }
+.article-wrapper.text-size-xlarge p { font-size: 22px; line-height: 1.8; }
+
+/* Paylaş satırı */
+.article-tools { display: flex; align-items: center; gap: 12px; margin: 22px 0; position: relative; }
+.article-tool {
+    display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; cursor: pointer;
+    border: 1px solid var(--gray-border); border-radius: 4px; background: #fff; color: #333; font-size: 14px;
+}
+.article-tool:hover { background: #000; color: #fff; }
+.text-increase .ti-small { font-size: 12px; }
+.text-increase .ti-large { font-size: 19px; }
+.article-tool .bloomberght-icon-font svg { width: 16px; height: 16px; }
+
+.share-dropdown { position: relative; }
+.share-menu {
+    position: absolute; right: 0; top: calc(100% + 6px); z-index: 40;
+    display: none; align-items: center; gap: 14px; margin: 0; padding: 12px 16px;
+    list-style: none; background: #fff; border: 1px solid var(--gray-border);
+    border-radius: 4px; box-shadow: 0 8px 24px rgba(0, 0, 0, .15);
+}
+.share-dropdown:hover .share-menu,
+.share-dropdown:focus-within .share-menu,
+.share-dropdown.is-open .share-menu { display: flex; }
+.share-menu a, .share-menu .share-copy {
+    display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px;
+    border: 1px solid var(--gray-border); border-radius: 50%; background: #fff; color: #333; cursor: pointer;
+}
+.share-menu a:hover, .share-menu .share-copy:hover { background: #000; color: #fff; }
+.share-menu .share-copy { width: auto; border-radius: 17px; padding: 0 10px; gap: 6px; }
+.share-menu .shortlink-text { font-size: 12px; font-weight: 600; white-space: nowrap; }
+.share-menu .bloomberght-icon-font svg { width: 15px; height: 15px; }
+
+.article-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 0; }
+.article-tags a {
+    background: var(--gray-bg); padding: 4px 10px; font-size: 12px; border-radius: 12px; color: #333;
+}
+.article-tags a:hover { background: #000; color: #fff; }
+
+.article-ad-block { margin: 26px 0; }
+.article-ad-block .ad-zone-block + .ad-zone-block { margin-top: 24px; }
+
+/* İlgili Haberler — yatay karusel */
+.article-related { margin-top: 36px; }
+.article-related-title { font-size: 28px; margin: 0 0 16px; }
+.related-slider { overflow: hidden; }
+.related-track { display: flex; gap: 16px; transition: transform .5s ease; }
+.related-slide { flex: 0 0 288px; }
+.related-figure { margin: 0 0 8px; }
+.related-img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.related-slide-title {
+    font-family: Unna, Georgia, 'Times New Roman', serif; font-weight: 700;
+    font-size: 16px; line-height: 1.25; margin: 0;
+}
+.related-slide a:hover .related-slide-title { color: var(--down); }
+
+/* Sidebar Öne Çıkanlar */
+.headlines-widget .news-card-item:last-child { border-bottom: 0; }
+
+/* Pageskin sol/sağ (spec §14.6) */
+.pageskin { position: fixed; top: 130px; z-index: 30; width: 160px; display: none; }
+.pageskin-left { left: 8px; }
+.pageskin-right { right: 8px; }
+.pageskin .ads-zone { min-height: 600px; }
+
+.article-sentinel { height: 1px; }
+
+@media (min-width: 1600px) { .pageskin { display: block; } }
+
+@media (max-width: 999px) {
+    .article-layout { flex-direction: column; }
+    .article-main { width: 100%; padding-right: 0; }
+    .article-sidebar { width: 100%; flex-basis: auto; margin-top: 32px; }
+}
+@media (max-width: 767px) {
+    .article-detail .article-title { font-size: 32px; }
+    .article-spot-list .description { font-size: 16px; }
+    .related-track { flex-direction: column; transform: none !important; }
+    .related-slide { flex: 1 1 auto; }
+    .pageskin { display: none; }
+    .share-menu { right: auto; left: 0; }
+}

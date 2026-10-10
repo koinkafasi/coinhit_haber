@@ -48,6 +48,8 @@ $frontRoutes = function (): void {
     */
     Route::get('/haberler', [NewsController::class, 'index'])->name('news.index');
     Route::get('/tumhaberler', [NewsController::class, 'all'])->name('news.all');
+    Route::get('/infinite/news/{newsId}', [NewsController::class, 'infinite'])
+        ->where('newsId', '[0-9]+')->name('news.infinite');
     Route::get('/sondakika', [BreakingNewsController::class, 'index'])->name('breaking.index');
     Route::get('/grafik-arsivi', [ChartArchiveController::class, 'index'])->name('charts.index');
     Route::get('/yazarlar', [AuthorController::class, 'index'])->name('authors.index');

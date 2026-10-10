@@ -1,2 +1,33 @@
 User-agent: *
-Disallow:
+Disallow: /images/dummy
+Disallow: /Flash
+Disallow: /piyasa/intradaydata
+Disallow: /piyasa/refdata
+Disallow: /uyelik
+Disallow: /dynamics
+Disallow: /bizeulasin
+Disallow: /haberler/haber/
+Disallow: /index
+Disallow: /arama
+Disallow: /liste/arama
+Disallow: /yorumlar/liste
+Disallow: /etiket
+Disallow: /grafik/
+Disallow: /info/gizlilik-politikasi
+Disallow: /cerez-politikasi
+Disallow: /tcmb/detay/
+Disallow: /haberdetay/siblings/
+Disallow: /haberdetay/preview/
+Disallow: /infinite/
+Disallow: /settings
+Disallow: /finance-slider-data
+Disallow: /test/
+Disallow: /breaking-news-widget
+Disallow: /most-read-news
+Disallow: /most-read-news-vertical
+Disallow: /menu-widget
+Disallow: /web-view/yatirim-fonlari/fon-portfoy-dagilim
+Disallow: /detaytest/
+Allow: /dynamics/vdo/
+
+Sitemap: /sitemap.xml
