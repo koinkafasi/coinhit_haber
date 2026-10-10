@@ -97,6 +97,54 @@ class MarketInstrument extends Model
         'bae-dirhemi' => 'AEDTRY',
     ];
 
+    /**
+     * Altın çeşitleri detay rotası okunur slug'ları (spec §3, §8).
+     *
+     * Gerçek sitede `14 AYAR BİLEZİK` → `14-ay-bilezik-gr`, `ALTIN/ONS (TL)`
+     * → `altin-ons-tl` gibi kısaltmalar kullanılır.
+     */
+    public const GOLD_ROUTE_SLUGS = [
+        'GAU' => 'altin-ons',
+        'GRAM' => 'gram-altin',
+        'GAUTRY' => 'altin-ons-tl',
+        'CUMHUR' => 'cumhuriyet-altini',
+        'TAM' => 'tam-altin',
+        'ZIYNET' => 'ziynet-altini',
+        'CEYREK' => 'ceyrek-altin',
+        'YARIM' => 'yarim-altin',
+        'ATA' => 'ata-altin',
+        'BILEZIK14' => '14-ay-bilezik-gr',
+        'BILEZIK22' => '22-ay-bilezik-gr',
+        'GREMSE' => 'gremse-altin',
+        'HAS' => 'has-altin',
+        'IKIBUCUK' => 'ikibucuk-altin',
+        'BESLI' => 'besli-altin',
+        'KULCE_EUR' => 'kulce-euro',
+        'KULCE_USD' => 'kulce-dolar',
+    ];
+
+    /**
+     * Emtia detay rotası okunur slug'ları (spec §3 — Sanayi Emtia 3 Aylık).
+     */
+    public const COMMODITY_ROUTE_SLUGS = [
+        'BAKIR3A' => 'bakir3m',
+        'ALUMINYUM3A' => 'aluminyum3m',
+        'CINKO3A' => 'cinko3m',
+        'NIKEL3A' => 'nikel3m',
+        'KALAY3A' => 'kalay3m',
+        'KURSUN3A' => 'kursun3m',
+    ];
+
+    /**
+     * Emtia detay rotası takma adları (spec §3 — sitemap varyantları).
+     */
+    public const COMMODITY_ROUTE_ALIASES = [
+        'petrol' => 'BRENT',
+        'bity' => 'BDIY',
+        'bidy' => 'BDIY',
+        'bdiy' => 'BDIY',
+    ];
+
     public const GROUPS = [
         self::GROUP_BIST_INDEX => 'BIST Endeksleri',
         self::GROUP_WORLD_INDEX => 'Dünya Borsaları',
@@ -197,10 +245,34 @@ class MarketInstrument extends Model
     }
 
     /**
+     * Altın detay rotası (spec §3, §8): `/altin/<slug>`.
+     */
+    public function goldUrl(): string
+    {
+        return Locale::url('/altin/'.(self::GOLD_ROUTE_SLUGS[$this->code] ?? $this->slug));
+    }
+
+    /**
+     * Altın detay rotası slug'ı (kataloğa göre).
+     */
+    public function goldRouteSlug(): string
+    {
+        return self::GOLD_ROUTE_SLUGS[$this->code] ?? $this->slug;
+    }
+
+    /**
      * Emtia/Baltık detay rotası (spec §3): `/emtia/<slug>`.
      */
     public function commodityUrl(): string
     {
-        return Locale::url('/emtia/'.$this->slug);
+        return Locale::url('/emtia/'.(self::COMMODITY_ROUTE_SLUGS[$this->code] ?? $this->slug));
+    }
+
+    /**
+     * Emtia detay rotası slug'ı (kataloğa göre).
+     */
+    public function commodityRouteSlug(): string
+    {
+        return self::COMMODITY_ROUTE_SLUGS[$this->code] ?? $this->slug;
     }
 }

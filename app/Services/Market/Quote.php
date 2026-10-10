@@ -139,6 +139,18 @@ class Quote
     }
 
     /**
+     * Altın serbest piyasa "SAAT" sütunu — enstrümana göre deterministik
+     * bayat güncelleme saati (bazı altın çeşitleri gün içinde daha seyrek
+     * güncellenir; spec §5, §8).
+     */
+    public function staleTime(): string
+    {
+        $offset = crc32($this->instrument->code) % 140;
+
+        return $this->updatedAt->subMinutes($offset)->format('H:i');
+    }
+
+    /**
      * Sunrise/kripto için ABD doları fiyatı.
      */
     public function formattedUsdPrice(): string

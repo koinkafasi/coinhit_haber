@@ -244,8 +244,8 @@ class MarketInstrumentSeeder extends Seeder
     private function gold(): array
     {
         $data = [
-            ['GAU', 'ALTIN/ONS ($)', 2650.50, ['currency' => 'USD', 'decimals' => 2, 'source' => 'cme']],
-            ['GAUTRY', 'ALTIN/ONS (TL)', 114000.00, ['decimals' => 2]],
+            ['GAU', 'ALTIN/ONS', 2650.50, ['currency' => 'USD', 'decimals' => 2, 'source' => 'cme']],
+            ['GAUTRY', 'ALTIN/ONS TL', 114000.00, ['decimals' => 2]],
             ['GRAM', 'GRAM ALTIN', 3670.00, ['decimals' => 2]],
             ['CUMHUR', 'CUMHURİYET ALTINI', 24500.00, ['decimals' => 2]],
             ['TAM', 'TAM ALTIN', 16300.00, ['decimals' => 2]],
@@ -253,8 +253,8 @@ class MarketInstrumentSeeder extends Seeder
             ['CEYREK', 'ÇEYREK ALTIN', 6100.00, ['decimals' => 2]],
             ['YARIM', 'YARIM ALTIN', 12200.00, ['decimals' => 2]],
             ['ATA', 'ATA ALTIN', 16800.00, ['decimals' => 2]],
-            ['BILEZIK14', '14 AYAR BİLEZİK', 2050.00, ['decimals' => 2]],
-            ['BILEZIK22', '22 AYAR BİLEZİK', 3200.00, ['decimals' => 2]],
+            ['BILEZIK14', '14 AYAR BİLEZİK GRAMI', 2050.00, ['decimals' => 2]],
+            ['BILEZIK22', '22 AYAR BİLEZİK GRAMI', 3200.00, ['decimals' => 2]],
             ['GREMSE', 'GREMSE ALTIN', 32700.00, ['decimals' => 2]],
             ['HAS', 'HAS ALTIN', 3700.00, ['decimals' => 2]],
             ['IKIBUCUK', 'İKİBUÇUK ALTIN', 30500.00, ['decimals' => 2]],
@@ -306,9 +306,9 @@ class MarketInstrumentSeeder extends Seeder
         $data = [
             ['BAKIR', 'BAKIR', 4.15], ['ALUMINYUM', 'ALÜMİNYUM', 2.45], ['CINKO', 'ÇİNKO', 2.85],
             ['NIKEL', 'NİKEL', 16.20], ['KALAY', 'KALAY', 32.50], ['KURSUN', 'KURŞUN', 2.10],
-            ['BAKIR3A', 'BAKIR (3 Aylık)', 4.22], ['ALUMINYUM3A', 'ALÜMİNYUM (3 Aylık)', 2.50],
-            ['CINKO3A', 'ÇİNKO (3 Aylık)', 2.90], ['NIKEL3A', 'NİKEL (3 Aylık)', 16.45],
-            ['KALAY3A', 'KALAY (3 Aylık)', 32.80], ['KURSUN3A', 'KURŞUN (3 Aylık)', 2.14],
+            ['BAKIR3A', 'BAKIR 3 AYLIK', 4.22], ['ALUMINYUM3A', 'ALÜMİNYUM 3 AYLIK', 2.50],
+            ['CINKO3A', 'ÇİNKO 3 AYLIK', 2.90], ['NIKEL3A', 'NİKEL 3 AYLIK', 16.45],
+            ['KALAY3A', 'KALAY 3 AYLIK', 32.80], ['KURSUN3A', 'KURŞUN 3 AYLIK', 2.14],
         ];
 
         return $this->map(MarketInstrument::GROUP_INDUSTRY, $data, ['currency' => 'USD', 'source' => 'cme']);
@@ -320,7 +320,7 @@ class MarketInstrumentSeeder extends Seeder
     private function energy(): array
     {
         $data = [
-            ['WTI', 'WTI HAM PETROL', 78.40], ['BRENT', 'BRENT PETROL', 82.60],
+            ['WTI', 'WTI PETROL', 78.40], ['BRENT', 'BRENT', 82.60],
         ];
 
         return $this->map(MarketInstrument::GROUP_ENERGY, $data, ['currency' => 'USD', 'source' => 'cme']);

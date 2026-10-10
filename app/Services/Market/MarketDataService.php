@@ -166,6 +166,15 @@ class MarketDataService
         return config("market.sources.{$source}.note");
     }
 
+    /**
+     * Kaynak veri lisansı metni (ör. CME Chicago Mercantile Exchange lisansı —
+     * Bölüm 11.6, §15.5).
+     */
+    public function licenseNote(string $source): ?string
+    {
+        return config("market.sources.{$source}.license");
+    }
+
     public function lastUpdated(?CarbonInterface $at = null): string
     {
         $at ??= CarbonImmutable::now();

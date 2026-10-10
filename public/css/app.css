@@ -1327,3 +1327,39 @@ img[data-src].b-lazy-loaded {
 @media (max-width: 480px) {
     .mini-quote-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* ============================================================
+   CH-9 — ALTIN & EMTİA BÖLÜMÜ (Bölüm 5, 6, 8, 15.5)
+   Serbest piyasa altın tablosu + Altın Hesaplama + Diğer Emtia.
+   ============================================================ */
+
+.altin-page .altin-quick-links,
+.emtia-page .emtia-quick-links { margin-bottom: 16px; }
+
+.altin-time { font-variant-numeric: tabular-nums; color: #555; font-size: 13px; }
+
+/* ---------- Altın Hesaplama ---------- */
+.altin-calculator { margin-bottom: 28px; }
+.gold-calc-modes { display: inline-flex; gap: 0; margin: 4px 0 14px; border: 1px solid var(--gray-border); border-radius: 4px; overflow: hidden; }
+.gold-calc-modes .gold-calc-mode {
+    padding: 7px 22px; border: 0; background: #fff; cursor: pointer; font-size: 13px; font-weight: 700;
+    color: #555; border-radius: 0;
+}
+.gold-calc-modes .gold-calc-mode + .gold-calc-mode { border-left: 1px solid var(--gray-border); }
+.gold-calc-modes .gold-calc-mode.is-active { background: #000; color: #fff; }
+
+.altin-calc-desc { color: #444; line-height: 1.7; margin: 20px 0; }
+
+/* ---------- Kaynak / CME lisans notu ---------- */
+.market-source-note {
+    border-top: 1px solid var(--gray-border); margin-top: 28px; padding-top: 14px;
+    color: #777; font-size: 12px; line-height: 1.6;
+}
+.market-source-note p { margin: 0; }
+
+/* ---------- Emtia sayfası ---------- */
+.emtia-page .market-data-block { margin-bottom: 32px; }
+
+@media (max-width: 767px) {
+    .gold-calc-modes .gold-calc-mode { flex: 1; text-align: center; }
+}

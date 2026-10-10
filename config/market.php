@@ -39,6 +39,7 @@ return [
             'delay_minutes' => 10,
             'delay_label' => '10 dk gecikmeli',
             'note' => 'CME, NYMEX ve S&P verileri 10 dk gecikmelidir. CME verilerinin izinsiz kullanımı yasaktır ve bu veriler hiçbir yapay zeka modelinin eğitiminde kullanılamaz.',
+            'license' => 'Bu sayfada yer alan piyasa verileri, Chicago Mercantile Exchange Inc. veya onun lisans verenlerine ait özel bilgileri içermektedir. Özel olarak yetki verilmedikçe kopyalanamaz, satılamaz veya dağıtılamaz. Yatırım tavsiyesi teşkil etmez. Yalnızca bilgilendirme amacıyla sağlanmaktadır. Hiçbir ticari amaçla kullanılmamaktadır. Tam, kesin veya zamanında olduğuna dair herhangi bir garanti verilmemektedir.',
         ],
         'forex' => [
             'label' => 'Forex',

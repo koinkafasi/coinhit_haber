@@ -8,11 +8,13 @@ use App\Http\Controllers\Admin\KapAdminController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\NewsAdminController;
 use App\Http\Controllers\Admin\ProgramAdminController;
+use App\Http\Controllers\AltinController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BorsaController;
 use App\Http\Controllers\BreakingNewsController;
 use App\Http\Controllers\ChartArchiveController;
 use App\Http\Controllers\DovizController;
+use App\Http\Controllers\EmtiaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MarketDataController;
@@ -80,6 +82,19 @@ $frontRoutes = function (): void {
     Route::get('/doviz/{slug}', [DovizController::class, 'detail'])
         ->where('slug', '[A-Za-z0-9\-]+')->name('doviz.detail');
     Route::get('/doviz-cevirici', [DovizController::class, 'converter'])->name('doviz.converter');
+
+    /*
+    |----------------------------------------------------------------------
+    | Altın & Emtia bölümü (Bölüm 5, 6, 8, 15.5 — altın/emtia + hesaplama)
+    |----------------------------------------------------------------------
+    */
+    Route::get('/altin', [AltinController::class, 'index'])->name('altin.index');
+    Route::get('/altin-cevirici', [AltinController::class, 'calculator'])->name('altin.calculator');
+    Route::get('/altin/{slug}', [AltinController::class, 'detail'])
+        ->where('slug', '[A-Za-z0-9\-]+')->name('altin.detail');
+    Route::get('/emtia', [EmtiaController::class, 'index'])->name('emtia.index');
+    Route::get('/emtia/{slug}', [EmtiaController::class, 'detail'])
+        ->where('slug', '[A-Za-z0-9\-]+')->name('emtia.detail');
 
     /*
     |----------------------------------------------------------------------

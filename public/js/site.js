@@ -310,6 +310,79 @@
         });
     }
 
+    /**
+     * Altın Hesaplama (Bölüm 6, 8): Alış/Satış modu + A↔B enstrüman + Tutar.
+     */
+    function initGoldCalculator() {
+        document.querySelectorAll('[data-gold-calculator]').forEach(function (root) {
+            var form = root.querySelector('[data-gold-form]');
+            var from = root.querySelector('[data-gold-from]');
+            var to = root.querySelector('[data-gold-to]');
+            var amount = root.querySelector('[data-gold-amount]');
+            var valueEl = root.querySelector('[data-gold-value]');
+            var currencyEl = root.querySelector('[data-gold-currency]');
+            var modes = root.querySelectorAll('[data-gold-mode]');
+
+            if (!form || !from || !to || !amount) {
+                return;
+            }
+
+            var values = {};
+
+            try { values = JSON.parse(root.getAttribute('data-values') || '{}'); } catch (e) { values = {}; }
+
+            var activeMode = root.querySelector('[data-gold-mode].is-active');
+            var mode = activeMode ? activeMode.getAttribute('data-gold-mode') : 'alis';
+
+            function format(value) {
+                try {
+                    return value.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+                } catch (e) {
+                    return value.toFixed(4).replace('.', ',');
+                }
+            }
+
+            function calculate() {
+                var table = values[mode] || {};
+                var fromValue = (typeof table[from.value] === 'number') ? table[from.value] : 0;
+                var toValue = (typeof table[to.value] === 'number') ? table[to.value] : 0;
+                var value = parseFloat(String(amount.value).replace(',', '.')) || 0;
+                var result = toValue > 0 ? (value * fromValue) / toValue : 0;
+
+                if (valueEl) {
+                    valueEl.textContent = format(result);
+                }
+                if (currencyEl && to.selectedIndex >= 0) {
+                    currencyEl.textContent = to.options[to.selectedIndex].textContent;
+                }
+            }
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                calculate();
+            });
+
+            from.addEventListener('change', calculate);
+            to.addEventListener('change', calculate);
+            amount.addEventListener('input', calculate);
+
+            modes.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    modes.forEach(function (other) {
+                        var active = other === button;
+                        other.classList.toggle('is-active', active);
+                        if (other.hasAttribute('aria-selected')) {
+                            other.setAttribute('aria-selected', active ? 'true' : 'false');
+                        }
+                    });
+
+                    mode = button.getAttribute('data-gold-mode');
+                    calculate();
+                });
+            });
+        });
+    }
+
     function init() {
         initCookie();
         initMenu();
@@ -320,6 +393,7 @@
         initRangeTabs();
         initShareCopy();
         initCurrencyConverter();
+        initGoldCalculator();
     }
 
     if (document.readyState === 'loading') {
