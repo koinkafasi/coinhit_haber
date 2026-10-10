@@ -41,5 +41,7 @@
                     :urlResolver="$stockUrl" firstField="code" :head="false" id="most-actives" />
             </section>
         </div>
+
+        @include('altin.partials.cme-note')
     </div>
 @endsection

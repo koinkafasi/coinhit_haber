@@ -8,9 +8,23 @@ use App\Models\SiteSetting;
 use App\Services\Market\MarketDataService;
 use App\Services\Market\Quote;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 abstract class Controller
 {
+    /**
+     * Parçalı (partial) önbellek — ağır widget verisi (Bölüm 12, performans).
+     *
+     * Test ortamında deterministik kalmak için önbellek devre dışıdır.
+     */
+    protected function cached(string $key, int $seconds, callable $callback): mixed
+    {
+        if (app()->runningUnitTests()) {
+            return $callback();
+        }
+
+        return Cache::remember($key, $seconds, $callback);
+    }
     /**
      * Tüm Blade görünümleri için ortak çerçeve verisi.
      *

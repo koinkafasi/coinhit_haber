@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Concerns\BuildsHomeWidgets;
+use App\Http\Controllers\Concerns\BuildsMarketWidget;
 use App\Models\BreakingNews;
 use App\Models\BroadcastSchedule;
 use App\Models\Category;
@@ -15,14 +16,13 @@ use App\Models\ProgramEpisode;
 use App\Models\Trend;
 use App\Services\Market\MarketDataService;
 use App\Services\Market\Quote;
-use App\Support\Locale;
 use Carbon\CarbonImmutable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 
 class HomeController extends Controller
 {
-    use BuildsHomeWidgets;
+    use BuildsHomeWidgets, BuildsMarketWidget;
 
     public function __construct(private readonly MarketDataService $market) {}
 
@@ -53,19 +53,19 @@ class HomeController extends Controller
             'programs' => $this->programEpisodes(6),
             'videos' => $this->programEpisodes(8, 6),
             'broadcast' => $this->broadcastToday(),
-            'galleries' => Gallery::with('category')->orderByDesc('published_at')->take(6)->get(),
-            'podcasts' => Podcast::where('is_active', true)->orderBy('sort_order')->take(6)->get(),
-            'kapDisclosures' => KapDisclosure::orderByDesc('published_at')->take(8)->get(),
-            'charts' => ChartArchive::orderByDesc('published_at')->take(4)->get(),
-            'trends' => Trend::where('is_active', true)->with(['news' => fn ($q) => $q->where('status', 'published')->orderByDesc('published_at')->take(4)])->orderBy('sort_order')->get(),
+            'galleries' => $this->cached('home.galleries', 60, fn () => Gallery::with('category')->orderByDesc('published_at')->take(6)->get()),
+            'podcasts' => $this->cached('home.podcasts', 300, fn () => Podcast::where('is_active', true)->orderBy('sort_order')->take(6)->get()),
+            'kapDisclosures' => $this->cached('home.kap', 120, fn () => KapDisclosure::orderByDesc('published_at')->take(8)->get()),
+            'charts' => $this->cached('home.charts', 120, fn () => ChartArchive::orderByDesc('published_at')->take(4)->get()),
+            'trends' => $this->cached('home.trends', 120, fn () => Trend::where('is_active', true)->with(['news' => fn ($q) => $q->where('status', 'published')->orderByDesc('published_at')->take(4)])->orderBy('sort_order')->get()),
             'sectorNews' => $this->categoryNews('sektor-haberleri', 5),
             'politicsNews' => $this->categoryNews('siyaset', 4),
             'marketNews' => $this->categoryNews('piyasalar', 5),
             'mostReadTabs' => $this->mostReadTabs(8),
             'featuredNews' => $this->featuredNews(6),
             'commodityNews' => $this->categoryNewsModule('emtia', 4),
-            'marketWidget' => $this->marketWidget(),
-            'marketTables' => $this->marketTables(),
+            'marketWidget' => $this->cached('home.market_widget', 30, fn () => $this->marketWidget()),
+            'marketTables' => $this->cached('home.market_tables', 30, fn () => $this->marketTableData()),
             'cryptoQuotes' => $this->market->quotes('crypto')->take(12)->values(),
             'latestBreaking' => BreakingNews::where('is_active', true)->orderByDesc('published_at')->take(10)->get(),
         ], $this->layoutData()));
@@ -159,52 +159,5 @@ class HomeController extends Controller
         }
 
         return $tabs;
-    }
-
-    /**
-     * Ana sayfa piyasa verisi tabloları (Bölüm 7 modül 19, §15.1).
-     *
-     * @return array<int, array<string, mixed>>
-     */
-    private function marketTables(): array
-    {
-        $stocks = $this->market->quotes('stock');
-
-        return [
-            ['key' => 'doviz', 'title' => __('ui.tables.doviz'), 'href' => Locale::url('/doviz'), 'quotes' => $this->market->quotes('currency')],
-            ['key' => 'pariteler', 'title' => __('ui.tables.pariteler'), 'href' => Locale::url('/doviz/pariteler'), 'quotes' => $this->market->quotes('parity')->take(12)->values()],
-            ['key' => 'gelisen-piyasa', 'title' => __('ui.tables.gelisen_piyasa'), 'href' => Locale::url('/doviz'), 'quotes' => $this->market->quotes('emerging_fx')],
-            ['key' => 'bist', 'title' => __('ui.tables.bist'), 'href' => Locale::url('/borsa'), 'quotes' => $this->market->quotes('bist_index')->take(15)->values()],
-            [
-                'key' => 'artanlar',
-                'title' => __('ui.tables.artanlar'),
-                'href' => Locale::url('/borsa/en-cok'),
-                'quotes' => $stocks->sortByDesc(fn ($q) => $q->changePercent)->take(10)->values(),
-            ],
-            [
-                'key' => 'azalanlar',
-                'title' => __('ui.tables.azalanlar'),
-                'href' => Locale::url('/borsa/en-cok'),
-                'quotes' => $stocks->sortBy(fn ($q) => $q->changePercent)->take(10)->values(),
-            ],
-            ['key' => 'tahvil', 'title' => __('ui.tables.tahvil'), 'href' => Locale::url('/faiz-bono'), 'quotes' => $this->market->quotes('bond_tr')],
-            ['key' => 'repo', 'title' => __('ui.tables.repo'), 'href' => Locale::url('/faiz-bono'), 'quotes' => $this->market->quotes('repo')],
-            ['key' => 'eurobond', 'title' => __('ui.tables.eurobond'), 'href' => Locale::url('/faiz-bono'), 'quotes' => $this->market->quotes('eurobond')],
-            [
-                'key' => 'altin',
-                'title' => __('ui.tables.altin'),
-                'href' => Locale::url('/altin'),
-                'quotes' => $this->market->quotes('gold'),
-                'columns' => [
-                    ['label' => 'ALIŞ', 'field' => 'bid', 'class' => 'lastPrice'],
-                    ['label' => 'SATIŞ', 'field' => 'ask', 'class' => 'lastPrice'],
-                    ['label' => '%', 'field' => 'change_percent', 'class' => 'percentChange', 'color' => true],
-                ],
-            ],
-            ['key' => 'kiymetli', 'title' => __('ui.tables.kiymetli'), 'href' => Locale::url('/emtia'), 'quotes' => $this->market->quotes('precious_metal')],
-            ['key' => 'tarim', 'title' => __('ui.tables.tarim'), 'href' => Locale::url('/emtia'), 'quotes' => $this->market->quotes('agriculture')],
-            ['key' => 'alternatif-piyasalar', 'title' => __('ui.tables.alternatif_piyasalar'), 'href' => Locale::url('/alternatif'), 'quotes' => $this->market->quotes('alternative')],
-            ['key' => 'alternatif', 'title' => __('ui.tables.alternatif'), 'href' => Locale::url('/alternatif'), 'quotes' => $this->market->quotes('baltic')],
-        ];
     }
 }

@@ -24,8 +24,6 @@
             @endforeach
         </div>
 
-        @if ($cmeNote)
-            <p class="cme-notice text-xs">{!! $cmeNote !!}</p>
-        @endif
+        @include('altin.partials.cme-note', ['cmeNote' => $cmeNote])
     </div>
 @endsection

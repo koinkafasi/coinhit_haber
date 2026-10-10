@@ -19,6 +19,7 @@ Disallow: /tcmb/detay/
 Disallow: /haberdetay/siblings/
 Disallow: /haberdetay/preview/
 Disallow: /infinite/
+Disallow: /infinite/kategori/
 Disallow: /settings
 Disallow: /finance-slider-data
 Disallow: /test/
@@ -30,4 +31,5 @@ Disallow: /web-view/yatirim-fonlari/fon-portfoy-dagilim
 Disallow: /detaytest/
 Allow: /dynamics/vdo/
 
-Sitemap: /sitemap.xml
+Sitemap: https://www.bloomberght.com/sitemap.xml
+Sitemap: https://www.bloomberght.com/sitemap_google_news.xml

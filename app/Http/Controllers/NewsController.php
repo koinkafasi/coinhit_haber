@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\News;
 use App\Support\Locale;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 
 class NewsController extends Controller
@@ -112,6 +113,18 @@ class NewsController extends Controller
             'news' => $news,
             'categoryUrl' => $this->categoryUrl($news->category),
         ])->header('Content-Type', 'text/html; charset=UTF-8');
+    }
+
+    /**
+     * Legacy `/haberler/haber/{numericId}-{slug}` → yeni `/{slug}-{numericId}` (301).
+     */
+    public function legacy(string $newsId): RedirectResponse
+    {
+        $news = News::where('news_id', (int) $newsId)->first();
+
+        abort_unless($news, 404);
+
+        return redirect()->to($news->url, 301);
     }
 
     /**

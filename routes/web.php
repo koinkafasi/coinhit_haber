@@ -22,12 +22,17 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\IpoCalendarController;
 use App\Http\Controllers\KriptoController;
+use App\Http\Controllers\LegalController;
+use App\Http\Controllers\ManifestController;
 use App\Http\Controllers\MarketDataController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PhotoGalleryController;
+use App\Http\Controllers\PiyasalarController;
 use App\Http\Controllers\PodcastController;
+use App\Http\Controllers\RssController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\ToolController;
 use App\Http\Controllers\TrendController;
 use App\Http\Controllers\TvController;
 use App\Http\Controllers\VideoController;
@@ -45,6 +50,9 @@ use Illuminate\Support\Facades\Route;
 */
 $frontRoutes = function (): void {
     Route::get('/', [HomeController::class, 'index'])->name('home');
+
+    Route::get('/piyasalar', [PiyasalarController::class, 'index'])->name('markets.index');
+    Route::get('/yuzde-hesaplama', [ToolController::class, 'percentage'])->name('tools.percentage');
 
     /*
     |----------------------------------------------------------------------
@@ -79,6 +87,22 @@ $frontRoutes = function (): void {
         ->name('photo.show');
 
     Route::get('/halka-arz-takvimi', [IpoCalendarController::class, 'index'])->name('ipo.index');
+
+    /*
+    |----------------------------------------------------------------------
+    | Yasal statik sayfalar (Bölüm 3, 11.6, 14.4) — footer'dan erişilir
+    |----------------------------------------------------------------------
+    */
+    Route::get('/kunye', [LegalController::class, 'show'])->defaults('slug', 'kunye')->name('legal.kunye');
+    Route::get('/bizeulasin', [LegalController::class, 'show'])->defaults('slug', 'bizeulasin')->name('legal.contact');
+    Route::post('/bizeulasin', [LegalController::class, 'contact'])->name('legal.contact.submit');
+    Route::get('/bizeulasin/izleyicitemsilcisi', [LegalController::class, 'show'])
+        ->defaults('slug', 'bizeulasin/izleyicitemsilcisi')->name('legal.izleyici');
+    Route::get('/kullanimkosullari', [LegalController::class, 'show'])->defaults('slug', 'kullanimkosullari')->name('legal.kullanim');
+    Route::get('/aydinlatma-metni', [LegalController::class, 'show'])->defaults('slug', 'aydinlatma-metni')->name('legal.aydinlatma');
+    Route::get('/cerez-politikasi', [LegalController::class, 'show'])->defaults('slug', 'cerez-politikasi')->name('legal.cerez');
+    Route::get('/privacy', [LegalController::class, 'show'])->defaults('slug', 'privacy')->name('legal.privacy');
+    Route::get('/biyografi', [LegalController::class, 'show'])->defaults('slug', 'biyografi')->name('legal.biyografi');
 
     Route::get('/arama', [SearchController::class, 'index'])->name('search.index');
     Route::get('/arama/{q}', [SearchController::class, 'index'])
@@ -220,6 +244,15 @@ $frontRoutes = function (): void {
 
     /*
     |----------------------------------------------------------------------
+    | Legacy makale kalıbı → yeni `/{slug}-{id}` (301, Bölüm 11.2/14.1)
+    |----------------------------------------------------------------------
+    */
+    Route::get('/haberler/haber/{newsId}-{slug}', [NewsController::class, 'legacy'])
+        ->where('newsId', '[0-9]+')
+        ->where('slug', '[^/]+')->name('news.legacy');
+
+    /*
+    |----------------------------------------------------------------------
     | Haber detay (catch-all) — grubun en sonunda kalmalı.
     |----------------------------------------------------------------------
     */
@@ -228,6 +261,32 @@ $frontRoutes = function (): void {
         ->where('newsId', '[0-9]+')
         ->name('news.show');
 };
+
+/*
+|--------------------------------------------------------------------------
+| SEO altyapısı (Bölüm 11.2, §14.2): sitemap, RSS, PWA manifest
+|--------------------------------------------------------------------------
+| Catch-all haber rotasından önce kaydedilir.
+*/
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/sitemap_google_news.xml', [SitemapController::class, 'googleNews'])->name('sitemap.google-news');
+Route::get('/sitemap_piyasa.xml', [SitemapController::class, 'piyasa'])->name('sitemap.piyasa');
+Route::get('/sitemap_authors.xml', [SitemapController::class, 'authors'])->name('sitemap.authors');
+Route::get('/sitemap_categories.xml', [SitemapController::class, 'categories'])->name('sitemap.categories');
+Route::get('/sitemap_video.xml', [SitemapController::class, 'videoIndex'])->name('sitemap.video');
+Route::get('/sitemap_video_{part}.xml', [SitemapController::class, 'videoPart'])
+    ->where('part', '[0-9]+')->name('sitemap.video.part');
+Route::get('/sitemap_news_{part}.xml', [SitemapController::class, 'newsPart'])
+    ->where('part', '[0-9]+')->name('sitemap.news.part');
+
+Route::get('/rss', [RssController::class, 'index'])->name('rss.index');
+Route::get('/rss/tum-haberler.xml', [RssController::class, 'all'])->name('rss.all');
+Route::get('/rss/kategori/{slug}.xml', [RssController::class, 'category'])
+    ->where('slug', '[A-Za-z0-9\-]+')->name('rss.category');
+Route::get('/rss/yazar/{slug}.xml', [RssController::class, 'author'])
+    ->where('slug', '[A-Za-z0-9\-]+')->name('rss.author');
+
+Route::get('/manifest.webmanifest', [ManifestController::class, 'show'])->name('manifest');
 
 Route::middleware(SetLocale::class)->group($frontRoutes);
 Route::prefix('en')->name('en.')->middleware(SetLocale::class)->group($frontRoutes);
@@ -241,13 +300,6 @@ Route::prefix('en')->name('en.')->middleware(SetLocale::class)->group($frontRout
 */
 Route::get('/piyasa/veri', [MarketDataController::class, 'snapshot'])->name('market.snapshot');
 Route::get('/finance-slider-data', [MarketDataController::class, 'slider'])->name('market.slider');
-
-/*
-|--------------------------------------------------------------------------
-| Çok dilli sitemap (master spec §18.6)
-|--------------------------------------------------------------------------
-*/
-Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 /*
 |--------------------------------------------------------------------------

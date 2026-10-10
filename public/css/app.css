@@ -2049,3 +2049,47 @@ img[data-src].b-lazy-loaded {
     .trend-news-img { width: 110px; height: 110px; }
     .trend-news-title { font-size: 17px; }
 }
+
+/* ---------- Statik / yasal sayfalar (§11.6) ---------- */
+.static-layout { max-width: 860px; margin: 0 auto; padding: 24px 0; }
+.static-title { font-size: 2rem; margin: 12px 0 20px; line-height: 1.2; }
+.static-section { margin-bottom: 22px; }
+.static-section h2 { font-size: 1.2rem; margin: 0 0 8px; }
+.static-section p { color: #333; line-height: 1.65; margin: 0; }
+.contact-form { display: grid; gap: 10px; max-width: 560px; margin-top: 24px; }
+.contact-form label { font-weight: 600; }
+.contact-form input,
+.contact-form select,
+.contact-form textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--gray-border); background: #fff; font: inherit; }
+.contact-form button { justify-self: start; background: #384552; color: #fff; border: 0; padding: 12px 22px; font-weight: 700; cursor: pointer; }
+.form-status { background: #e6f7f0; border: 1px solid #24a278; padding: 10px 14px; }
+.form-error { color: #bd1b2e; font-size: 13px; }
+
+/* ---------- /piyasalar (tek sütun, §15.2) ---------- */
+.markets-layout { min-width: 0; }
+.markets-news,
+.markets-videos { margin-top: 40px; }
+
+/* ---------- Yüzde hesaplama (§3 araç sayfaları) ---------- */
+.tool-fields { display: flex; gap: 16px; flex-wrap: wrap; }
+.tool-fields label { display: flex; flex-direction: column; gap: 6px; font-weight: 600; }
+.tool-fields input { padding: 10px 12px; border: 1px solid var(--gray-border); font: inherit; width: 180px; }
+.tool-result { font-size: 1.1rem; margin-top: 16px; }
+.tool-result output { font-weight: 700; }
+
+/* ---------- Responsive & erişilebilirlik güvenceleri (Bölüm 12) ---------- */
+.table-scroll { max-width: 100%; -webkit-overflow-scrolling: touch; }
+.market-table,
+.ipo-table,
+.widget-table-kapnews { max-width: 100%; }
+figure { max-width: 100%; }
+.sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+@media (max-width: 767px) {
+    .static-layout { padding: 16px 0; }
+    .static-title { font-size: 1.6rem; }
+    .markets-news,
+    .markets-videos { margin-top: 28px; }
+}

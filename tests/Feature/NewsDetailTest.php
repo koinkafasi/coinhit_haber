@@ -113,6 +113,7 @@ class NewsDetailTest extends TestCase
         $robots = (string) file_get_contents(public_path('robots.txt'));
 
         $this->assertStringContainsString('Disallow: /infinite/', $robots);
-        $this->assertStringContainsString('Sitemap: /sitemap.xml', $robots);
+        $this->assertStringContainsString('Sitemap: https://www.bloomberght.com/sitemap.xml', $robots);
+        $this->assertStringContainsString('sitemap_google_news.xml', $robots);
     }
 }

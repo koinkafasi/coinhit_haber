@@ -40,8 +40,8 @@
         <meta property="og:description" content="@yield('description', $siteSettings['site_tagline'] ?? '')">
     @endif
     <meta property="og:image" content="@yield('og_image', url($siteSettings['default_og_image'] ?? '/img/og-default.png'))">
-    <meta property="og:image:width" content="960">
-    <meta property="og:image:height" content="540">
+    <meta property="og:image:width" content="@yield('og_image_width', '960')">
+    <meta property="og:image:height" content="@yield('og_image_height', '540')">
 
     {{-- Twitter Card (summary_large_image, @bloomberght) --}}
     <meta name="twitter:card" content="summary_large_image">
@@ -61,9 +61,14 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     @include('front.partials.jsonld')
     @stack('jsonld')
+    @include('front.partials.analytics')
     @yield('head')
 </head>
 <body class="bht-body @yield('body_class')">
+    {{-- Google Tag Manager (noscript) --}}
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5XBP88"
+                      height="0" width="0" style="display:none;visibility:hidden" title="GTM"></iframe></noscript>
+
     @hasSection('masthead')
         <div class="masthead-zone" data-type="masthead">
             @yield('masthead')
@@ -92,6 +97,17 @@
     @php($dimensionNews = ($news ?? null) instanceof \App\Models\News ? $news : null)
     @php($customDimension = app(\App\Services\Analytics\CustomDimensionBuilder::class)->build($dimensionNews, $pageType ?? 'home'))
     <script>window.customdimension = @json($customDimension);</script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            event: 'pageview',
+            pageType: @json($pageType ?? 'home'),
+            customdimension: window.customdimension
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.cbgAds && typeof window.cbgAds.init === 'function') { window.cbgAds.init(); }
+        });
+    </script>
     <script src="{{ asset('js/lazy.js') }}" defer></script>
     <script src="{{ asset('js/site.js') }}" defer></script>
     <script src="{{ asset('js/market-live.js') }}" defer></script>

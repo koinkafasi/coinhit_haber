@@ -58,5 +58,7 @@
                 @include('borsa.partials.pagination', ['paginator' => $paginator])
             </div>
         </div>
+
+        @include('altin.partials.cme-note')
     </div>
 @endsection

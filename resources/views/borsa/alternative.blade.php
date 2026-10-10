@@ -39,5 +39,7 @@
                 <x-ad-zone :zone="1257" :index="1" />
             </aside>
         </div>
+
+        @include('altin.partials.cme-note')
     </div>
 @endsection

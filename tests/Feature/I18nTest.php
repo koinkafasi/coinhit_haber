@@ -136,7 +136,9 @@ class I18nTest extends TestCase
     {
         $this->seed(DatabaseSeeder::class);
 
-        $response = $this->get('/sitemap.xml')->assertOk();
+        $this->get('/sitemap.xml')->assertOk()->assertSee('<sitemapindex', false);
+
+        $response = $this->get('/sitemap_news_0.xml')->assertOk();
 
         $response->assertSee('hreflang="tr"', false);
         $response->assertSee('hreflang="en"', false);

@@ -29,7 +29,7 @@ class SiteSettingSeeder extends Seeder
         ['copyright', 'YASAL UYARI © 2026', 'legal'],
         ['legal_notice', 'Sitemizdeki veriler Foreks tarafından sağlanmaktadır. NASDAQ, Dow Jones Industrial Average, SHCOM, FTSE 100, CAC 40, DAX 30, Hang Seng, BOVESPA, VİOP, Tahvil-bono verileri 15 dk; CME, NYMEX ve S&P verileri 10 dk gecikmelidir.', 'legal'],
         ['data_license', 'CME verilerinin izinsiz kullanımı yasaktır.', 'legal'],
-        ['no_ai_training', 'Bu sitedeki içerik, hiçbir yapay zeka modelinin eğitiminde kullanılamaz.', 'legal'],
+        ['no_ai_training', 'Bu sitedeki içerik, hiçbir yapay zeka/öğrenme modelinin eğitiminde kullanılamaz (no AI/ML training use).', 'legal'],
 
         ['social_twitter', 'https://x.com/bloomberght', 'social'],
         ['social_facebook', 'https://www.facebook.com/bloomberght', 'social'],

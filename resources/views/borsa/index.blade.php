@@ -67,5 +67,7 @@
                 </div>
             </aside>
         </div>
+
+        @include('altin.partials.cme-note')
     </div>
 @endsection

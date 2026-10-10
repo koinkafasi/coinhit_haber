@@ -118,6 +118,16 @@ imagettftext($img, 22, 0, 40, 190, color($img, 0xffffff), $fontSans, 'Türkiye\'
 imagepng($img, "$root/img/og-default.png");
 imagedestroy($img);
 
+// PWA manifest ikonları (spec §11.5) — 192x192 ve 512x512
+foreach ([192, 512] as $size) {
+    $img = renderCanvas($size, $size, 0x101418);
+    $yellow = color($img, 0xFFE400);
+    $textSize = (int) ($size * 0.42);
+    imagettftext($img, $textSize, 0, (int) ($size * 0.13), (int) ($size * 0.72), $yellow, $font, 'HT');
+    imagepng($img, "$root/img/manifest-$size.png");
+    imagedestroy($img);
+}
+
 // favicon.ico — ico container içinde PNG (32px)
 function buildIco(string $pngData): string
 {

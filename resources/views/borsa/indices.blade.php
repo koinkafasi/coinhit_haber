@@ -20,5 +20,7 @@
 
         <x-market-table title="ENDEKSLER" firstLabel="ENDEKSLER" :quotes="$quotes" :columns="$columns"
             :urlResolver="fn ($q) => $q->instrument->indexUrl()" id="endeksler-table" />
+
+        @include('altin.partials.cme-note')
     </div>
 @endsection
