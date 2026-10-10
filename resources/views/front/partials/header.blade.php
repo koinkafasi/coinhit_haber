@@ -77,4 +77,6 @@
             </div>
         </div>
     </div>
+
+    @include('front.partials.finance-slider')
 </header>

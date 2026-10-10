@@ -96,11 +96,132 @@
         });
     }
 
+    /**
+     * Sekme grupları (finance-slider, market widget, en çok okunanlar).
+     */
+    function bindTabs(container, buttonSelector, contentSelector) {
+        if (!container) {
+            return;
+        }
+
+        var buttons = container.querySelectorAll(buttonSelector);
+        var contents = container.querySelectorAll(contentSelector);
+
+        if (!buttons.length) {
+            return;
+        }
+
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var key = button.getAttribute('data-tab') || button.getAttribute('data-subtab');
+
+                buttons.forEach(function (other) {
+                    var active = other === button;
+                    other.classList.toggle('is-active', active);
+                    if (other.hasAttribute('aria-selected')) {
+                        other.setAttribute('aria-selected', active ? 'true' : 'false');
+                    }
+                });
+
+                contents.forEach(function (content) {
+                    var contentKey = content.getAttribute('data-id') || content.getAttribute('data-subcontent');
+                    content.classList.toggle('hidden', contentKey !== key);
+                });
+            });
+        });
+    }
+
+    function initTabs() {
+        document.querySelectorAll('[data-type="finance-slider"]').forEach(function (container) {
+            bindTabs(container, '.finance-slider-tab', '.finance-slider-track');
+        });
+
+        document.querySelectorAll('[data-widget-type="market-graphic-tab"]').forEach(function (container) {
+            bindTabs(container, '.market-widget-tabs > [data-tab]', '.market-widget-panels > [data-id]');
+
+            container.querySelectorAll('.market-widget-panel').forEach(function (panel) {
+                bindTabs(panel, '.market-subtab', '.market-widget-chart');
+            });
+        });
+
+        document.querySelectorAll('[data-widget-type="most-read"]').forEach(function (container) {
+            bindTabs(container, '.most-read-tabs > [data-tab]', '[data-id]');
+        });
+    }
+
+    /**
+     * Hero main-slider (grid-cols-12 swiper karşılığı).
+     */
+    function initHeroSlider() {
+        document.querySelectorAll('[data-hero-slider]').forEach(function (slider) {
+            var track = slider.querySelector('[data-hero-track]');
+            if (!track) {
+                return;
+            }
+
+            var slides = Array.prototype.slice.call(track.children);
+            if (slides.length < 2) {
+                return;
+            }
+
+            var pagination = slider.querySelector('[data-hero-pagination]');
+            var current = 0;
+            var timer = null;
+
+            function render() {
+                track.style.transform = 'translateX(-' + current * 100 + '%)';
+
+                if (pagination) {
+                    pagination.querySelectorAll('.dot').forEach(function (dot, index) {
+                        dot.classList.toggle('is-active', index === current);
+                    });
+                }
+            }
+
+            function go(index) {
+                current = (index + slides.length) % slides.length;
+                render();
+            }
+
+            if (pagination) {
+                slides.forEach(function (slide, index) {
+                    var dot = document.createElement('button');
+                    dot.type = 'button';
+                    dot.className = 'dot' + (index === 0 ? ' is-active' : '');
+                    dot.setAttribute('aria-label', String(index + 1));
+                    dot.addEventListener('click', function () { go(index); });
+                    pagination.appendChild(dot);
+                });
+            }
+
+            var prev = slider.querySelector('[data-hero-prev]');
+            var next = slider.querySelector('[data-hero-next]');
+
+            if (prev) {
+                prev.addEventListener('click', function () { go(current - 1); });
+            }
+            if (next) {
+                next.addEventListener('click', function () { go(current + 1); });
+            }
+
+            function start() {
+                timer = window.setInterval(function () { go(current + 1); }, 6000);
+            }
+
+            slider.addEventListener('mouseenter', function () { window.clearInterval(timer); });
+            slider.addEventListener('mouseleave', start);
+
+            start();
+        });
+    }
+
     function init() {
         initCookie();
         initMenu();
         initSearch();
         initScrollTop();
+        initTabs();
+        initHeroSlider();
     }
 
     if (document.readyState === 'loading') {

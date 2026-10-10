@@ -16,6 +16,9 @@
             <p class="tagline">{{ $settings['site_tagline'] ?? "Türkiye'nin ekonomi platformu" }}</p>
         </div>
 
+        {{-- Footer billboard (zone 1260) — Bölüm 2.7 / 14.6 --}}
+        <x-ad-zone :zone="1260" variant="billboard" />
+
         <nav class="bht-footer-grid" id="footer-menu" aria-label="Alt navigasyon">
             @foreach ($columns as $column)
                 <div class="footer-col">

@@ -846,3 +846,296 @@ img[data-src].b-lazy-loaded {
     .footer-search button { width: 100%; }
     .cookie-actions { width: 100%; margin-left: 0; }
 }
+
+/* ============================================================
+   CH-6 — ANA SAYFA MODÜLLERİ (Bölüm 7 / 15.1, 17.3 birebir sınıf deseni)
+   Markup'taki Tailwind utility'leri CSS'te yok; hook olarak korunur,
+   görsel davranış bu blokta semantic sınıflarla kurulur.
+   ============================================================ */
+
+/* ---------- Markup hook utility'leri (Tailwind karşılıkları) ---------- */
+.hidden { display: none !important; }
+.w-full { width: 100%; }
+.bg-white { background: #fff; }
+.text-center { text-align: center; }
+.text-green-700 { color: #15803d; }
+.text-red-700 { color: #b91c1c; }
+.text-gray-400 { color: #9ca3af; }
+.text-xs { font-size: 12px; }
+.text-sm { font-size: 14px; }
+.text-base { font-size: 16px; }
+.text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+.\!text-xxs { font-size: 0.625rem !important; letter-spacing: .05em; }
+.bg-gray-50 { background: #f9fafb; }
+.aspect-video { aspect-ratio: 16 / 9; }
+.grid-cols-12 { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); }
+.line-clamp-1, .line-clamp-2, .line-clamp-3 { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+.line-clamp-1 { -webkit-line-clamp: 1; line-clamp: 1; }
+.line-clamp-2 { -webkit-line-clamp: 2; line-clamp: 2; }
+.line-clamp-3 { -webkit-line-clamp: 3; line-clamp: 3; }
+
+@media (min-width: 768px) {
+    .md\:hidden { display: none !important; }
+}
+
+/* ---------- Bölüm başlığı bandı (head-type1, §17.3) ---------- */
+.section-head { position: relative; border-bottom: 1px solid #000; margin-bottom: 16px; padding-bottom: 8px; }
+.section-head-inner { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.section-head-title { margin: 0; color: #000; }
+.section-head-all { font-size: 13px; font-weight: 600; white-space: nowrap; }
+.section-head-all:hover { text-decoration: underline; }
+.section-head-bar {
+    position: absolute; top: 0; bottom: 0; margin: auto 0; left: 0;
+    width: 230px; height: 10px; background: #000; z-index: -1; opacity: .08;
+}
+
+/* ---------- REKLAM kutusu (Bölüm 17.3) ---------- */
+.ad-zone-block {
+    width: 100%; margin-bottom: 20px; padding: 16px 0;
+    display: flex; flex-direction: column; align-items: center;
+    background: var(--gray-bg); gap: 8px;
+}
+.ad-head { text-align: center; }
+.ad-label { margin: 0; color: #9ca3af; font-weight: 600; }
+.ad-body { width: 100%; max-width: 970px; min-height: 250px; display: flex; justify-content: center; background: #fff; }
+.ad-body .ads-zone { width: 100%; min-height: 250px; }
+.ad-body-desktop .ads-zone { min-height: 250px; }
+.ad-body-mobile { display: none; max-width: 320px; min-height: 100px; }
+.ad-body-mobile .ads-zone { min-height: 100px; }
+.ad-zone-masthead { padding: 8px 0; }
+.ad-zone-billboard { background: transparent; }
+
+/* ---------- Masthead (header üstü) ---------- */
+.masthead-zone { background: #f5f5f5; padding: 6px 0; }
+.masthead-ad { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.masthead-ad .ad-body { max-width: 970px; min-height: 250px; }
+
+/* ---------- Hero main-slider (§17.3) ---------- */
+.hero-main-slider { position: relative; margin-bottom: 24px; }
+.main-slider { position: relative; overflow: hidden; }
+.hero-slides { display: flex; transition: transform .4s ease; }
+.hero-slide { flex: 0 0 100%; max-width: 100%; }
+.hero-slide-link { display: block; position: relative; }
+.hero-slide-figure { position: relative; overflow: hidden; margin: 0; }
+.hero-slide-img { width: 100%; height: 100%; object-fit: cover; }
+.hero-slide-caption {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 24px 20px 20px;
+    background: linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,0));
+    color: #fff;
+}
+.hero-slide-caption .category { color: var(--bht-yellow); font-weight: 600; }
+.hero-slide-title { font-size: 30px; line-height: 1.15; margin: 6px 0 8px; }
+.hero-slide-spot { font-size: 14px; color: #e5e5e5; margin: 0; }
+.main-slider-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 36px; height: 36px; border: 0; cursor: pointer;
+    background: rgba(0,0,0,.4); color: #fff; font-size: 22px; line-height: 1;
+}
+.main-slider-prev { left: 8px; }
+.main-slider-next { right: 8px; }
+.main-slider-pagination { display: flex; justify-content: center; gap: 8px; padding: 8px 0; }
+.main-slider-pagination .dot { width: 10px; height: 10px; border-radius: 50%; background: #fff; border: 1px solid #707070; cursor: pointer; }
+.main-slider-pagination .dot.is-active { width: 16px; height: 16px; background: #000; border-radius: 50%; }
+
+/* ---------- Finance slider (header) + mobil şerit ---------- */
+.finance-slider { border-bottom: 1px solid var(--gray-border); }
+.finance-slider-inner { display: flex; align-items: stretch; gap: 12px; min-height: 60px; }
+.finance-slider-tabs { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+.finance-slider-tab {
+    border: 0; background: none; cursor: pointer; padding: 8px 10px;
+    font-size: 13px; font-weight: 600; color: #444; border-bottom: 2px solid transparent;
+}
+.finance-slider-tab.is-active { color: #000; border-bottom-color: var(--bht-yellow); }
+.finance-slider-viewport { flex: 1; overflow: hidden; display: flex; align-items: center; }
+.finance-slider-track { display: flex; gap: 22px; overflow-x: auto; white-space: nowrap; width: 100%; }
+.finance-slider-row { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.finance-slider-row .fs-name { color: #444; }
+.finance-slider-row .lastPrice { font-variant-numeric: tabular-nums; }
+.finance-slider-row .fs-change { display: inline-flex; align-items: center; gap: 2px; }
+.finance-slider-row .setIcon { font-size: 10px; }
+.finance-strip-mobile { border-top: 1px solid var(--gray-border); overflow: hidden; }
+.finance-strip-track { display: flex; gap: 18px; width: max-content; animation: bht-marquee 40s linear infinite; padding: 8px 0; }
+.finance-strip-item { display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+/* ---------- ÖNE ÇIKANLAR yatay şerit ---------- */
+.featured-strip, .crypto-swiper { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 12px; scroll-snap-type: x mandatory; }
+.featured-strip-item {
+    flex: 0 0 260px; scroll-snap-align: start;
+    border-left: 3px solid var(--bht-yellow); padding: 4px 0 4px 12px;
+}
+.featured-strip-title { font-size: 16px; }
+
+/* ---------- Haber kart gridleri ---------- */
+.news-card-grid { display: grid; gap: 20px; }
+.news-card-grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.news-card-grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.news-card-item { border-bottom: 1px solid var(--gray-border); margin-bottom: 8px; padding-bottom: 8px; }
+.news-card-news-card-type2 .news-card-link { }
+
+/* ---------- manuel sınıf eşlemeleri (markup hook) ---------- */
+.news-card-item[data-type="news-card-type2"] .news-card-link,
+.news-card-item[data-type="news-card-type4"] .news-card-link { display: flex; gap: 8px; }
+.news-card-item[data-type="news-card-type4"] .news-card-link { flex-direction: row-reverse; justify-content: space-between; }
+.news-card-item[data-type="news-card-type2"] .news-card-figure { flex: 0 0 33%; max-width: 160px; }
+.news-card-figure { margin: 0; }
+.news-card-img { width: 100%; aspect-ratio: 1 / 1; background: var(--gray-bg); object-fit: cover; }
+.news-card-caption { flex: 1; }
+.news-card-caption .category { color: #777; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
+.news-card-title { font-size: 18px; line-height: 1.3; margin: 2px 0; }
+.news-card-spot { color: #555; font-size: 14px; margin-top: 6px; }
+
+/* ---------- PİYASALAR büyük widget ---------- */
+.market-widget { margin-bottom: 32px; }
+.market-widget-body { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; }
+.market-widget-tabs, .market-widget-subtabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.tab-button {
+    border: 1px solid var(--gray-border); background: #fff; cursor: pointer;
+    padding: 8px 16px; border-radius: 999px; font-size: 14px; font-weight: 500;
+}
+.tab-button.is-active { background: #e5e7eb; border-color: #9ca3af; font-weight: 700; }
+.market-subtab { font-size: 12px; padding: 5px 12px; }
+.market-widget-charts { border: 1px solid var(--gray-border); border-radius: 6px; padding: 16px; background: #fff; }
+.mw-chart-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px; }
+.mw-chart-name { font-weight: 600; }
+.mw-chart-price { font-size: 20px; }
+.mw-chart-canvas { display: flex; justify-content: center; }
+.sparkline { width: 100%; height: 120px; }
+.market-widget-aside { display: flex; flex-direction: column; gap: 20px; }
+.market-widget-aside > div { border-top: 2px solid #000; padding-top: 10px; }
+.mw-aside-title { font-size: 18px; margin: 0 0 8px; }
+.mw-news-list { list-style: none; margin: 0 0 8px; padding: 0; }
+.mw-news-list li { padding: 6px 0; border-bottom: 1px solid var(--gray-border); font-size: 14px; }
+.mw-news-list a:hover { text-decoration: underline; }
+.mw-aside-all { font-size: 12px; font-weight: 600; }
+.quick-links-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.chip { background: var(--gray-bg); border-radius: 999px; padding: 5px 12px; font-size: 12px; }
+.chip:hover { background: var(--bht-yellow); }
+.mw-charts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 8px; }
+.mw-chart-thumb img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+.mw-chart-thumb-title { font-size: 11px; display: block; margin-top: 4px; }
+
+/* ---------- PROGRAMLAR / VİDEOLAR ---------- */
+.program-list, .video-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.program-thumb, .video-thumb { position: relative; margin: 0; overflow: hidden; }
+.program-thumb img, .video-thumb img { width: 100%; aspect-ratio: 360 / 203; object-fit: cover; background: var(--gray-bg); }
+.program-duration {
+    position: absolute; right: 6px; bottom: 6px; background: rgba(0,0,0,.8); color: #fff;
+    font-size: 11px; padding: 2px 6px; border-radius: 2px;
+}
+.program-title, .video-title { font-size: 16px; line-height: 1.3; margin: 8px 0 4px; }
+.program-date { font-size: 12px; color: #888; }
+
+/* ---------- TÜM HABERLER / başlık listeleri ---------- */
+.headline-list { list-style: none; margin: 0; padding: 0; }
+.headline-list li { border-bottom: 1px solid var(--gray-border); }
+.headline-list a { display: flex; align-items: baseline; gap: 12px; padding: 10px 0; }
+.headline-cat { font-size: 11px; font-weight: 600; color: var(--red); white-space: nowrap; min-width: 90px; }
+.headline-title { flex: 1; font-size: 17px; }
+.headline-time { font-size: 12px; color: #999; }
+
+/* ---------- YAYIN AKIŞI ---------- */
+.broadcast-list { list-style: none; margin: 0; padding: 0; }
+.broadcast-list li { display: flex; align-items: baseline; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--gray-border); }
+.broadcast-time { font-weight: 700; color: var(--red); min-width: 50px; }
+.broadcast-name { font-weight: 600; min-width: 220px; }
+.broadcast-desc { color: #666; font-size: 13px; }
+
+/* ---------- Businessweek ---------- */
+.home-businessweek { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 24px; margin-bottom: 32px; }
+.bw-cover-img { width: 260px; height: 342px; object-fit: cover; background: var(--gray-bg); }
+.bw-issue-list { list-style: none; margin: 0; padding: 0; }
+.bw-issue-list li { border-bottom: 1px solid var(--gray-border); }
+.bw-issue-list a { display: flex; justify-content: space-between; padding: 12px 0; }
+.bw-issue-no { font-weight: 700; }
+.bw-issue-date { color: #666; font-size: 13px; }
+
+/* ---------- Foto haber / galeri ---------- */
+.gallery-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.gallery-card figure { position: relative; margin: 0; }
+.gallery-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; background: var(--gray-bg); }
+.gallery-count {
+    position: absolute; right: 8px; bottom: 8px; background: rgba(0,0,0,.75); color: #fff;
+    font-size: 12px; padding: 2px 8px; border-radius: 4px;
+}
+.gallery-body h4 { margin: 8px 0 0; font-size: 16px; }
+
+/* ---------- Podcast ---------- */
+.podcast-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.podcast-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; background: var(--gray-bg); }
+.podcast-body h3 { font-size: 16px; margin: 8px 0 4px; }
+.podcast-desc { font-size: 13px; color: #666; margin: 0 0 4px; }
+.podcast-air { color: var(--red); }
+
+/* ---------- KAP ---------- */
+.kap-list { list-style: none; margin: 0; padding: 0; }
+.kap-list li { border-bottom: 1px solid var(--gray-border); }
+.kap-list a { display: flex; align-items: baseline; gap: 14px; padding: 10px 0; }
+.kap-company { font-size: 12px; font-weight: 700; color: var(--navy); min-width: 220px; }
+.kap-title { flex: 1; }
+.kap-time { font-size: 12px; color: #999; }
+
+/* ---------- Piyasa verisi tabloları ---------- */
+.market-data-widget { margin-bottom: 32px; }
+.market-data-block { margin-bottom: 28px; }
+.table-scroll { overflow-x: auto; }
+.market-table { border-collapse: collapse; }
+.market-table th { font-size: 13px; color: #fff; background: #000; padding: 12px; text-align: left; }
+.market-table th:not(.sticky) { text-align: center; }
+.market-table td { padding: 12px; border-bottom: 1px solid var(--gray-border); }
+.market-table td.sticky { text-align: left; font-weight: 600; }
+.market-table tbody tr:hover { background: #fafafa; }
+
+/* ---------- Sektör / siyaset ---------- */
+.home-sector { margin-bottom: 32px; }
+.politics-block { margin-top: 24px; }
+
+/* ---------- Kripto swiper ---------- */
+.crypto-card {
+    flex: 0 0 150px; scroll-snap-align: start; border: 1px solid var(--gray-border);
+    border-radius: 6px; padding: 12px; display: flex; flex-direction: column; gap: 4px;
+}
+.crypto-code { font-weight: 700; font-size: 15px; }
+.crypto-name { color: #777; }
+
+/* ---------- En Çok Okunanlar ---------- */
+.most-read-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+.most-read-tabs .tab-button { border: 0; background: #fff; }
+.most-read-tabs .tab-button.is-active { background: #e5e7eb; }
+.most-read-list { list-style: none; margin: 0; padding: 0; }
+.most-read-list li { border-bottom: 1px solid var(--gray-border); }
+.most-read-list a { display: flex; align-items: baseline; gap: 14px; padding: 10px 0; }
+.most-read-rank { font-family: Unna, serif; font-size: 22px; font-weight: 700; color: var(--special-maroon); min-width: 28px; }
+.most-read-title { flex: 1; font-size: 17px; }
+.most-read-cat { font-size: 11px; color: #999; }
+
+/* ---------- Mobil sticky alt reklam ---------- */
+.mobile-sticky-ad {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 400;
+    display: none; justify-content: center; background: #fff;
+    border-top: 1px solid var(--gray-border); padding: 4px;
+}
+.mobile-sticky-ad .ads-zone { width: 100%; min-height: 50px; }
+
+/* ---------- Ana sayfa responsive ---------- */
+@media (max-width: 999px) {
+    .market-widget-body { grid-template-columns: 1fr; }
+    .home-businessweek { grid-template-columns: 1fr; }
+    .program-list, .video-list, .gallery-grid, .podcast-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .news-card-grid.cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 767px) {
+    .program-list, .video-list, .gallery-grid, .podcast-grid,
+    .news-card-grid.cols-3, .news-card-grid.cols-2 { grid-template-columns: 1fr; }
+    .hero-slide-title { font-size: 22px; }
+    .ad-body-desktop { display: none; }
+    .ad-body-mobile { display: flex; }
+    .ad-body { min-height: 100px; }
+    .mobile-sticky-ad { display: flex; }
+    .finance-slider-inner { flex-direction: column; }
+    .broadcast-name { min-width: 0; }
+    .kap-company { min-width: 0; }
+    .headline-list a { flex-wrap: wrap; }
+    .bw-cover-img { width: 100%; height: auto; }
+}

@@ -12,6 +12,8 @@ class MarketInstrument extends Model
 
     public const GROUP_BIST_INDEX = 'bist_index';
 
+    public const GROUP_WORLD_INDEX = 'world_index';
+
     public const GROUP_STOCK = 'stock';
 
     public const GROUP_CURRENCY = 'currency';
@@ -49,6 +51,7 @@ class MarketInstrument extends Model
      */
     public const GROUPS = [
         self::GROUP_BIST_INDEX => 'BIST Endeksleri',
+        self::GROUP_WORLD_INDEX => 'Dünya Borsaları',
         self::GROUP_STOCK => 'Hisse Senetleri',
         self::GROUP_CURRENCY => 'Döviz',
         self::GROUP_PARITY => 'Pariteler',

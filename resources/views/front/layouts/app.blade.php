@@ -57,6 +57,12 @@
     @yield('head')
 </head>
 <body class="bht-body @yield('body_class')">
+    @hasSection('masthead')
+        <div class="masthead-zone" data-type="masthead">
+            @yield('masthead')
+        </div>
+    @endif
+
     @include('front.partials.header')
 
     <main class="container page bht-main" id="main-content">
@@ -65,6 +71,12 @@
 
     @include('front.partials.footer')
     @include('front.partials.cookie')
+
+    {{-- Mobil sticky alt bant (zone 2280) — Bölüm 2.5 / 14.6 --}}
+    <div class="widget-sticky-ads mobile-sticky-ad" data-type="stickyAds" data-device="MOBILE"
+         id="zone_auto_refresh_sticky" data-adv="bht" data-zone-id="zone_2280">
+        <div class="ads-zone lazy-init" data-adv="bht" data-device="MOBILE" data-zone-id="zone_2280"></div>
+    </div>
 
     <button type="button" class="scroll-to-top" data-scroll-top aria-label="Yukarı dön">
         <x-icon name="arrow-up" title="Yukarı dön" />

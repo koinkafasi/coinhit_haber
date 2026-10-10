@@ -31,6 +31,7 @@ class MarketInstrumentSeeder extends Seeder
     {
         return array_merge(
             $this->bistIndices(),
+            $this->worldIndices(),
             $this->stocks(),
             $this->currencies(),
             $this->parities(),
@@ -115,6 +116,23 @@ class MarketInstrumentSeeder extends Seeder
         ];
 
         return $this->map(MarketInstrument::GROUP_BIST_INDEX, $data, ['decimals' => 2]);
+    }
+
+    /**
+     * Dünya borsa endeksleri (spec §2.4, §7, §8 /borsa/dunya-borsalari).
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function worldIndices(): array
+    {
+        $data = [
+            ['DOW', 'DOW JONES', 44100.30], ['SP500', 'S&P 500', 6050.40], ['NASDAQ', 'NASDAQ 100', 21800.75],
+            ['DAX', 'DAX 40', 18450.20], ['FTSE100', 'FTSE 100', 8280.60], ['CAC40', 'CAC 40', 7620.90],
+            ['SHANGHAI', 'SHANGHAI', 3310.45], ['NIKKEI225', 'NIKKEI 225', 39250.35], ['HANGSENG', 'HANG SENG', 19850.10],
+            ['KOSPI', 'KORE KOSPI', 2760.55], ['SPFUT', 'S&P FUT', 6045.80], ['NASDAQFUT', 'NASDAQ 100 FUT', 21790.25],
+        ];
+
+        return $this->map(MarketInstrument::GROUP_WORLD_INDEX, $data, ['currency' => 'USD', 'decimals' => 2, 'source' => 'foreks']);
     }
 
     /**

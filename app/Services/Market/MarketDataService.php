@@ -20,7 +20,7 @@ class MarketDataService
     /**
      * İstek boyunca kataloğu tek seferlik önbelleğe alır.
      *
-     * @var \Illuminate\Support\Collection<int, MarketInstrument>|null
+     * @var Collection<int, MarketInstrument>|null
      */
     private ?Collection $catalog = null;
 
@@ -171,6 +171,56 @@ class MarketDataService
         $at ??= CarbonImmutable::now();
 
         return $at->format((string) config('market.timestamp_format', 'Y/m/d H:i:s'));
+    }
+
+    /**
+     * Bir enstrüman için deterministik güniçi seri (mini grafik/sparkline).
+     *
+     * @return array<int, float>
+     */
+    public function sparkline(MarketInstrument|string $instrument, int $points = 24, int $intervalSeconds = 900, ?CarbonInterface $at = null): array
+    {
+        if (is_string($instrument)) {
+            $instrument = $this->all()->firstWhere('code', $instrument)
+                ?? MarketInstrument::where('code', $instrument)->firstOrFail();
+        }
+
+        $at = $at ? CarbonImmutable::instance($at) : CarbonImmutable::now();
+        $values = [];
+
+        for ($i = $points - 1; $i >= 0; $i--) {
+            $values[] = $this->quote($instrument, $at->subSeconds($i * $intervalSeconds))->last;
+        }
+
+        return $values;
+    }
+
+    /**
+     * Güniçi seriyi satır içi SVG polyline olarak üretir (Chart.js yokluğunda
+     * SSR karşılığı; renk yönü ilk/son değere göre Bölüm 17 token'larıyla).
+     */
+    public function sparklineSvg(MarketInstrument|string $instrument, int $points = 24, int $width = 96, int $height = 32): string
+    {
+        $values = $this->sparkline($instrument, $points);
+        $min = min($values);
+        $max = max($values);
+        $range = $max - $min ?: 1.0;
+        $stepX = $points > 1 ? $width / ($points - 1) : $width;
+        $coords = [];
+
+        foreach ($values as $i => $value) {
+            $x = round($i * $stepX, 2);
+            $y = round($height - (($value - $min) / $range) * ($height - 4) - 2, 2);
+            $coords[] = $x.','.$y;
+        }
+
+        $direction = end($values) > $values[0] ? 'up' : (end($values) < $values[0] ? 'down' : 'flat');
+        $color = ['up' => '#24A278', 'down' => '#BD1B2E', 'flat' => '#9D9D9D'][$direction];
+
+        return '<svg class="sparkline sparkline-'.$direction.'" width="'.$width.'" height="'.$height
+            .'" viewBox="0 0 '.$width.' '.$height.'" fill="none" aria-hidden="true">'
+            .'<polyline points="'.implode(' ', $coords).'" stroke="'.$color.'" stroke-width="1.5" '
+            .'fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg>';
     }
 
     /**
