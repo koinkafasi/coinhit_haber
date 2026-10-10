@@ -113,6 +113,11 @@ class MarketInstrumentSeeder extends Seeder
             ['XYORT', 'BIST YATIRIM ORTAKLIKLARI', 3600.15], ['XYUZO', 'BIST YÜZ ÖLÇÜM DEĞERLERİ', 5400.30],
             ['XAUTO', 'BIST OTOMOTİV', 13400.55], ['XKTUM', 'BIST KATILIM TÜM', 11200.40], ['XK050', 'BIST KATILIM 50', 12050.25],
             ['XK030', 'BIST KATILIM 30', 12600.15], ['XSGRT', 'BIST SÜRDÜRÜLEBİLİRLİK', 9200.70],
+            // Bölgesel + MSCI endeksleri (spec §5, §8; sitemap'te 65 endeks detay sayfası)
+            ['MSCI_EURO', 'MSCI EURO BÖLGESİ', 2250.40], ['BIST_ADANA', 'BIST ADANA', 48500.25],
+            ['MSCI_TURKEY', 'MSCI TÜRKİYE', 98500.60], ['MSCI_EMERGING', 'MSCI GELİŞEN PİYASALAR', 1120.35],
+            ['BIST_ANKARA', 'BIST ANKARA', 74200.15], ['BIST_IZMIR', 'BIST İZMİR', 68800.45],
+            ['BIST_ISTANBUL', 'BIST İSTANBUL', 126400.80], ['BIST_ANTALYA', 'BIST ANTALYA', 41200.55],
         ];
 
         return $this->map(MarketInstrument::GROUP_BIST_INDEX, $data, ['decimals' => 2]);

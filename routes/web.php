@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\NewsAdminController;
 use App\Http\Controllers\Admin\ProgramAdminController;
 use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\BorsaController;
 use App\Http\Controllers\BreakingNewsController;
 use App\Http\Controllers\ChartArchiveController;
 use App\Http\Controllers\HomeController;
@@ -40,6 +41,30 @@ Route::get('/arama/{q}', [SearchController::class, 'index'])
 */
 Route::get('/piyasa/veri', [MarketDataController::class, 'snapshot'])->name('market.snapshot');
 Route::get('/finance-slider-data', [MarketDataController::class, 'slider'])->name('market.slider');
+
+/*
+|--------------------------------------------------------------------------
+| Borsa bölümü (Bölüm 8, 15.3 — hisse/endeks/KAP/dünya/alternatif)
+|--------------------------------------------------------------------------
+*/
+Route::get('/borsa', [BorsaController::class, 'index'])->name('borsa.index');
+Route::get('/borsa/hisseler/kap-haberleri', [BorsaController::class, 'kapNews'])->name('borsa.kap-news');
+Route::get('/borsa/hisseler/{letter}', [BorsaController::class, 'stocks'])
+    ->where('letter', '[A-Za-z]')->name('borsa.stocks.letter');
+Route::get('/borsa/hisseler', [BorsaController::class, 'stocks'])->name('borsa.stocks');
+Route::get('/borsa/en-cok', [BorsaController::class, 'most'])->name('borsa.most');
+Route::get('/borsa/dunya-borsalari', [BorsaController::class, 'world'])->name('borsa.world');
+Route::get('/borsa/endeksler', [BorsaController::class, 'indices'])->name('borsa.indices');
+Route::get('/borsa/endeks/{slug}', [BorsaController::class, 'indexDetail'])
+    ->where('slug', '[A-Za-z0-9\-]+')->name('borsa.index-detail');
+Route::get('/borsa/borsa-kapanis/{letter}', [BorsaController::class, 'closing'])
+    ->where('letter', '[A-Za-z]')->name('borsa.closing.letter');
+Route::get('/borsa/borsa-kapanis', [BorsaController::class, 'closing'])->name('borsa.closing');
+Route::get('/alternatif', [BorsaController::class, 'alternative'])->name('borsa.alternative');
+Route::get('/borsa/hisse/{company}/kap-haberi/{kapId}', [BorsaController::class, 'kapDetail'])
+    ->where('kapId', '[0-9]+')->name('borsa.kap-detail');
+Route::get('/borsa/hisse/{company}', [BorsaController::class, 'stock'])
+    ->where('company', '[A-Za-z0-9\-]+')->name('borsa.stock');
 
 /*
 |--------------------------------------------------------------------------

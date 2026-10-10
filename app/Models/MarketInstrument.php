@@ -101,4 +101,28 @@ class MarketInstrument extends Model
     {
         return '/piyasa/'.$this->slug;
     }
+
+    /**
+     * Hisse detay rotası (spec §3): `/borsa/hisse/<kod>-<slug>-detay`.
+     */
+    public function stockUrl(): string
+    {
+        return '/borsa/hisse/'.strtolower($this->code).'-'.$this->slug.'-detay';
+    }
+
+    /**
+     * Endeks detay rotası (spec §3): `/borsa/endeks/<slug>`.
+     */
+    public function indexUrl(): string
+    {
+        return '/borsa/endeks/'.$this->slug;
+    }
+
+    /**
+     * Emtia/Baltık detay rotası (spec §3): `/emtia/<slug>`.
+     */
+    public function commodityUrl(): string
+    {
+        return '/emtia/'.$this->slug;
+    }
 }

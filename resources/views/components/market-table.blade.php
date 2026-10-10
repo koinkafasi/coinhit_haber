@@ -5,6 +5,11 @@
     'allLabel' => 'TÜMÜNÜ GÖR',
     'columns' => null,
     'id' => null,
+    'head' => true,
+    'firstLabel' => null,
+    'firstField' => 'name',
+    'urlResolver' => null,
+    'sectionClass' => null,
 ])
 
 @php
@@ -12,15 +17,18 @@
         ['label' => 'SON', 'field' => 'last', 'class' => 'lastPrice'],
         ['label' => '%', 'field' => 'change_percent', 'class' => 'percentChange', 'color' => true],
     ];
+    $firstLabel = $firstLabel ?? $title;
 @endphp
 
-<section class="market-data-block" @if ($id) id="{{ $id }}" @endif>
-    <x-section-head :title="$title" :href="$href" :allLabel="$allLabel" />
+<section class="market-data-block {{ $sectionClass }}" @if ($id) id="{{ $id }}" @endif>
+    @if ($head)
+        <x-section-head :title="$title" :href="$href" :allLabel="$allLabel" />
+    @endif
     <div class="table-scroll">
         <table data-type="table-type1" class="market-table w-full text-center text-sm bg-white">
             <thead>
                 <tr class="border-b">
-                    <th class="sticky left-0 p-4 text-left bg-white">{{ $title }}</th>
+                    <th class="sticky left-0 p-4 text-left bg-white">{{ $firstLabel }}</th>
                     @foreach ($columns as $column)
                         <th class="p-4">{{ $column['label'] }}</th>
                     @endforeach
@@ -31,7 +39,13 @@
                     <tr class="border-b text-sm security-{{ $quote->instrument->slug }} {{ $quote->direction() === 'up' ? 'is-up' : ($quote->direction() === 'down' ? 'is-down' : 'is-flat') }}"
                         data-market-code="{{ $quote->code() }}">
                         <td class="py-4 sticky left-0">
-                            <a href="{{ $quote->instrument->url }}">{{ $quote->instrument->name }}</a>
+                            <a href="{{ $urlResolver ? $urlResolver($quote) : $quote->instrument->url }}" @if ($firstField === 'code') title="{{ $quote->instrument->name }}" @endif>
+                                @if ($firstField === 'code')
+                                    <span class="stock-code">{{ $quote->code() }}</span>
+                                @else
+                                    {{ $quote->instrument->name }}
+                                @endif
+                            </a>
                         </td>
                         @foreach ($columns as $column)
                             @php
@@ -43,6 +57,12 @@
                                     'bid' => $quote->formattedBid(),
                                     'ask' => $quote->formattedAsk(),
                                     'change' => $quote->formattedChange(),
+                                    'previous_close' => $quote->format($quote->previousClose),
+                                    'high' => $quote->format($quote->high),
+                                    'low' => $quote->format($quote->low),
+                                    'open' => $quote->format($quote->open),
+                                    'volume_lot' => $quote->formattedVolumeLot(),
+                                    'volume_tl' => $quote->formattedVolumeTl(),
                                     'volume_24h' => $quote->formattedVolume24h(),
                                     'market_cap' => $quote->formattedMarketCap(),
                                     'change_7d' => $quote->format($quote->change7d, 2).'%',

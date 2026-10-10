@@ -215,6 +215,44 @@
         });
     }
 
+    /**
+     * Güniçi grafik zaman aralığı sekmeleri (varsayılan "Tümü").
+     */
+    function initRangeTabs() {
+        document.querySelectorAll('.intraday-ranges').forEach(function (group) {
+            var buttons = group.querySelectorAll('.range-btn');
+
+            buttons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    buttons.forEach(function (other) {
+                        var active = other === button;
+                        other.classList.toggle('is-active', active);
+                        other.setAttribute('aria-selected', active ? 'true' : 'false');
+                    });
+                });
+            });
+        });
+    }
+
+    /**
+     * KAP paylaş çubuğu "bağlantıyı kopyala".
+     */
+    function initShareCopy() {
+        document.querySelectorAll('[data-copy-link]').forEach(function (button) {
+            button.addEventListener('click', function () {
+                var link = button.getAttribute('data-copy-link');
+
+                if (!link || !navigator.clipboard) {
+                    return;
+                }
+
+                navigator.clipboard.writeText(link).then(function () {
+                    button.classList.add('is-copied');
+                }).catch(function () { /* yoksay */ });
+            });
+        });
+    }
+
     function init() {
         initCookie();
         initMenu();
@@ -222,6 +260,8 @@
         initScrollTop();
         initTabs();
         initHeroSlider();
+        initRangeTabs();
+        initShareCopy();
     }
 
     if (document.readyState === 'loading') {

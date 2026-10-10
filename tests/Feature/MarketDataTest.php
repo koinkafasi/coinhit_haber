@@ -22,7 +22,7 @@ class MarketDataTest extends TestCase
     public function test_catalog_is_seeded_with_all_groups(): void
     {
         $this->assertGreaterThan(200, MarketInstrument::count());
-        $this->assertEquals(40, MarketInstrument::where('group', MarketInstrument::GROUP_BIST_INDEX)->count());
+        $this->assertEquals(48, MarketInstrument::where('group', MarketInstrument::GROUP_BIST_INDEX)->count());
         $this->assertEquals(14, MarketInstrument::where('group', MarketInstrument::GROUP_CURRENCY)->count());
         $this->assertEquals(17, MarketInstrument::where('group', MarketInstrument::GROUP_GOLD)->count());
         $this->assertEquals(20, MarketInstrument::where('group', MarketInstrument::GROUP_CRYPTO)->count());
@@ -99,6 +99,6 @@ class MarketDataTest extends TestCase
 
         $this->assertArrayHasKey('bist_index', $snapshot);
         $this->assertArrayHasKey('crypto', $snapshot);
-        $this->assertCount(40, $snapshot['bist_index']);
+        $this->assertCount(48, $snapshot['bist_index']);
     }
 }

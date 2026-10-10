@@ -1139,3 +1139,132 @@ img[data-src].b-lazy-loaded {
     .headline-list a { flex-wrap: wrap; }
     .bw-cover-img { width: 100%; height: auto; }
 }
+
+/* ============================================================
+   CH-7 — BORSA BÖLÜMÜ (Bölüm 8 / 15.3, 17.3 birebir sınıf deseni)
+   Hisse, endeks, KAP, dünya borsaları, borsa kapanışı, alternatif.
+   ============================================================ */
+
+.borsa-page { margin-bottom: 32px; }
+.borsa-page .page-title { font-size: 2rem; margin: 0 0 12px; }
+
+/* ---------- Alt-hızlı bağlantılar ---------- */
+.borsa-quick-links {
+    display: flex; flex-wrap: wrap; gap: 6px 14px;
+    border-bottom: 1px solid var(--gray-border); padding-bottom: 10px; margin-bottom: 16px;
+    font-size: 13px; font-weight: 600;
+}
+.borsa-quick-links a { color: #444; }
+.borsa-quick-links a:hover { color: var(--red); text-decoration: underline; }
+
+/* ---------- 2 kolon yerleşim (ana + 400px aside) ---------- */
+.borsa-layout { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 28px; align-items: start; }
+.borsa-main { min-width: 0; }
+.borsa-aside { display: flex; flex-direction: column; gap: 20px; }
+.borsa-aside .aside-block { }
+.borsa-aside .caption { background: #f0f0f0; padding: 2px 6px; border: 1px solid var(--gray-border); }
+
+/* ---------- A-Z harf sekmeleri ---------- */
+.az-tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 14px; }
+.az-tabs a {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 30px; height: 30px; padding: 0 8px;
+    border: 1px solid var(--gray-border); border-radius: 4px;
+    font-size: 12px; font-weight: 600; background: #fff;
+}
+.az-tabs a:hover { background: var(--gray-bg); }
+.az-tabs a.is-active { background: #000; color: #fff; border-color: #000; }
+
+/* ---------- Endeks seçiniz dropdown ---------- */
+.endeks-select { margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px; }
+.endeks-select label { font-size: 13px; font-weight: 700; }
+.endeks-select-input {
+    width: 100%; max-width: 420px; padding: 9px 12px;
+    border: 1px solid var(--gray-border); border-radius: 4px; background: #fff; font-size: 14px;
+}
+
+/* ---------- Tarih seçiniz (borsa kapanış) ---------- */
+.date-select { margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px; }
+.date-select > label { font-size: 13px; font-weight: 700; }
+.date-select-fields { display: flex; flex-wrap: wrap; gap: 8px; }
+.date-select-fields select {
+    padding: 9px 12px; border: 1px solid var(--gray-border); border-radius: 4px; background: #fff; font-size: 14px;
+}
+
+/* ---------- Sayfalama ---------- */
+.pagination { display: flex; align-items: center; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
+.page-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 8px 12px; border: 1px solid var(--gray-border); background: var(--gray-bg);
+    font-size: 13px; border-radius: 3px;
+}
+.page-btn:hover { background: #e5e7eb; }
+.page-btn.is-active { background: #000; color: #fff; border-color: #000; }
+
+/* ---------- Hisse kodu hücresi ---------- */
+.stock-code { font-weight: 700; letter-spacing: .02em; }
+.volumeTl { color: #333; }
+
+/* ---------- Fiyat hero (detay) ---------- */
+.quote-hero { border-bottom: 2px solid #000; padding-bottom: 14px; margin-bottom: 18px; }
+.quote-hero h1 { font-size: 1.75rem; margin: 0 0 6px; }
+.quote-code { color: #777; font-size: 1.25rem; }
+.quote-hero-price { display: flex; align-items: baseline; gap: 14px; }
+.quote-hero-price .lastPrice { font-size: 2rem; font-variant-numeric: tabular-nums; }
+.quote-hero-price .percentChange { font-size: 1.1rem; }
+
+/* ---------- İstatistik kutusu ---------- */
+.quote-stats {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px;
+    background: var(--gray-border); border: 1px solid var(--gray-border); margin: 0 0 24px;
+}
+.quote-stat { background: #fff; padding: 12px; }
+.quote-stat dt { font-size: 11px; color: #777; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+.quote-stat dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ---------- Güniçi grafik ---------- */
+.intraday-chart-block { margin-bottom: 28px; }
+.intraday-ranges { display: flex; gap: 8px; margin-bottom: 12px; }
+.intraday-ranges .range-btn { padding: 5px 14px; font-size: 13px; }
+.intraday-chart { border: 1px solid var(--gray-border); border-radius: 6px; padding: 12px; background: #fff; }
+.intraday-chart svg.sparkline { width: 100%; height: 300px; }
+.market-updated { color: #888; margin: 8px 0 0; }
+
+/* ---------- Paylaş çubuğu (KAP detay) ---------- */
+.share-bar { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0 0 18px; }
+.share-bar a, .share-bar button {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border: 1px solid var(--gray-border); border-radius: 50%;
+    background: #fff; color: #333; cursor: pointer;
+}
+.share-bar a:hover, .share-bar button:hover { background: #000; color: #fff; }
+.share-bar .bloomberght-icon-font svg { width: 16px; height: 16px; }
+
+/* ---------- KAP detay ---------- */
+.kap-content .kap-title { font-size: 1.75rem; margin: 0 0 10px; line-height: 1.25; }
+.kap-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; color: #555; margin-bottom: 14px; }
+.kap-company-badge { background: var(--navy); color: #fff; font-weight: 700; padding: 3px 8px; border-radius: 3px; font-size: 12px; }
+.kap-summary { font-size: 15px; color: #333; margin-bottom: 18px; }
+
+.widget-table-kapnews { width: 100%; border-collapse: collapse; font-size: .875rem; line-height: 1.25rem; }
+.widget-table-kapnews th { background: #000; color: #fff; padding: .5rem; text-align: left; }
+.widget-table-kapnews td { border: 1px solid rgb(156 163 175); padding: .5rem; font-size: .875rem; vertical-align: top; width: 50%; }
+.kap-field-value { margin-top: 4px; color: #333; }
+
+/* ---------- Sıralama / dünya / video blokları ---------- */
+.borsa-ranking { display: flex; flex-direction: column; gap: 28px; }
+.world-markets { display: flex; flex-direction: column; gap: 24px; }
+.kap-videos { margin-top: 28px; }
+.kap-empty { color: #888; padding: 10px 0; }
+
+/* ---------- Borsa responsive ---------- */
+@media (max-width: 999px) {
+    .borsa-layout { grid-template-columns: 1fr; }
+    .quote-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 767px) {
+    .borsa-page .page-title { font-size: 1.5rem; }
+    .quote-hero-price .lastPrice { font-size: 1.5rem; }
+    .intraday-chart svg.sparkline { height: 200px; }
+}
