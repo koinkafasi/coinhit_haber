@@ -1,13 +1,49 @@
+/* ============================================================
+   BLOOMBERG HT — TASARIM SİSTEMİ (Stage 0 / CH-19)
+   Renk, tipografi, ikon, görsel boyut, grid token'ları.
+   Spec: Bölüm 1 (Tasarım sistemi) + Bölüm 17 (CSS envanteri).
+   ============================================================ */
 :root {
-    --black: #101418;
-    --navy: #384552;
-    --navy-hover: #4D596A;
-    --yellow: #FFE400;
-    --red: #bd1b2d;
-    --red-dark: #a00207;
-    --green: #24A278;
+    /* --- Marka kimliği (sarı/siyah) --- */
+    --bht-black: #101418;
+    --bht-navy: #384552;          /* üst bar / mega nav zemini (rgb 56,69,82) */
+    --bht-navy-hover: #4D596A;    /* dropdown hover (rgb 77,89,106) */
+    --bht-yellow: #FFE400;        /* marka sarısı */
+    --bht-white: #ffffff;
+
+    /* --- SON DAKİKA rozeti / şeridi --- */
+    --breaking-red: #bd1b2d;      /* rgb(189,27,45) */
+    --breaking-red-dot: #a00207;  /* canlı nokta (rgb 160,2,7) */
+
+    /* --- Canlı yayın (sarı) --- */
+    --live-yellow: #FFE400;
+    --live-dot: #ff2d2d;
+
+    /* --- Piyasa yön renkleri --- */
+    --up: #24A278;                /* yükseliş */
+    --down: #BD1B2E;              /* düşüş */
+    --flat: #9D9D9D;              /* yatay */
+
+    /* --- Zemin / çizgi --- */
     --gray-bg: #f5f5f5;
     --gray-border: #e2e2e2;
+    --footer-border: #707070;     /* rgb(112,112,112) */
+    --special-maroon: #61082a;    /* En Çok Okunanlar (rgb 97,8,42) */
+
+    /* --- Layout ölçüleri --- */
+    --container-max: 1440px;      /* fluid 12-col, max ~1440px */
+    --container-gutter: 16px;
+    --sidebar-width: 400px;       /* makale detay sağ sidebar */
+    --header-bar-height: 64px;
+
+    /* --- Geriye dönük kısa adlar (CH-17 şablonları) --- */
+    --black: var(--bht-black);
+    --navy: var(--bht-navy);
+    --navy-hover: var(--bht-navy-hover);
+    --yellow: var(--bht-yellow);
+    --red: var(--breaking-red);
+    --red-dark: var(--breaking-red-dot);
+    --green: var(--up);
 }
 
 * { box-sizing: border-box; }
@@ -28,10 +64,47 @@ img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
 
 .container {
-    max-width: 1280px;
+    width: 100%;
+    max-width: var(--container-max);
     margin: 0 auto;
-    padding: 0 16px;
+    padding: 0 var(--container-gutter);
 }
+
+/* ----- Tipografi (Bölüm 1.1) ----- */
+.font-sans { font-family: Poppins, 'Helvetica Neue', Arial, sans-serif; }
+
+.font-unna {
+    font-family: Unna, Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+}
+
+.font-bold { font-weight: 700; }
+
+/* H1 makale: mobil 36px/2.25rem → ≥768px 44px/48px */
+.bht-display-1 {
+    font-family: Unna, Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 2.25rem;
+    line-height: 2.25rem;
+}
+
+@media (min-width: 768px) {
+    .bht-display-1 { font-size: 44px; line-height: 3rem; }
+}
+
+.bht-display-2 { font-family: Unna, Georgia, serif; font-weight: 700; font-size: 1.875rem; }
+
+/* ----- Grid / 12 kolon (fluid) ----- */
+.bht-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.bht-col-8 { grid-column: span 8; }
+.bht-col-4 { grid-column: span 4; }
+.bht-col-9 { grid-column: span 9; }
+.bht-col-3 { grid-column: span 3; }
 
 /* ---------- Header ---------- */
 .site-header { position: sticky; top: 0; z-index: 50; }
@@ -360,6 +433,160 @@ a { color: inherit; text-decoration: none; }
 .legal-notice { font-size: 12px; color: #8b939c; max-width: 980px; }
 
 .copyright { font-size: 12px; color: #8b939c; margin-top: 8px; }
+
+/* ============================================================
+   İKON FONT — bloomberght-icon-font envanteri (Bölüm 1.1)
+   Canlı sitede tek ikon fontu; klon aşamasında inline SVG + sınıf
+   takma adı. Sınıf deseni birebir korunur: font-family ataması ve
+   her glyph için `bloomberght-icon-font-icon-{ad}` hook'u.
+   ============================================================ */
+.bloomberght-icon-font,
+[class^="bloomberght-icon-font-"],
+[class*=" bloomberght-icon-font-"] {
+    font-family: bloomberght-icon-font, Poppins, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.bloomberght-icon-font {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+}
+
+.bloomberght-icon-font svg {
+    width: 1em;
+    height: 1em;
+    display: block;
+    fill: currentColor;
+}
+
+/* nsosyal glyph değil: SVG background (.7em×.7em) — Bölüm 1.1 */
+.bloomberght-icon-font-icon-nsosyal {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 0.7em 0.7em;
+}
+
+/* ============================================================
+   GÖRSEL BOYUT SÖZLEŞMELERİ (Bölüm 1)
+   640x360, 640x640, 360x203, 500px, 260x342, 750x425, 400x400, 960x540
+   ============================================================ */
+.img-contract { background: var(--gray-bg); object-fit: cover; }
+
+.img-640x360  { aspect-ratio: 640 / 360; }
+.img-640x640  { aspect-ratio: 1 / 1; }
+.img-360x203  { aspect-ratio: 360 / 203; }
+.img-500      { max-width: 500px; }
+.img-260x342  { aspect-ratio: 260 / 342; }
+.img-750x425  { aspect-ratio: 750 / 425; }
+.img-400x400  { aspect-ratio: 1 / 1; }
+.img-960x540  { aspect-ratio: 960 / 540; }
+
+/* ---------- Lazy-load (blazy deseni: transparent.gif + data-src) ---------- */
+img[data-src]:not(.swiper-lazy),
+img.b-lazy {
+    filter: blur(4px);
+    transition: filter 0.3s ease;
+}
+
+img.b-lazy-loaded,
+img[data-src].b-lazy-loaded {
+    filter: none;
+}
+
+/* ============================================================
+   FRONT HEADER / FOOTER İSKELETİ (Bölüm 2, 17.3)
+   Bağlantı içerikleri CH-4'te birebir doldurulur.
+   ============================================================ */
+.site-header { position: sticky; top: 0; z-index: 50; }
+
+.bht-topbar-inner {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    background: var(--bht-navy);
+    color: #fff;
+    min-height: var(--header-bar-height);
+    padding: 8px var(--container-gutter);
+}
+
+.bht-mega-nav { display: flex; align-items: center; gap: 4px; flex: 1; overflow: hidden; }
+
+.bht-top-actions { display: flex; align-items: center; gap: 14px; color: #fff; font-size: 13px; white-space: nowrap; }
+.bht-top-actions a { display: inline-flex; align-items: center; gap: 6px; }
+.bht-top-actions a:hover { color: var(--live-yellow); }
+.bht-top-actions .live-link { color: var(--live-yellow); font-weight: 700; }
+
+/* Canlı yayın noktası (animate-ping eşdeğeri) */
+.live-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--breaking-red-dot);
+    box-shadow: 0 0 0 0 rgba(160, 2, 7, 0.7);
+    animation: bht-ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+@keyframes bht-ping {
+    0%   { box-shadow: 0 0 0 0 rgba(160, 2, 7, 0.7); }
+    75%  { box-shadow: 0 0 0 10px rgba(160, 2, 7, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(160, 2, 7, 0); }
+}
+
+.bht-breaking { background: var(--breaking-red); color: #fff; }
+.bht-breaking-label { display: inline-flex; align-items: center; }
+
+/* Footer iskeleti: 5 sütun */
+.bht-footer { background: var(--bht-black); color: #cfd4d9; margin-top: 40px; }
+.bht-footer-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px;
+    padding-top: 32px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--footer-border);
+    font-size: 14px;
+}
+.footer-col ul { list-style: none; margin: 0; padding: 0; }
+.footer-col li { margin-bottom: 14px; }
+.footer-col a:hover { color: var(--live-yellow); }
+.footer-col-title { color: var(--bht-yellow); font-weight: 700; margin: 0 0 14px; font-size: 13px; }
+
+.footer-social { display: flex; gap: 16px; padding: 20px 0; font-size: 18px; }
+.footer-social a:hover { color: var(--bht-yellow); }
+
+.footer-badges { display: flex; flex-wrap: wrap; gap: 12px; padding: 4px 0 16px; }
+.footer-badge {
+    border: 1px solid var(--footer-border);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: #cfd4d9;
+}
+
+/* ---------- Responsive (mobil ≤767 kırılımı — Bölüm 1) ---------- */
+@media (max-width: 999px) {
+    .bht-footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 767px) {
+    .bht-topbar-inner { flex-wrap: wrap; }
+    .bht-mega-nav { order: 3; width: 100%; overflow-x: auto; }
+    .bht-footer-grid { grid-template-columns: 1fr; }
+    .bht-col-8, .bht-col-4, .bht-col-9, .bht-col-3 { grid-column: span 12; }
+}
 
 /* ---------- Responsive ---------- */
 @media (max-width: 900px) {

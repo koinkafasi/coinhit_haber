@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('front.layouts.app')
 
 @section('title', $news->title.' | '.($news->category?->name ?? 'Haber').' haberleri')
 @section('description', strip_tags($news->spot ?? ''))

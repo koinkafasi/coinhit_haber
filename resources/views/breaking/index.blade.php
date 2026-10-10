@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('front.layouts.app')
 
 @section('title', 'Son Dakika | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
 

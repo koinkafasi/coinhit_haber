@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('front.layouts.app')
 
 @section('title', ($siteSettings['site_name'] ?? 'Bloomberg HT').' | Türkiye\'nin Ekonomi Platformu')
 
@@ -8,7 +8,7 @@
             @php($lead = $featured->first())
             <article class="hero-lead">
                 <a href="{{ $lead->url }}">
-                    <img src="{{ asset($lead->image) }}" alt="" loading="eager" class="hero-img">
+                    <x-lazy-image :src="asset($lead->image)" alt="" contract="news_card" class="hero-img img-contract" eager />
                     <div class="hero-body">
                         <span class="category-tag">{{ $lead->category?->name }}</span>
                         <h1>{{ $lead->title }}</h1>
@@ -20,7 +20,7 @@
                 @foreach ($featured->slice(1, 2) as $item)
                     <article class="hero-side-item">
                         <a href="{{ $item->url }}">
-                            <img src="{{ asset($item->image) }}" alt="" loading="lazy">
+                            <x-lazy-image :src="asset($item->image)" alt="" contract="news_card" class="img-contract" />
                             <h2>{{ $item->title }}</h2>
                         </a>
                     </article>
@@ -38,7 +38,7 @@
             @forelse ($latestNews as $item)
                 <article class="news-card">
                     <a href="{{ $item->url }}">
-                        <img src="{{ asset($item->image) }}" alt="" loading="lazy" class="card-img">
+                        <x-lazy-image :src="asset($item->image)" alt="" contract="news_card" class="card-img img-contract" />
                         <div class="card-body">
                             <span class="category-tag">{{ $item->category?->name }}</span>
                             <h3>{{ $item->title }}</h3>
