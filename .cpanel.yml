@@ -1,0 +1,23 @@
+---
+# cPanel "Git Version Control" deploy şablonu (CH-18).
+# Kullanmadan önce <cpanel-kullanici> ve gerekiyorsa PHP/composer yollarını
+# kendi sunucunuza göre güncelleyin. Doküman: docs/deploy.md
+deployment:
+  tasks:
+    - export CPANEL_USER="<cpanel-kullanici>"
+    - export APP_PATH="/home/$CPANEL_USER/coinhit"
+    - export PHP_BIN="/usr/local/bin/php"
+    - export COMPOSER_BIN="/usr/local/bin/composer"
+    # 1) Üretim bağımlılıkları
+    - cd $APP_PATH && $PHP_BIN $COMPOSER_BIN install --no-dev --optimize-autoloader
+    # 2) Şema + tohum verisi (admin şifresi ortam değişkeninden okunur)
+    - cd $APP_PATH && $PHP_BIN artisan migrate --force
+    # 3) storage sembolik bağlantısı
+    - cd $APP_PATH && $PHP_BIN artisan storage:link
+    # 4) Önbellekleri temizle ve yeniden kur
+    - cd $APP_PATH && $PHP_BIN artisan optimize:clear
+    - cd $APP_PATH && $PHP_BIN artisan config:cache
+    - cd $APP_PATH && $PHP_BIN artisan route:cache
+    - cd $APP_PATH && $PHP_BIN artisan view:cache
+    # 5) Docroot /public değilse public içeriğini yayınla
+    - /bin/cp -R $APP_PATH/public/* /home/$CPANEL_USER/public_html/
