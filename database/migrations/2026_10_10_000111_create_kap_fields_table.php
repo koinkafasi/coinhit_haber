@@ -1,0 +1,28 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('kap_fields', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('kap_disclosure_id')->constrained('kap_disclosures')->cascadeOnDelete();
+            $table->string('key');
+            $table->string('label_tr')->nullable();
+            $table->string('label_en')->nullable();
+            $table->text('value_tr')->nullable();
+            $table->text('value_en')->nullable();
+            $table->unsignedInteger('sort_order')->default(0);
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('kap_fields');
+    }
+};

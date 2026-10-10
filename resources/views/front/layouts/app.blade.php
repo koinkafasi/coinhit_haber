@@ -70,8 +70,12 @@
         <x-icon name="arrow-up" title="Yukarı dön" />
     </button>
 
+    @php($dimensionNews = ($news ?? null) instanceof \App\Models\News ? $news : null)
+    @php($customDimension = app(\App\Services\Analytics\CustomDimensionBuilder::class)->build($dimensionNews, $pageType ?? 'home'))
+    <script>window.customdimension = @json($customDimension);</script>
     <script src="{{ asset('js/lazy.js') }}" defer></script>
     <script src="{{ asset('js/site.js') }}" defer></script>
+    <script src="{{ asset('js/market-live.js') }}" defer></script>
     @stack('scripts')
 </body>
 </html>

@@ -18,5 +18,12 @@ class DatabaseSeeder extends Seeder
         $this->call(NewsSeeder::class);
         $this->call(BreakingNewsSeeder::class);
         $this->call(ChartArchiveSeeder::class);
+        $this->call(GallerySeeder::class);
+        $this->call(ProgramSeeder::class);
+        $this->call(PodcastSeeder::class);
+        $this->call(KapDisclosureSeeder::class);
+        $this->call(IpoCalendarSeeder::class);
+        $this->call(TrendSeeder::class);
+        $this->call(MarketInstrumentSeeder::class);
     }
 }
