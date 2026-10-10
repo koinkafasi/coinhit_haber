@@ -145,6 +145,86 @@ class MarketInstrument extends Model
         'bdiy' => 'BDIY',
     ];
 
+    /**
+     * Tahvil (TR) detay rotası okunur slug'ları (spec §3, §8).
+     */
+    public const BOND_TR_ROUTE_SLUGS = [
+        'TR2Y' => 'tr-2-yillik-tahvil',
+        'TR5Y' => 'tr-5-yillik-tahvil',
+        'TR10Y' => 'tr-10-yillik-tahvil',
+    ];
+
+    /**
+     * Uluslararası tahvil detay rotası okunur slug'ları (spec §3, §8).
+     */
+    public const INTL_BOND_ROUTE_SLUGS = [
+        'US2Y' => 'abd-2-yillik-tahvil',
+        'US5Y' => 'abd-5-yillik-tahvil',
+        'US10Y' => 'abd-10-yillik-tahvil',
+        'DE2Y' => 'almanya-2-yillik-tahvil',
+        'DE5Y' => 'almanya-5-yillik-tahvil',
+        'DE10Y' => 'almanya-10-yillik-tahvil',
+        'GB2Y' => 'ingiltere-2-yillik-tahvil',
+        'GB5Y' => 'ingiltere-5-yillik-tahvil',
+        'GB10Y' => 'ingiltere-10-yillik-tahvil',
+        'JP2Y' => 'japonya-2-yillik-tahvil',
+        'JP5Y' => 'japonya-5-yillik-tahvil',
+        'JP10Y' => 'japonya-10-yillik-tahvil',
+    ];
+
+    /**
+     * Uluslararası tahvil rotası takma adları (spec §5 — sitemap `almayna` TYPO'su).
+     */
+    public const INTL_BOND_ROUTE_ALIASES = [
+        'almayna-2-yillik-tahvil' => 'DE2Y',
+        'almayna-5-yillik-tahvil' => 'DE5Y',
+        'almayna-10-yillik-tahvil' => 'DE10Y',
+    ];
+
+    /**
+     * Repo detay rotası okunur slug'ları (spec §3).
+     */
+    public const REPO_ROUTE_SLUGS = [
+        'REPO_GECELIK' => 'repo-gecelik',
+        'REPO_HAFTALIK' => 'repo-haftalik',
+        'REPO_AYLIK' => 'repo-aylik',
+    ];
+
+    /**
+     * Eurobond detay rotası okunur slug'ları (spec §3): `/eurobond/tr-eurobond-{n}-yil`.
+     */
+    public const EUROBOND_ROUTE_SLUGS = [
+        'EUROBOND_TR_1Y' => 'tr-eurobond-1-yil',
+        'EUROBOND_TR_2Y' => 'tr-eurobond-2-yil',
+        'EUROBOND_TR_3Y' => 'tr-eurobond-3-yil',
+        'EUROBOND_TR_4Y' => 'tr-eurobond-4-yil',
+        'EUROBOND_TR_5Y' => 'tr-eurobond-5-yil',
+        'EUROBOND_TR_6Y' => 'tr-eurobond-6-yil',
+        'EUROBOND_TR_7Y' => 'tr-eurobond-7-yil',
+        'EUROBOND_TR_8Y' => 'tr-eurobond-8-yil',
+        'EUROBOND_TR_10Y' => 'tr-eurobond-10-yil',
+        'EUROBOND_TR_20Y' => 'tr-eurobond-20-yil',
+        'EUROBOND_TR_30Y' => 'tr-eurobond-30-yil',
+    ];
+
+    /**
+     * Kripto detay rotası okunur slug'ları (spec §3): yalnızca BTC/ETH/XRP.
+     */
+    public const CRYPTO_ROUTE_SLUGS = [
+        'BTC' => 'bitcoin',
+        'ETH' => 'ethereum',
+        'XRP' => 'ripple',
+    ];
+
+    /**
+     * Kripto detay rotası takma adları (`/doviz/<slug>`).
+     */
+    public const CRYPTO_ROUTE_ALIASES = [
+        'bitcoin' => 'BTC',
+        'ethereum' => 'ETH',
+        'ripple' => 'XRP',
+    ];
+
     public const GROUPS = [
         self::GROUP_BIST_INDEX => 'BIST Endeksleri',
         self::GROUP_WORLD_INDEX => 'Dünya Borsaları',
@@ -274,5 +354,54 @@ class MarketInstrument extends Model
     public function commodityRouteSlug(): string
     {
         return self::COMMODITY_ROUTE_SLUGS[$this->code] ?? $this->slug;
+    }
+
+    /**
+     * Tahvil detay rotası (spec §3, §8): `/tahvil/<slug>`.
+     *
+     * TR tahvil ve uluslararası tahvil aynı rotayı paylaşır.
+     */
+    public function bondUrl(): string
+    {
+        return Locale::url('/tahvil/'.$this->bondRouteSlug());
+    }
+
+    /**
+     * Tahvil detay rotası slug'ı (TR + uluslararası).
+     */
+    public function bondRouteSlug(): string
+    {
+        $map = $this->group === self::GROUP_INTL_BOND
+            ? self::INTL_BOND_ROUTE_SLUGS
+            : self::BOND_TR_ROUTE_SLUGS;
+
+        return $map[$this->code] ?? $this->slug;
+    }
+
+    /**
+     * Repo detay rotası (spec §3): `/repo/<slug>`.
+     */
+    public function repoUrl(): string
+    {
+        return Locale::url('/repo/'.(self::REPO_ROUTE_SLUGS[$this->code] ?? $this->slug));
+    }
+
+    /**
+     * Eurobond detay rotası (spec §3): `/eurobond/<slug>`.
+     */
+    public function eurobondUrl(): string
+    {
+        return Locale::url('/eurobond/'.(self::EUROBOND_ROUTE_SLUGS[$this->code] ?? $this->slug));
+    }
+
+    /**
+     * Kripto detay rotası (spec §3): yalnızca BTC/ETH/XRP → `/doviz/<slug>`,
+     * diğerleri için null (metin satırı).
+     */
+    public function cryptoUrl(): ?string
+    {
+        $slug = self::CRYPTO_ROUTE_SLUGS[$this->code] ?? null;
+
+        return $slug !== null ? Locale::url('/doviz/'.$slug) : null;
     }
 }

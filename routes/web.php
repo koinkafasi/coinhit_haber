@@ -15,8 +15,10 @@ use App\Http\Controllers\BreakingNewsController;
 use App\Http\Controllers\ChartArchiveController;
 use App\Http\Controllers\DovizController;
 use App\Http\Controllers\EmtiaController;
+use App\Http\Controllers\FaizBonoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\KriptoController;
 use App\Http\Controllers\MarketDataController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\SearchController;
@@ -77,11 +79,36 @@ $frontRoutes = function (): void {
     */
     Route::get('/doviz', [DovizController::class, 'index'])->name('doviz.index');
     Route::get('/doviz/pariteler', [DovizController::class, 'parities'])->name('doviz.parities');
+    Route::get('/doviz/sepet-kur', [DovizController::class, 'sepetKur'])->name('doviz.sepet-kur');
+    Route::get('/doviz/tl-euro', [DovizController::class, 'tlEuro'])->name('doviz.tl-euro');
     Route::get('/doviz/parite/{slug}', [DovizController::class, 'parityDetail'])
         ->where('slug', '[A-Za-z0-9\-]+')->name('doviz.parity-detail');
     Route::get('/doviz/{slug}', [DovizController::class, 'detail'])
         ->where('slug', '[A-Za-z0-9\-]+')->name('doviz.detail');
     Route::get('/doviz-cevirici', [DovizController::class, 'converter'])->name('doviz.converter');
+
+    /*
+    |----------------------------------------------------------------------
+    | Faiz-Bono bölümü (Bölüm 5, 8, 15.7 — tahvil/repo/eurobond)
+    |----------------------------------------------------------------------
+    */
+    Route::get('/faiz-bono', [FaizBonoController::class, 'index'])->name('faiz-bono.index');
+    Route::get('/tahvil/faiz', [FaizBonoController::class, 'tahvilFaiz'])->name('faiz-bono.tahvil-faiz');
+    Route::get('/tahvil/{slug}', [FaizBonoController::class, 'bondDetail'])
+        ->where('slug', '[A-Za-z0-9\-]+')->name('faiz-bono.bond');
+    Route::get('/repo/{slug}', [FaizBonoController::class, 'repoDetail'])
+        ->where('slug', '[A-Za-z0-9\-]+')->name('faiz-bono.repo');
+    Route::get('/eurobond/{slug}', [FaizBonoController::class, 'eurobondDetail'])
+        ->where('slug', '[A-Za-z0-9\-]+')->name('faiz-bono.eurobond');
+
+    /*
+    |----------------------------------------------------------------------
+    | Kripto bölümü (Bölüm 5, 8, 14.5, 15.6 — A-Z filtre + tablo + widget)
+    |----------------------------------------------------------------------
+    */
+    Route::get('/kripto', [KriptoController::class, 'index'])->name('kripto.index');
+    Route::get('/kripto/liste/{harf}', [KriptoController::class, 'index'])
+        ->where('harf', '[A-Za-z]')->name('kripto.list');
 
     /*
     |----------------------------------------------------------------------
