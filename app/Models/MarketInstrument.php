@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Locale;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -146,7 +147,7 @@ class MarketInstrument extends Model
 
     public function getUrlAttribute(): string
     {
-        return '/piyasa/'.$this->slug;
+        return Locale::url('/piyasa/'.$this->slug);
     }
 
     /**
@@ -154,7 +155,7 @@ class MarketInstrument extends Model
      */
     public function stockUrl(): string
     {
-        return '/borsa/hisse/'.strtolower($this->code).'-'.$this->slug.'-detay';
+        return Locale::url('/borsa/hisse/'.strtolower($this->code).'-'.$this->slug.'-detay');
     }
 
     /**
@@ -162,7 +163,7 @@ class MarketInstrument extends Model
      */
     public function indexUrl(): string
     {
-        return '/borsa/endeks/'.$this->slug;
+        return Locale::url('/borsa/endeks/'.$this->slug);
     }
 
     /**
@@ -170,7 +171,7 @@ class MarketInstrument extends Model
      */
     public function currencyUrl(): string
     {
-        return '/doviz/'.(self::CURRENCY_ROUTE_SLUGS[$this->code] ?? $this->slug);
+        return Locale::url('/doviz/'.(self::CURRENCY_ROUTE_SLUGS[$this->code] ?? $this->slug));
     }
 
     /**
@@ -178,7 +179,7 @@ class MarketInstrument extends Model
      */
     public function parityUrl(): string
     {
-        return '/doviz/parite/'.$this->parityRouteSlug();
+        return Locale::url('/doviz/parite/'.$this->parityRouteSlug());
     }
 
     /**
@@ -200,6 +201,6 @@ class MarketInstrument extends Model
      */
     public function commodityUrl(): string
     {
-        return '/emtia/'.$this->slug;
+        return Locale::url('/emtia/'.$this->slug);
     }
 }

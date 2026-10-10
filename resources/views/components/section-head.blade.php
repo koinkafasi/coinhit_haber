@@ -1,11 +1,13 @@
 @props([
     'title',
     'href' => null,
-    'allLabel' => 'TÜMÜ',
+    'allLabel' => null,
     'level' => 'h2',
     'id' => null,
     'class' => '',
 ])
+
+@php($allLabel = $allLabel ?? __('ui.all'))
 
 <div class="section-head head-type1 {{ $class }}" @if ($id) id="{{ $id }}" @endif>
     <div class="section-head-inner">

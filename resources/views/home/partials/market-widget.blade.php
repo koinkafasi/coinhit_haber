@@ -4,11 +4,11 @@
 
 {{-- PİYASALAR büyük widget (Bölüm 7 modül 7, §17.3): 4 sekme + alt-sekmeler + mini grafikler --}}
 <section class="market-widget" data-widget-type="market-graphic-tab" id="piyasalar-widget">
-    <x-section-head title="PİYASALAR" href="/piyasalar" />
+    <x-section-head :title="__('ui.markets')" :href="\App\Support\Locale::url('/piyasalar')" />
 
     <div class="market-widget-body">
         <div class="market-widget-main">
-            <div class="market-widget-tabs tab-menu" role="tablist" aria-label="Piyasalar">
+            <div class="market-widget-tabs tab-menu" role="tablist" aria-label="{{ __('ui.markets_aria') }}">
                 @foreach ($marketWidget as $tab)
                     <button type="button" role="tab"
                             class="tab-button market-widget-tab {{ $firstTab ? 'is-active' : '' }}"
@@ -52,7 +52,7 @@
         <aside class="market-widget-aside">
             {{-- Piyasa haberleri --}}
             <div class="market-news">
-                <h3 class="mw-aside-title font-unna font-bold">Piyasa Haberleri</h3>
+                <h3 class="mw-aside-title font-unna font-bold">{{ __('ui.market_news') }}</h3>
                 <ul class="mw-news-list">
                     @foreach ($marketNews as $item)
                         <li>
@@ -62,23 +62,23 @@
                         </li>
                     @endforeach
                 </ul>
-                <a class="mw-aside-all" href="/piyasalar">TÜMÜ &raquo;</a>
+                <a class="mw-aside-all" href="{{ \App\Support\Locale::url('/piyasalar') }}">{{ __('ui.all') }} &raquo;</a>
             </div>
 
             {{-- Hızlı Linkler (trend cipsleri) --}}
             <div class="quick-links">
-                <h3 class="mw-aside-title font-unna font-bold">Hızlı Linkler</h3>
+                <h3 class="mw-aside-title font-unna font-bold">{{ __('ui.quick_links') }}</h3>
                 <div class="quick-links-chips">
                     @foreach ($trends as $trend)
-                        <a class="chip" href="/trendler">{{ $trend->label }}</a>
+                        <a class="chip" href="{{ \App\Support\Locale::url('/trendler') }}">{{ $trend->label }}</a>
                     @endforeach
                 </div>
-                <a class="mw-aside-all" href="/trendler">TÜMÜ &raquo;</a>
+                <a class="mw-aside-all" href="{{ \App\Support\Locale::url('/trendler') }}">{{ __('ui.all') }} &raquo;</a>
             </div>
 
             {{-- Grafik --}}
             <div class="market-charts-mini">
-                <h3 class="mw-aside-title font-unna font-bold">Grafik</h3>
+                <h3 class="mw-aside-title font-unna font-bold">{{ __('ui.charts') }}</h3>
                 <div class="mw-charts-grid">
                     @foreach ($charts as $chart)
                         <a class="mw-chart-thumb" href="{{ $chart->url }}">
@@ -87,7 +87,7 @@
                         </a>
                     @endforeach
                 </div>
-                <a class="mw-aside-all" href="/grafik-arsivi">TÜMÜ &raquo;</a>
+                <a class="mw-aside-all" href="{{ \App\Support\Locale::url('/grafik-arsivi') }}">{{ __('ui.all') }} &raquo;</a>
             </div>
         </aside>
     </div>

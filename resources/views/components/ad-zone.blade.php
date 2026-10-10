@@ -1,11 +1,12 @@
 @props([
     'zone',
-    'label' => 'REKLAM',
+    'label' => null,
     'index' => null,
     'variant' => 'inline',
 ])
 
 @php
+    $label = $label ?? __('ui.ad');
     $zoneId = 'zone_'.$zone;
     $uid = $zoneId.($index !== null ? '_'.$index : '');
     $adName = 'advertisement'.($index ?? '');

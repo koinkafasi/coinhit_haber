@@ -1,11 +1,11 @@
 @extends('front.layouts.app')
 
-@section('title', 'Haberler | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('title', __('ui.news_title').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
 
 @section('content')
     <div class="section-title">
-        <h1>Haberler</h1>
-        <a href="{{ route('breaking.index') }}">Son Dakika &raquo;</a>
+        <h1>{{ __('ui.news_title') }}</h1>
+        <a href="{{ \App\Support\Locale::route('breaking.index') }}">{{ __('ui.breaking_link') }} &raquo;</a>
     </div>
 
     <div class="list-grid">
@@ -24,7 +24,7 @@
                 </a>
             </article>
         @empty
-            <p>Henüz haber bulunmuyor.</p>
+            <p>{{ __('ui.no_news') }}</p>
         @endforelse
     </div>
 

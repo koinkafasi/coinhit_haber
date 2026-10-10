@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Locale;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -50,6 +51,6 @@ class KapDisclosure extends Model
      */
     public function getUrlAttribute(): string
     {
-        return '/borsa/hisse/'.$this->company_slug.'/kap-haberi/'.$this->kap_id;
+        return Locale::url('/borsa/hisse/'.$this->company_slug.'/kap-haberi/'.$this->kap_id);
     }
 }

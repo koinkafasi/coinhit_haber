@@ -18,20 +18,82 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MarketDataController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Middleware\EnsureAdmin;
+use App\Http\Middleware\SetLocale;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+/*
+|--------------------------------------------------------------------------
+| Ön yüz sayfa rotaları (locale'e duyarlı)
+|--------------------------------------------------------------------------
+|
+| Aynı rota seti iki kez kaydedilir: tr kökte (prefixsiz, mevcut URL'ler
+| korunur) ve en `/en` prefix'i ile. Master spec §18.2.
+*/
+$frontRoutes = function (): void {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('/haberler', [NewsController::class, 'index'])->name('news.index');
-Route::get('/sondakika', [BreakingNewsController::class, 'index'])->name('breaking.index');
-Route::get('/grafik-arsivi', [ChartArchiveController::class, 'index'])->name('charts.index');
-Route::get('/yazarlar', [AuthorController::class, 'index'])->name('authors.index');
+    Route::get('/haberler', [NewsController::class, 'index'])->name('news.index');
+    Route::get('/sondakika', [BreakingNewsController::class, 'index'])->name('breaking.index');
+    Route::get('/grafik-arsivi', [ChartArchiveController::class, 'index'])->name('charts.index');
+    Route::get('/yazarlar', [AuthorController::class, 'index'])->name('authors.index');
 
-Route::get('/arama', [SearchController::class, 'index'])->name('search.index');
-Route::get('/arama/{q}', [SearchController::class, 'index'])
-    ->where('q', '[^/]+')
-    ->name('search.query');
+    Route::get('/arama', [SearchController::class, 'index'])->name('search.index');
+    Route::get('/arama/{q}', [SearchController::class, 'index'])
+        ->where('q', '[^/]+')
+        ->name('search.query');
+
+    /*
+    |----------------------------------------------------------------------
+    | Borsa bölümü (Bölüm 8, 15.3 — hisse/endeks/KAP/dünya/alternatif)
+    |----------------------------------------------------------------------
+    */
+    Route::get('/borsa', [BorsaController::class, 'index'])->name('borsa.index');
+    Route::get('/borsa/hisseler/kap-haberleri', [BorsaController::class, 'kapNews'])->name('borsa.kap-news');
+    Route::get('/borsa/hisseler/{letter}', [BorsaController::class, 'stocks'])
+        ->where('letter', '[A-Za-z]')->name('borsa.stocks.letter');
+    Route::get('/borsa/hisseler', [BorsaController::class, 'stocks'])->name('borsa.stocks');
+    Route::get('/borsa/en-cok', [BorsaController::class, 'most'])->name('borsa.most');
+    Route::get('/borsa/dunya-borsalari', [BorsaController::class, 'world'])->name('borsa.world');
+    Route::get('/borsa/endeksler', [BorsaController::class, 'indices'])->name('borsa.indices');
+    Route::get('/borsa/endeks/{slug}', [BorsaController::class, 'indexDetail'])
+        ->where('slug', '[A-Za-z0-9\-]+')->name('borsa.index-detail');
+    Route::get('/borsa/borsa-kapanis/{letter}', [BorsaController::class, 'closing'])
+        ->where('letter', '[A-Za-z]')->name('borsa.closing.letter');
+    Route::get('/borsa/borsa-kapanis', [BorsaController::class, 'closing'])->name('borsa.closing');
+    Route::get('/alternatif', [BorsaController::class, 'alternative'])->name('borsa.alternative');
+    Route::get('/borsa/hisse/{company}/kap-haberi/{kapId}', [BorsaController::class, 'kapDetail'])
+        ->where('kapId', '[0-9]+')->name('borsa.kap-detail');
+    Route::get('/borsa/hisse/{company}', [BorsaController::class, 'stock'])
+        ->where('company', '[A-Za-z0-9\-]+')->name('borsa.stock');
+
+    /*
+    |----------------------------------------------------------------------
+    | Döviz & Parite bölümü (Bölüm 5, 6, 8, 15.4 — döviz/parite + çevirici)
+    |----------------------------------------------------------------------
+    */
+    Route::get('/doviz', [DovizController::class, 'index'])->name('doviz.index');
+    Route::get('/doviz/pariteler', [DovizController::class, 'parities'])->name('doviz.parities');
+    Route::get('/doviz/parite/{slug}', [DovizController::class, 'parityDetail'])
+        ->where('slug', '[A-Za-z0-9\-]+')->name('doviz.parity-detail');
+    Route::get('/doviz/{slug}', [DovizController::class, 'detail'])
+        ->where('slug', '[A-Za-z0-9\-]+')->name('doviz.detail');
+    Route::get('/doviz-cevirici', [DovizController::class, 'converter'])->name('doviz.converter');
+
+    /*
+    |----------------------------------------------------------------------
+    | Haber detay (catch-all) — grubun en sonunda kalmalı.
+    |----------------------------------------------------------------------
+    */
+    Route::get('/{slug}-{newsId}', [NewsController::class, 'show'])
+        ->where('slug', '[^/]+')
+        ->where('newsId', '[0-9]+')
+        ->name('news.show');
+};
+
+Route::middleware(SetLocale::class)->group($frontRoutes);
+Route::prefix('en')->name('en.')->middleware(SetLocale::class)->group($frontRoutes);
 
 /*
 |--------------------------------------------------------------------------
@@ -45,40 +107,10 @@ Route::get('/finance-slider-data', [MarketDataController::class, 'slider'])->nam
 
 /*
 |--------------------------------------------------------------------------
-| Borsa bölümü (Bölüm 8, 15.3 — hisse/endeks/KAP/dünya/alternatif)
+| Çok dilli sitemap (master spec §18.6)
 |--------------------------------------------------------------------------
 */
-Route::get('/borsa', [BorsaController::class, 'index'])->name('borsa.index');
-Route::get('/borsa/hisseler/kap-haberleri', [BorsaController::class, 'kapNews'])->name('borsa.kap-news');
-Route::get('/borsa/hisseler/{letter}', [BorsaController::class, 'stocks'])
-    ->where('letter', '[A-Za-z]')->name('borsa.stocks.letter');
-Route::get('/borsa/hisseler', [BorsaController::class, 'stocks'])->name('borsa.stocks');
-Route::get('/borsa/en-cok', [BorsaController::class, 'most'])->name('borsa.most');
-Route::get('/borsa/dunya-borsalari', [BorsaController::class, 'world'])->name('borsa.world');
-Route::get('/borsa/endeksler', [BorsaController::class, 'indices'])->name('borsa.indices');
-Route::get('/borsa/endeks/{slug}', [BorsaController::class, 'indexDetail'])
-    ->where('slug', '[A-Za-z0-9\-]+')->name('borsa.index-detail');
-Route::get('/borsa/borsa-kapanis/{letter}', [BorsaController::class, 'closing'])
-    ->where('letter', '[A-Za-z]')->name('borsa.closing.letter');
-Route::get('/borsa/borsa-kapanis', [BorsaController::class, 'closing'])->name('borsa.closing');
-Route::get('/alternatif', [BorsaController::class, 'alternative'])->name('borsa.alternative');
-Route::get('/borsa/hisse/{company}/kap-haberi/{kapId}', [BorsaController::class, 'kapDetail'])
-    ->where('kapId', '[0-9]+')->name('borsa.kap-detail');
-Route::get('/borsa/hisse/{company}', [BorsaController::class, 'stock'])
-    ->where('company', '[A-Za-z0-9\-]+')->name('borsa.stock');
-
-/*
-|--------------------------------------------------------------------------
-| Döviz & Parite bölümü (Bölüm 5, 6, 8, 15.4 — döviz/parite + çevirici)
-|--------------------------------------------------------------------------
-*/
-Route::get('/doviz', [DovizController::class, 'index'])->name('doviz.index');
-Route::get('/doviz/pariteler', [DovizController::class, 'parities'])->name('doviz.parities');
-Route::get('/doviz/parite/{slug}', [DovizController::class, 'parityDetail'])
-    ->where('slug', '[A-Za-z0-9\-]+')->name('doviz.parity-detail');
-Route::get('/doviz/{slug}', [DovizController::class, 'detail'])
-    ->where('slug', '[A-Za-z0-9\-]+')->name('doviz.detail');
-Route::get('/doviz-cevirici', [DovizController::class, 'converter'])->name('doviz.converter');
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 /*
 |--------------------------------------------------------------------------
@@ -117,8 +149,3 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('galleries/{gallery}/items/{item}', [GalleryAdminController::class, 'destroyItem'])->name('galleries.items.destroy');
     });
 });
-
-Route::get('/{slug}-{newsId}', [NewsController::class, 'show'])
-    ->where('slug', '[^/]+')
-    ->where('newsId', '[0-9]+')
-    ->name('news.show');

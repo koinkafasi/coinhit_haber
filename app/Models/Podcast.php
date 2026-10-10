@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Locale;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -34,6 +35,6 @@ class Podcast extends Model
 
     public function getUrlAttribute(): string
     {
-        return '/podcastler/'.$this->slug;
+        return Locale::url('/podcastler/'.$this->slug);
     }
 }

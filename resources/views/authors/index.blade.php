@@ -1,10 +1,10 @@
 @extends('front.layouts.app')
 
-@section('title', 'Yazarlar | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('title', __('ui.authors_title').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
 
 @section('content')
     <div class="section-title">
-        <h1>Görüş &amp; Yazarlar</h1>
+        <h1>{{ __('ui.authors_title') }}</h1>
     </div>
 
     <div class="author-grid">
@@ -17,11 +17,11 @@
                     <h3>{{ $author->name }}</h3>
                     <p class="author-title">{{ $author->title }}</p>
                     <p class="author-bio">{{ $author->bio }}</p>
-                    <span class="category-tag">{{ $author->news_count }} yazı</span>
+                    <span class="category-tag">{{ $author->news_count }} {{ __('ui.article_count') }}</span>
                 </div>
             </article>
         @empty
-            <p>Yazar bulunmuyor.</p>
+            <p>{{ __('ui.no_authors') }}</p>
         @endforelse
     </div>
 @endsection

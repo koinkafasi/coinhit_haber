@@ -10,23 +10,23 @@
 <footer class="site-footer bht-footer">
     <div class="container">
         <div class="footer-top">
-            <a class="logo" href="{{ route('home') }}" aria-label="{{ $settings['logo_alt'] ?? 'Bloomberg HT' }}">
+            <a class="logo" href="{{ \App\Support\Locale::route('home') }}" aria-label="{{ $settings['logo_alt'] ?? 'Bloomberg HT' }}">
                 <img src="{{ asset($settings['logo_path'] ?? '/brand/logo.svg') }}" alt="{{ $settings['logo_alt'] ?? 'Bloomberg HT' }}" width="150" height="44">
             </a>
-            <p class="tagline">{{ $settings['site_tagline'] ?? "Türkiye'nin ekonomi platformu" }}</p>
+            <p class="tagline">{{ $settings['site_tagline'] ?? __('ui.site_tagline') }}</p>
         </div>
 
         {{-- Footer billboard (zone 1260) — Bölüm 2.7 / 14.6 --}}
         <x-ad-zone :zone="1260" variant="billboard" />
 
-        <nav class="bht-footer-grid" id="footer-menu" aria-label="Alt navigasyon">
+        <nav class="bht-footer-grid" id="footer-menu" aria-label="{{ __('ui.footer_nav') }}">
             @foreach ($columns as $column)
                 <div class="footer-col">
                     <ul>
                         @foreach ($column as $link)
                             <li>
-                                <a href="{{ $link['url'] }}"
-                                   @if (str_starts_with($link['url'], 'http')) {!! $newWindow !!} @endif>{{ $link['label'] }}</a>
+                                <a href="{{ \App\Support\Locale::navUrl($link['url']) }}"
+                                   @if (str_starts_with($link['url'], 'http')) {!! $newWindow !!} @endif>{{ \App\Support\Locale::navLabel($link['label']) }}</a>
                             </li>
                         @endforeach
                     </ul>
@@ -35,11 +35,11 @@
         </nav>
 
         {{-- Arama kutusu: "BİRKAÇ KELİME YAZARAK..." + Listele → /arama/{q} --}}
-        <form class="footer-search" action="{{ route('search.index') }}" method="get" role="search" data-search-form>
-            <label class="sr-only" for="footer-search-input">Arama</label>
+        <form class="footer-search" action="{{ \App\Support\Locale::route('search.index') }}" method="get" role="search" data-search-form>
+            <label class="sr-only" for="footer-search-input">{{ __('ui.search') }}</label>
             <input id="footer-search-input" name="q" type="search" autocomplete="off"
-                   placeholder="BİRKAÇ KELİME YAZARAK SİZE YARDIMCI OLABİLİRİZ!">
-            <button type="submit">Listele</button>
+                   placeholder="{{ __('ui.search_placeholder') }}">
+            <button type="submit">{{ __('ui.list') }}</button>
         </form>
 
         <div class="footer-badges">

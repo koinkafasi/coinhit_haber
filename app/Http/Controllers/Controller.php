@@ -28,7 +28,9 @@ abstract class Controller
                 ->take(10)
                 ->get(),
             'financeGroups' => $this->financeSliderGroups(),
-            'siteSettings' => SiteSetting::pluck('value', 'key')->all(),
+            'siteSettings' => SiteSetting::all()
+                ->mapWithKeys(fn (SiteSetting $setting) => [$setting->key => $setting->value])
+                ->all(),
         ];
     }
 
@@ -40,10 +42,10 @@ abstract class Controller
     protected function financeSliderGroups(): array
     {
         $definitions = [
-            'borsa' => ['label' => 'Borsa', 'codes' => ['XU100', 'DOW', 'DAX', 'FTSE100', 'SHANGHAI']],
-            'doviz' => ['label' => 'Döviz', 'codes' => ['USDTRY', 'EURTRY', 'GBPTRY', 'EURUSD', 'DXY']],
-            'emtia' => ['label' => 'Emtia', 'codes' => ['GAU', 'GRAM', 'GUMUS_ONS', 'BRENT', 'WTI', 'BDIY']],
-            'faiz' => ['label' => 'Faiz', 'codes' => ['TR2Y', 'TR10Y', 'US10Y', 'DE10Y', 'GB10Y']],
+            'borsa' => ['label' => __('ui.market.borsa'), 'codes' => ['XU100', 'DOW', 'DAX', 'FTSE100', 'SHANGHAI']],
+            'doviz' => ['label' => __('ui.market.doviz'), 'codes' => ['USDTRY', 'EURTRY', 'GBPTRY', 'EURUSD', 'DXY']],
+            'emtia' => ['label' => __('ui.market.emtia'), 'codes' => ['GAU', 'GRAM', 'GUMUS_ONS', 'BRENT', 'WTI', 'BDIY']],
+            'faiz' => ['label' => __('ui.market.faiz'), 'codes' => ['TR2Y', 'TR10Y', 'US10Y', 'DE10Y', 'GB10Y']],
         ];
 
         $market = app(MarketDataService::class);

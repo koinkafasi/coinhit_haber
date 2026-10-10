@@ -1,11 +1,11 @@
 @extends('front.layouts.app')
 
-@section('title', ($siteSettings['site_name'] ?? 'Bloomberg HT')." | Türkiye'nin Ekonomi Platformu")
+@section('title', ($siteSettings['site_name'] ?? 'Bloomberg HT').' | '.__('ui.site_tagline'))
 
 @section('masthead')
     {{-- Modül 1: Masthead ad — zone_1264 (masaüstü) / zone_1394 (mobil), header ÜSTÜNDE --}}
     <div class="masthead-ad">
-        <div class="ad-head"><h2 class="ad-label !text-xxs">REKLAM</h2></div>
+        <div class="ad-head"><h2 class="ad-label !text-xxs">{{ __('ui.ad') }}</h2></div>
         <div class="ad-body ad-body-desktop" data-device="DESKTOP">
             <div class="ads-zone lazy-init" data-adv="bht" data-device="DESKTOP" data-zone-id="zone_1264" id="zone_1264"></div>
         </div>
@@ -39,10 +39,10 @@
                     </article>
                 @endforeach
             </div>
-            <button type="button" class="main-slider-nav main-slider-prev" data-hero-prev aria-label="Önceki">
+            <button type="button" class="main-slider-nav main-slider-prev" data-hero-prev aria-label="{{ __('ui.previous') }}">
                 <span class="bloomberght-icon-font-icon-chevron-left" aria-hidden="true">&lsaquo;</span>
             </button>
-            <button type="button" class="main-slider-nav main-slider-next" data-hero-next aria-label="Sonraki">
+            <button type="button" class="main-slider-nav main-slider-next" data-hero-next aria-label="{{ __('ui.next') }}">
                 <span class="bloomberght-icon-font-icon-chevron-right" aria-hidden="true">&rsaquo;</span>
             </button>
             <div class="main-slider-pagination type4" data-hero-pagination></div>
@@ -50,7 +50,7 @@
     </section>
 
     {{-- Modül 3: finance-slider mobil şerit (md:hidden, border-t) --}}
-    <div class="finance-strip-mobile md:hidden" data-type="finance-strip" aria-label="Piyasa şeridi">
+    <div class="finance-strip-mobile md:hidden" data-type="finance-strip" aria-label="{{ __('ui.market_strip') }}">
         <div class="finance-strip-track">
             @foreach ($financeGroups as $group)
                 @foreach ($group['quotes'] as $quote)
@@ -65,7 +65,7 @@
 
     {{-- Modül 5: ÖNE ÇIKANLAR — yatay haber başlık şeridi --}}
     <section class="home-featured-strip" id="one-cikanlar">
-        <x-section-head title="ÖNE ÇIKANLAR" :href="null" />
+        <x-section-head :title="__('ui.featured')" :href="null" />
         <div class="featured-strip" data-horizontal-strip>
             @foreach ($featuredStrip as $item)
                 <a class="featured-strip-item" href="{{ $item->url }}">
@@ -84,11 +84,11 @@
 
     {{-- Modül 8: PROGRAMLAR --}}
     <section class="home-programs">
-        <x-section-head title="PROGRAMLAR" href="/video" />
+        <x-section-head :title="__('ui.programs')" :href="\App\Support\Locale::url('/video')" />
         <div class="program-list">
             @foreach ($programs as $episode)
                 <article class="program-card">
-                    <a href="{{ $episode->program?->url ?? '/video' }}">
+                    <a href="{{ $episode->program?->url ?? \App\Support\Locale::url('/video') }}">
                         <figure class="program-thumb">
                             <x-lazy-image :src="asset($episode->thumbnail ?: $episode->program?->thumbnail ?: '/img/og-default.png')" alt="" contract="video_thumb" class="img-contract" />
                             <span class="program-duration">{{ $episode->duration }}</span>
@@ -109,7 +109,7 @@
 
     {{-- Modül 10: ÖNE ÇIKANLAR — kategori etiketli haber kartları --}}
     <section class="home-featured-cards">
-        <x-section-head title="ÖNE ÇIKANLAR" href="/haberler" />
+        <x-section-head :title="__('ui.featured')" :href="\App\Support\Locale::url('/haberler')" />
         <div class="news-card-grid cols-3">
             @foreach ($featuredCards as $item)
                 <x-news-card :news="$item" type="type2" :showSpot="true" />
@@ -119,7 +119,7 @@
 
     {{-- Modül 11: TÜM HABERLER --}}
     <section class="home-all-news">
-        <x-section-head title="TÜM HABERLER" href="/tumhaberler" />
+        <x-section-head :title="__('ui.all_news')" :href="\App\Support\Locale::url('/tumhaberler')" />
         <ol class="headline-list">
             @foreach ($allNews as $item)
                 <li>
@@ -135,12 +135,12 @@
 
     {{-- Modül 12: YAYIN AKIŞI --}}
     <section class="home-broadcast">
-        <x-section-head title="YAYIN AKIŞI" href="/yayinakisi" />
+        <x-section-head :title="__('ui.broadcast')" :href="\App\Support\Locale::url('/yayinakisi')" />
         <ol class="broadcast-list">
             @foreach ($broadcast as $row)
                 <li>
                     <time class="broadcast-time">{{ $row->air_time }}</time>
-                    <a class="broadcast-name" href="/yayinakisi">{{ $row->program_name }}</a>
+                    <a class="broadcast-name" href="{{ \App\Support\Locale::url('/yayinakisi') }}">{{ $row->program_name }}</a>
                     <span class="broadcast-desc">{{ $row->description }}</span>
                 </li>
             @endforeach
@@ -159,12 +159,12 @@
             </a>
         </div>
         <div class="bw-issues">
-            <x-section-head title="SON SAYILAR" href="https://www.businessweek.com.tr/" allLabel="Businessweek" />
+            <x-section-head :title="__('ui.latest_issues')" href="https://www.businessweek.com.tr/" allLabel="Businessweek" />
             <ul class="bw-issue-list">
                 @foreach ([0, 1, 2, 3] as $week)
                     <li>
                         <a href="https://www.businessweek.com.tr/" target="_blank" rel="noopener noreferrer">
-                            <span class="bw-issue-no">Sayı {{ 2026 - $week - 0 }}</span>
+                            <span class="bw-issue-no">{{ __('ui.issue') }} {{ 2026 - $week - 0 }}</span>
                             <time class="bw-issue-date">{{ now()->subWeeks($week)->startOfWeek()->isoFormat('D MMMM YYYY') }}</time>
                         </a>
                     </li>
@@ -175,7 +175,7 @@
 
     {{-- Modül 15: Foto Haber --}}
     <section class="home-gallery">
-        <x-section-head title="Foto Haber" href="/fotohaber" level="h3" />
+        <x-section-head :title="__('ui.photo_news')" :href="\App\Support\Locale::url('/fotohaber')" level="h3" />
         <div class="gallery-grid">
             @foreach ($galleries as $gallery)
                 <article class="gallery-card">
@@ -185,7 +185,7 @@
                             <span class="gallery-count">{{ $gallery->photo_total_count }}</span>
                         </figure>
                         <div class="gallery-body">
-                            <span class="category text-xs">{{ $gallery->category?->name ?? 'FOTO HABER' }}</span>
+                            <span class="category text-xs">{{ $gallery->category?->name ?? __('ui.photo_news_upper') }}</span>
                             <h4 class="font-unna font-bold line-clamp-2">{{ $gallery->title }}</h4>
                         </div>
                     </a>
@@ -196,11 +196,11 @@
 
     {{-- Modül 16: VİDEOLAR --}}
     <section class="home-videos">
-        <x-section-head title="VİDEOLAR" href="/video" />
+        <x-section-head :title="__('ui.video_news')" :href="\App\Support\Locale::url('/video')" />
         <div class="video-list">
             @foreach ($videos as $episode)
                 <article class="video-card">
-                    <a href="{{ $episode->program?->url ?? '/video' }}">
+                    <a href="{{ $episode->program?->url ?? \App\Support\Locale::url('/video') }}">
                         <figure class="video-thumb">
                             <x-lazy-image :src="asset($episode->thumbnail ?: '/img/og-default.png')" alt="" contract="video_thumb" class="img-contract" />
                             <span class="program-duration">{{ $episode->duration }}</span>
@@ -218,7 +218,7 @@
 
     {{-- Modül 18: PODCAST SERİLERİ --}}
     <section class="home-podcasts">
-        <x-section-head title="PODCAST SERİLERİ" href="/podcastler/" />
+        <x-section-head :title="__('ui.podcasts')" :href="\App\Support\Locale::url('/podcastler/')" />
         <div class="podcast-grid">
             @foreach ($podcasts as $podcast)
                 <article class="podcast-card">
@@ -239,7 +239,7 @@
 
     {{-- Modül 19: KAP HABERLERİ --}}
     <section class="home-kap">
-        <x-section-head title="KAP HABERLERİ" href="/borsa/hisseler/kap-haberleri" />
+        <x-section-head :title="__('ui.kap_news')" :href="\App\Support\Locale::url('/borsa/hisseler/kap-haberleri')" />
         <ul class="kap-list">
             @foreach ($kapDisclosures as $disclosure)
                 <li>
@@ -262,7 +262,7 @@
 
     {{-- Modül 22: SEKTÖR HABERLERİ (+ Siyaset Haberleri) --}}
     <section class="home-sector">
-        <x-section-head title="SEKTÖR HABERLERİ" href="/haberler/sektor-haberleri" />
+        <x-section-head :title="__('ui.sector_news')" :href="\App\Support\Locale::url('/haberler/sektor-haberleri')" />
         <div class="news-card-grid cols-2">
             @foreach ($sectorNews as $item)
                 <x-news-card :news="$item" type="type2" :showSpot="true" />
@@ -270,7 +270,7 @@
         </div>
 
         <div class="politics-block">
-            <x-section-head title="Siyaset Haberleri" href="/haberler/sektor-haberleri" level="h3" />
+            <x-section-head :title="__('ui.politics_news')" :href="\App\Support\Locale::url('/haberler/sektor-haberleri')" level="h3" />
             <ul class="headline-list">
                 @foreach ($politicsNews as $item)
                     <li>
@@ -286,7 +286,7 @@
 
     {{-- Modül 23: KRİPTO PARA — fiyat swiper'ı --}}
     <section class="home-crypto">
-        <x-section-head title="KRİPTO PARA" href="/kripto" />
+        <x-section-head :title="__('ui.crypto')" :href="\App\Support\Locale::url('/kripto')" />
         <div class="crypto-swiper" data-horizontal-strip>
             @foreach ($cryptoQuotes as $quote)
                 <a class="crypto-card" href="{{ $quote->instrument->url }}" data-market-code="{{ $quote->code() }}">
@@ -305,11 +305,11 @@
 
     {{-- Modül 25: EN ÇOK OKUNANLAR — Bugün | Bu Hafta | Bu Ay --}}
     <section class="home-most-read" data-widget-type="most-read">
-        <x-section-head title="EN ÇOK OKUNANLAR" :href="null" />
+        <x-section-head :title="__('ui.most_read')" :href="null" />
         <div class="most-read-tabs tab-menu" role="tablist">
-            <button type="button" role="tab" class="tab-button font-unna font-bold is-active" data-tab="today" aria-selected="true">Bugün</button>
-            <button type="button" role="tab" class="tab-button font-unna font-bold" data-tab="week" aria-selected="false">Bu Hafta</button>
-            <button type="button" role="tab" class="tab-button font-unna font-bold" data-tab="month" aria-selected="false">Bu Ay</button>
+            <button type="button" role="tab" class="tab-button font-unna font-bold is-active" data-tab="today" aria-selected="true">{{ __('ui.today') }}</button>
+            <button type="button" role="tab" class="tab-button font-unna font-bold" data-tab="week" aria-selected="false">{{ __('ui.this_week') }}</button>
+            <button type="button" role="tab" class="tab-button font-unna font-bold" data-tab="month" aria-selected="false">{{ __('ui.this_month') }}</button>
         </div>
         @foreach (['today' => $mostReadToday, 'week' => $mostReadWeek, 'month' => $mostReadMonth] as $period => $items)
             <ol class="most-read-list tab-content {{ $period === 'today' ? '' : 'hidden' }}" data-id="{{ $period }}">

@@ -23,7 +23,12 @@ class NewsController extends Controller
 
         $news = News::with(['category', 'author'])
             ->where('news_id', (int) $newsId)
-            ->where('slug', $slug)
+            ->where(function ($query) use ($slug) {
+                $query->where('slug', $slug)
+                    ->orWhereHas('translations', function ($translation) use ($slug) {
+                        $translation->where('slug', $slug);
+                    });
+            })
             ->where('status', 'published')
             ->first();
 

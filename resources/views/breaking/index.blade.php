@@ -1,10 +1,10 @@
 @extends('front.layouts.app')
 
-@section('title', 'Son Dakika | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('title', __('ui.breaking_link').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
 
 @section('content')
     <div class="section-title">
-        <h1>Son Dakika</h1>
+        <h1>{{ __('ui.breaking_link') }}</h1>
     </div>
 
     <ol class="breaking-list">
@@ -15,7 +15,7 @@
                 <a href="{{ $item->news?->url ?? '#' }}">{{ $item->title }}</a>
             </li>
         @empty
-            <li>Son dakika haberi bulunmuyor.</li>
+            <li>{{ __('ui.no_breaking') }}</li>
         @endforelse
     </ol>
 @endsection

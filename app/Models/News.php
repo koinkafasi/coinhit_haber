@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasTranslations;
+use App\Support\Locale;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +14,9 @@ use Illuminate\Support\Str;
 class News extends Model
 {
     /** @use HasFactory<NewsFactory> */
-    use HasFactory;
+    use HasFactory, HasTranslations;
+
+    protected $with = ['translations'];
 
     protected $fillable = [
         'news_id',
@@ -78,9 +82,42 @@ class News extends Model
         return $this->belongsToMany(Trend::class, 'news_trend')->withTimestamps();
     }
 
+    /**
+     * @return array<string, string>
+     */
+    public function translatable(): array
+    {
+        return [
+            'title' => 'title',
+            'slug' => 'slug',
+            'spot' => 'summary',
+            'body' => 'body',
+        ];
+    }
+
+    public function translationModel(): string
+    {
+        return NewsTranslation::class;
+    }
+
+    public function translationForeignKey(): string
+    {
+        return 'news_id';
+    }
+
+    public function getMetaTitleAttribute(): string
+    {
+        return (string) ($this->translationValue('meta_title') ?? $this->title);
+    }
+
+    public function getMetaDescriptionAttribute(): string
+    {
+        return (string) ($this->translationValue('meta_description') ?? strip_tags((string) $this->spot));
+    }
+
     public function getUrlAttribute(): string
     {
-        return '/'.$this->slug.'-'.$this->news_id;
+        return Locale::url('/'.$this->slug.'-'.$this->news_id);
     }
 
     /**

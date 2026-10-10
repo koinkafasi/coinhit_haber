@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="tr">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
-    <title>@yield('title', 'Hata') · Bloomberg HT</title>
+    <title>@yield('title', __('ui.error_title')) · Bloomberg HT</title>
     <style>
         :root { --black:#101418; --yellow:#FFE400; --red:#bd1b2d; }
         * { box-sizing:border-box; }
@@ -35,7 +35,7 @@
         <hr class="rule">
         <h1>@yield('heading')</h1>
         <p>@yield('message')</p>
-        <a class="btn" href="/">Ana Sayfa</a>
+        <a class="btn" href="{{ \App\Support\Locale::url('/') }}">{{ __('ui.error_home') }}</a>
     </main>
 </body>
 </html>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Locale;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,6 +27,6 @@ class ChartArchive extends Model
 
     public function getUrlAttribute(): string
     {
-        return '/grafik-arsivi/' . $this->slug . '-' . $this->chart_id;
+        return Locale::url('/grafik-arsivi/'.$this->slug.'-'.$this->chart_id);
     }
 }

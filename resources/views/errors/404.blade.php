@@ -1,6 +1,6 @@
 @extends('errors.layout')
 
-@section('title', 'Sayfa bulunamadı')
+@section('title', __('ui.error_404_title'))
 @section('code', '404')
-@section('heading', 'Aradığınız sayfa bulunamadı')
-@section('message', 'Bağlantı kaldırılmış ya da adres yanlış olabilir. Adresi kontrol edip tekrar deneyin.')
+@section('heading', __('ui.error_404_heading'))
+@section('message', __('ui.error_404_message'))

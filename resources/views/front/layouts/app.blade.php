@@ -1,18 +1,22 @@
 <!doctype html>
-<html lang="{{ $siteSettings['language'] ?? 'tr' }}" class="bht-html">
+<html lang="{{ app()->getLocale() }}" class="bht-html">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" content="#384552">
 
-    <title>@yield('title', ($siteSettings['site_name'] ?? 'Bloomberg HT').' | Türkiye\'nin Ekonomi Platformu')</title>
+    <title>@yield('title', ($siteSettings['site_name'] ?? 'Bloomberg HT').' | '.__('ui.site_tagline'))</title>
     <meta name="description" content="@yield('description', $siteSettings['site_tagline'] ?? '')">
     @hasSection('robots')
         <meta name="robots" content="@yield('robots')">
     @endif
 
     <link rel="canonical" href="@yield('canonical', url()->current())">
+    @foreach (config('locales.supported', []) as $__code => $__meta)
+        <link rel="alternate" hreflang="{{ $__code }}" href="{{ url(\App\Support\Locale::switchUrl($__code)) }}">
+    @endforeach
+    <link rel="alternate" hreflang="x-default" href="{{ url(\App\Support\Locale::switchUrl(\App\Support\Locale::default())) }}">
     <link rel="icon" href="{{ asset($siteSettings['favicon_path'] ?? '/favicon.ico') }}">
     <link rel="apple-touch-icon" href="{{ asset($siteSettings['apple_touch_icon'] ?? '/apple-touch-icon.png') }}">
     <link rel="alternate" type="application/rss+xml" title="Bloomberg HT RSS" href="{{ url('/rss') }}">
@@ -20,7 +24,10 @@
     {{-- Open Graph (OG görseli 960x540, Bölüm 1 / 11.1) --}}
     <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:site_name" content="{{ $siteSettings['site_name'] ?? 'Bloomberg HT' }}">
-    <meta property="og:locale" content="{{ $siteSettings['og_locale'] ?? 'tr_TR' }}">
+    <meta property="og:locale" content="{{ \App\Support\Locale::ogLocale() }}">
+    @foreach (\App\Support\Locale::alternates() as $__alt)
+        <meta property="og:locale:alternate" content="{{ \App\Support\Locale::ogLocale($__alt) }}">
+    @endforeach
     <meta property="og:url" content="@yield('canonical', url()->current())">
     @hasSection('og_title')
         <meta property="og:title" content="@yield('og_title')">
@@ -78,8 +85,8 @@
         <div class="ads-zone lazy-init" data-adv="bht" data-device="MOBILE" data-zone-id="zone_2280"></div>
     </div>
 
-    <button type="button" class="scroll-to-top" data-scroll-top aria-label="Yukarı dön">
-        <x-icon name="arrow-up" title="Yukarı dön" />
+    <button type="button" class="scroll-to-top" data-scroll-top aria-label="{{ __('ui.back_to_top') }}">
+        <x-icon name="arrow-up" title="{{ __('ui.back_to_top') }}" />
     </button>
 
     @php($dimensionNews = ($news ?? null) instanceof \App\Models\News ? $news : null)

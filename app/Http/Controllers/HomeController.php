@@ -14,6 +14,7 @@ use App\Models\ProgramEpisode;
 use App\Models\Trend;
 use App\Services\Market\MarketDataService;
 use App\Services\Market\Quote;
+use App\Support\Locale;
 use Carbon\CarbonImmutable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
@@ -158,10 +159,10 @@ class HomeController extends Controller
     private function marketWidget(): array
     {
         $definition = [
-            'borsa' => ['label' => 'Borsa', 'codes' => ['XU100', 'DOW', 'DAX', 'FTSE100', 'SHANGHAI']],
-            'doviz' => ['label' => 'Döviz', 'codes' => ['USDTRY', 'EURTRY', 'GBPTRY', 'EURUSD', 'DXY']],
-            'emtia' => ['label' => 'Emtia', 'codes' => ['GAU', 'GRAM', 'GUMUS_ONS', 'BRENT', 'WTI', 'BDIY']],
-            'faiz' => ['label' => 'Faiz', 'codes' => ['TR2Y', 'TR10Y', 'US10Y', 'DE10Y', 'GB10Y']],
+            'borsa' => ['label' => __('ui.market.borsa'), 'codes' => ['XU100', 'DOW', 'DAX', 'FTSE100', 'SHANGHAI']],
+            'doviz' => ['label' => __('ui.market.doviz'), 'codes' => ['USDTRY', 'EURTRY', 'GBPTRY', 'EURUSD', 'DXY']],
+            'emtia' => ['label' => __('ui.market.emtia'), 'codes' => ['GAU', 'GRAM', 'GUMUS_ONS', 'BRENT', 'WTI', 'BDIY']],
+            'faiz' => ['label' => __('ui.market.faiz'), 'codes' => ['TR2Y', 'TR10Y', 'US10Y', 'DE10Y', 'GB10Y']],
         ];
 
         $tabs = [];
@@ -198,29 +199,29 @@ class HomeController extends Controller
         $stocks = $this->market->quotes('stock');
 
         return [
-            ['key' => 'doviz', 'title' => 'Döviz', 'href' => '/doviz', 'quotes' => $this->market->quotes('currency')],
-            ['key' => 'pariteler', 'title' => 'Pariteler', 'href' => '/doviz/pariteler', 'quotes' => $this->market->quotes('parity')->take(12)->values()],
-            ['key' => 'gelisen-piyasa', 'title' => 'Gelişen Piyasa Kurları', 'href' => '/doviz', 'quotes' => $this->market->quotes('emerging_fx')],
-            ['key' => 'bist', 'title' => 'BIST', 'href' => '/borsa', 'quotes' => $this->market->quotes('bist_index')->take(15)->values()],
+            ['key' => 'doviz', 'title' => __('ui.tables.doviz'), 'href' => Locale::url('/doviz'), 'quotes' => $this->market->quotes('currency')],
+            ['key' => 'pariteler', 'title' => __('ui.tables.pariteler'), 'href' => Locale::url('/doviz/pariteler'), 'quotes' => $this->market->quotes('parity')->take(12)->values()],
+            ['key' => 'gelisen-piyasa', 'title' => __('ui.tables.gelisen_piyasa'), 'href' => Locale::url('/doviz'), 'quotes' => $this->market->quotes('emerging_fx')],
+            ['key' => 'bist', 'title' => __('ui.tables.bist'), 'href' => Locale::url('/borsa'), 'quotes' => $this->market->quotes('bist_index')->take(15)->values()],
             [
                 'key' => 'artanlar',
-                'title' => 'En çok Artanlar',
-                'href' => '/borsa/en-cok',
+                'title' => __('ui.tables.artanlar'),
+                'href' => Locale::url('/borsa/en-cok'),
                 'quotes' => $stocks->sortByDesc(fn ($q) => $q->changePercent)->take(10)->values(),
             ],
             [
                 'key' => 'azalanlar',
-                'title' => 'En çok Azalanlar',
-                'href' => '/borsa/en-cok',
+                'title' => __('ui.tables.azalanlar'),
+                'href' => Locale::url('/borsa/en-cok'),
                 'quotes' => $stocks->sortBy(fn ($q) => $q->changePercent)->take(10)->values(),
             ],
-            ['key' => 'tahvil', 'title' => 'Tahvil', 'href' => '/faiz-bono', 'quotes' => $this->market->quotes('bond_tr')],
-            ['key' => 'repo', 'title' => 'Repo', 'href' => '/faiz-bono', 'quotes' => $this->market->quotes('repo')],
-            ['key' => 'eurobond', 'title' => 'Eurobondlar', 'href' => '/faiz-bono', 'quotes' => $this->market->quotes('eurobond')],
+            ['key' => 'tahvil', 'title' => __('ui.tables.tahvil'), 'href' => Locale::url('/faiz-bono'), 'quotes' => $this->market->quotes('bond_tr')],
+            ['key' => 'repo', 'title' => __('ui.tables.repo'), 'href' => Locale::url('/faiz-bono'), 'quotes' => $this->market->quotes('repo')],
+            ['key' => 'eurobond', 'title' => __('ui.tables.eurobond'), 'href' => Locale::url('/faiz-bono'), 'quotes' => $this->market->quotes('eurobond')],
             [
                 'key' => 'altin',
-                'title' => 'Altın',
-                'href' => '/altin',
+                'title' => __('ui.tables.altin'),
+                'href' => Locale::url('/altin'),
                 'quotes' => $this->market->quotes('gold'),
                 'columns' => [
                     ['label' => 'ALIŞ', 'field' => 'bid', 'class' => 'lastPrice'],
@@ -228,10 +229,10 @@ class HomeController extends Controller
                     ['label' => '%', 'field' => 'change_percent', 'class' => 'percentChange', 'color' => true],
                 ],
             ],
-            ['key' => 'kiymetli', 'title' => 'Kıymetli Metaller', 'href' => '/emtia', 'quotes' => $this->market->quotes('precious_metal')],
-            ['key' => 'tarim', 'title' => 'Tarım Emtia', 'href' => '/emtia', 'quotes' => $this->market->quotes('agriculture')],
-            ['key' => 'alternatif-piyasalar', 'title' => 'Alternatif Piyasalar', 'href' => '/alternatif', 'quotes' => $this->market->quotes('alternative')],
-            ['key' => 'alternatif', 'title' => 'Alternatif', 'href' => '/alternatif', 'quotes' => $this->market->quotes('baltic')],
+            ['key' => 'kiymetli', 'title' => __('ui.tables.kiymetli'), 'href' => Locale::url('/emtia'), 'quotes' => $this->market->quotes('precious_metal')],
+            ['key' => 'tarim', 'title' => __('ui.tables.tarim'), 'href' => Locale::url('/emtia'), 'quotes' => $this->market->quotes('agriculture')],
+            ['key' => 'alternatif-piyasalar', 'title' => __('ui.tables.alternatif_piyasalar'), 'href' => Locale::url('/alternatif'), 'quotes' => $this->market->quotes('alternative')],
+            ['key' => 'alternatif', 'title' => __('ui.tables.alternatif'), 'href' => Locale::url('/alternatif'), 'quotes' => $this->market->quotes('baltic')],
         ];
     }
 }

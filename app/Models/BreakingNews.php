@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasTranslations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class BreakingNews extends Model
 {
     /** @use HasFactory<BreakingNewsFactory> */
-    use HasFactory;
+    use HasFactory, HasTranslations;
+
+    protected $with = ['translations'];
 
     protected $fillable = [
         'news_id',
@@ -30,6 +33,26 @@ class BreakingNews extends Model
     public function news(): BelongsTo
     {
         return $this->belongsTo(News::class);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function translatable(): array
+    {
+        return [
+            'title' => 'text',
+        ];
+    }
+
+    public function translationModel(): string
+    {
+        return BreakingNewsTranslation::class;
+    }
+
+    public function translationForeignKey(): string
+    {
+        return 'breaking_news_id';
     }
 
     /**

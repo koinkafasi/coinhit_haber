@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Locale;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -42,6 +43,6 @@ class Program extends Model
 
     public function getUrlAttribute(): string
     {
-        return '/tv/program/'.$this->slug;
+        return Locale::url('/tv/program/'.$this->slug);
     }
 }

@@ -2,7 +2,7 @@
     'title',
     'quotes',
     'href' => null,
-    'allLabel' => 'TÜMÜNÜ GÖR',
+    'allLabel' => null,
     'columns' => null,
     'id' => null,
     'head' => true,
@@ -13,6 +13,7 @@
 ])
 
 @php
+    $allLabel = $allLabel ?? __('ui.all_see');
     $columns = $columns ?? [
         ['label' => 'SON', 'field' => 'last', 'class' => 'lastPrice'],
         ['label' => '%', 'field' => 'change_percent', 'class' => 'percentChange', 'color' => true],
@@ -78,7 +79,7 @@
                         @endforeach
                     </tr>
                 @empty
-                    <tr><td colspan="{{ count($columns) + 1 }}" class="py-4 text-gray-400">Veri bulunmuyor.</td></tr>
+                    <tr><td colspan="{{ count($columns) + 1 }}" class="py-4 text-gray-400">{{ __('ui.no_data') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

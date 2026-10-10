@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasTranslations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +11,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Category extends Model
 {
     /** @use HasFactory<CategoryFactory> */
-    use HasFactory;
+    use HasFactory, HasTranslations;
+
+    protected $with = ['translations'];
 
     protected $fillable = [
         'parent_id',
@@ -37,5 +40,27 @@ class Category extends Model
     public function news(): HasMany
     {
         return $this->hasMany(News::class);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function translatable(): array
+    {
+        return [
+            'name' => 'name',
+            'slug' => 'slug',
+            'description' => 'description',
+        ];
+    }
+
+    public function translationModel(): string
+    {
+        return CategoryTranslation::class;
+    }
+
+    public function translationForeignKey(): string
+    {
+        return 'category_id';
     }
 }

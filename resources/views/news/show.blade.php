@@ -1,6 +1,6 @@
 @extends('front.layouts.app')
 
-@section('title', $news->title.' | '.($news->category?->name ?? 'Haber').' haberleri')
+@section('title', $news->title.' | '.($news->category?->name ?? __('ui.news_singular')).' '.__('ui.news_suffix'))
 @section('description', strip_tags($news->spot ?? ''))
 @section('og_type', 'article')
 @section('og_title', $news->title)
@@ -10,7 +10,7 @@
 
 @section('content')
     <x-breadcrumb :items="[
-        ['label' => $news->category?->name ?? 'Haberler', 'url' => '/haberler'],
+        ['label' => $news->category?->name ?? __('ui.news_title'), 'url' => \App\Support\Locale::url('/haberler')],
         ['label' => $news->title, 'url' => null],
     ]" />
 
@@ -26,7 +26,7 @@
 
         @if ($news->author)
             <p class="article-author">
-                <a href="{{ route('authors.index') }}">{{ $news->author->name }}</a> · {{ $news->author->title }}
+                <a href="{{ \App\Support\Locale::route('authors.index') }}">{{ $news->author->name }}</a> · {{ $news->author->title }}
             </p>
         @endif
 
@@ -37,7 +37,7 @@
         <p class="article-meta">
             {{ $news->published_at?->translatedFormat('j F Y, H:i') }}
             @if ($news->modified_at)
-                · Güncelleme: <time>{{ $news->modified_at->translatedFormat('H:i') }}</time>
+                · {{ __('ui.updated') }}: <time>{{ $news->modified_at->translatedFormat('H:i') }}</time>
             @endif
         </p>
 
@@ -56,7 +56,7 @@
 
     @if ($related->isNotEmpty())
         <section class="related">
-            <div class="section-title"><h2>İlgili Haberler</h2></div>
+            <div class="section-title"><h2>{{ __('ui.related') }}</h2></div>
             <div class="list-grid">
                 @foreach ($related as $item)
                     <article class="news-card">
