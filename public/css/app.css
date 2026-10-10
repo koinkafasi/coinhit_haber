@@ -1363,3 +1363,183 @@ img[data-src].b-lazy-loaded {
 @media (max-width: 767px) {
     .gold-calc-modes .gold-calc-mode { flex: 1; text-align: center; }
 }
+
+/* ============================================================
+   CH-11 — HABER LİSTELERİ & KATEGORİ/KANAL SAYFALARI
+   (Bölüm 8 / 15.10-15.13, 17.3 birebir sınıf deseni)
+   ============================================================ */
+
+/* ---------- Sayfa başlık bandı (head-type1/2) ---------- */
+.bht-page-band h1 { font-size: 2rem; margin: 0; }
+.bht-page-band .section-head-bar,
+.section-title.bht-page-band::after {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; margin: auto 0;
+    width: 230px; height: 10px; background: #000; opacity: .08; z-index: -1;
+}
+.section-title.bht-page-band { position: relative; }
+
+/* ---------- /haberler — 2 sütunlu masonry grid ---------- */
+.masonry-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; align-items: start; }
+.masonry-grid .news-card-item { border-bottom: 1px solid var(--gray-border); margin-bottom: 0; padding-bottom: 10px; }
+.masonry-lead { grid-column: 1 / -1; }
+.news-card-item[data-type="news-card-type5"] .news-card-link { display: block; }
+.news-card-item[data-type="news-card-type5"] .news-card-figure { margin: 0; }
+.news-card-item[data-type="news-card-type5"] .news-card-img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.news-card-item[data-type="news-card-type5"] .news-card-title { font-size: 1.6rem; line-height: 1.2; }
+
+/* ---------- "Daha fazla yükle / Listele" ---------- */
+.load-more-wrap { display: flex; justify-content: center; margin: 26px 0; }
+.load-more {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-width: 180px; padding: 12px 28px; border: 1px solid #000; background: #fff;
+    color: #000; font-weight: 700; font-size: 14px; letter-spacing: .02em; cursor: pointer;
+}
+.load-more:hover { background: #000; color: #fff; }
+.load-more.is-loading { opacity: .6; pointer-events: none; }
+.load-more.is-done { display: none; }
+
+/* ---------- Tek sütun haber listesi ---------- */
+.news-list { display: flex; flex-direction: column; }
+.news-list-item { border-bottom: 1px solid var(--gray-border); padding: 14px 0; }
+.news-list-link { display: flex; gap: 16px; align-items: flex-start; }
+.news-list-figure { flex: 0 0 200px; margin: 0; }
+.news-list-img { width: 200px; height: 200px; object-fit: cover; }
+.news-list-body { flex: 1; min-width: 0; }
+.news-list-category, .news-list-body .category { color: #777; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
+.news-list-title { font-size: 20px; line-height: 1.3; margin: 0 0 6px; }
+.news-list-spot { color: #555; font-size: 14px; margin: 0; }
+.news-age { display: inline-block; margin-top: 6px; font-size: 12px; color: #999; }
+.news-list-item.is-lead .news-list-title { font-size: 26px; }
+.news-list-item.is-lead .news-list-img { width: 240px; height: 240px; }
+.news-list-item.is-lead .news-list-figure { flex: 0 0 240px; }
+
+/* ---------- /tumhaberler 2 kolon ---------- */
+.tumhaberler-layout { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 28px; align-items: start; }
+.tumhaberler-main { min-width: 0; }
+
+/* ---------- Arama / etiket 2 kolon ---------- */
+.search-layout { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 28px; align-items: start; }
+.search-main { min-width: 0; }
+.search-updated { display: inline-block; margin-left: 10px; font-size: 12px; color: #999; }
+.related-tags { margin-top: 28px; }
+.related-tags-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ---------- /sondakika date grupları + paylaş ---------- */
+.breaking-groups { display: flex; flex-direction: column; gap: 26px; }
+.breaking-group-date {
+    background: #000; color: #fff; font-size: 16px; font-weight: 700;
+    padding: 8px 14px; margin: 0 0 6px; display: inline-block;
+}
+.breaking-row { display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--gray-border); }
+.breaking-time { color: var(--red); font-weight: 700; font-size: 18px; min-width: 60px; font-variant-numeric: tabular-nums; }
+.breaking-main { flex: 1; min-width: 0; }
+.breaking-title {
+    display: block; font-family: Unna, Georgia, serif; font-weight: 700;
+    font-size: 20px; line-height: 1.25; margin-bottom: 8px;
+}
+.breaking-title:hover { text-decoration: underline; }
+.breaking-share { margin: 0; gap: 6px; }
+.breaking-share a, .breaking-share button { width: 32px; height: 32px; }
+.breaking-share .shortlink-copy {
+    width: auto; height: 32px; border-radius: 16px; padding: 0 12px; gap: 6px;
+    font-size: 12px; white-space: nowrap;
+}
+.breaking-share .shortlink-text { font-weight: 600; }
+.breaking-live { display: inline-flex; align-items: center; font-size: 13px; font-weight: 700; color: var(--red); }
+.breaking-ad { margin-top: 30px; }
+
+/* ---------- /fotohaber slideshow ---------- */
+.gallery-summary { color: #444; margin-bottom: 16px; }
+.gallery-viewer { position: relative; background: #000; margin-bottom: 12px; }
+.gallery-slides { position: relative; }
+.gallery-slide { display: none; margin: 0; }
+.gallery-slide.is-active { display: block; }
+.gallery-slide img { width: 100%; max-height: 640px; object-fit: contain; background: #000; }
+.gallery-caption { background: rgba(0,0,0,.85); color: #fff; font-size: 14px; padding: 10px 16px; margin: 0; }
+.gallery-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 44px; height: 44px; border: 0; cursor: pointer;
+    background: rgba(0,0,0,.45); color: #fff; font-size: 28px; line-height: 1;
+}
+.gallery-prev { left: 10px; }
+.gallery-next { right: 10px; }
+.gallery-counter {
+    position: absolute; right: 12px; bottom: 12px; background: rgba(0,0,0,.7);
+    color: #fff; font-size: 12px; padding: 4px 10px; border-radius: 3px;
+}
+.gallery-thumbs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 18px; }
+.gallery-thumb { flex: 0 0 96px; padding: 0; border: 2px solid transparent; background: none; cursor: pointer; }
+.gallery-thumb img { width: 96px; height: 96px; object-fit: cover; }
+.gallery-thumb.is-active { border-color: #000; }
+.gallery-detail .article-title { font-size: 2rem; }
+
+/* ---------- /gorus yazar kartları ---------- */
+.opinion-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 22px; }
+.opinion-card { display: flex; gap: 16px; border: 1px solid var(--gray-border); padding: 18px; background: #fff; }
+.opinion-avatar { flex: 0 0 72px; }
+.opinion-avatar img, .opinion-avatar .author-avatar { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; }
+.opinion-body { flex: 1; min-width: 0; }
+.opinion-name { font-size: 20px; display: block; }
+.opinion-name:hover { color: var(--red); }
+.opinion-corner { color: var(--red); font-size: 13px; font-weight: 600; margin: 2px 0 6px; }
+.opinion-summary { color: #555; font-size: 14px; margin: 0 0 10px; }
+.opinion-latest { list-style: none; margin: 0 0 10px; padding: 0; border-top: 1px solid var(--gray-border); }
+.opinion-latest li { padding: 6px 0; border-bottom: 1px solid var(--gray-border); font-size: 14px; }
+.opinion-latest a:hover { text-decoration: underline; }
+.opinion-all { font-size: 12px; font-weight: 700; }
+
+/* ---------- Yazar arşivi ---------- */
+.archive-author { display: flex; gap: 20px; align-items: center; border-bottom: 2px solid #000; padding-bottom: 18px; margin-bottom: 20px; }
+.archive-author .author-avatar { width: 96px; height: 96px; font-size: 40px; }
+.archive-author-body h1 { font-size: 2rem; margin: 0 0 4px; }
+.archive-author-title { color: var(--red); font-weight: 600; }
+.archive-author-bio { color: #555; margin: 6px 0 0; }
+
+/* ---------- Halka arz takvimi ---------- */
+.ipo-intro { font-size: 16px; color: #333; line-height: 1.7; margin-bottom: 8px; }
+.ipo-legal { font-size: 13px; color: #777; line-height: 1.6; margin-bottom: 22px; }
+.ipo-subtitle { font-size: 1.5rem; margin: 0 0 12px; }
+.ipo-table { width: 100%; background: #fff; }
+.ipo-table th, .ipo-table td { text-align: left; }
+.ipo-table .ipo-ticker { color: #777; font-weight: 600; }
+.ipo-empty { text-align: center; color: #888; padding: 20px; }
+
+/* ---------- Kanal/kategori sayfası ortak şablon ---------- */
+.channel-intro { font-size: 16px; color: #333; line-height: 1.7; margin-bottom: 20px; }
+.author-corner {
+    display: flex; gap: 18px; align-items: flex-start;
+    border: 1px solid var(--gray-border); border-left: 4px solid var(--bht-yellow);
+    background: #fff; padding: 18px; margin: 28px 0;
+}
+.author-corner-avatar { flex: 0 0 80px; }
+.author-corner-avatar img, .author-corner-avatar .author-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; }
+.author-corner-name { font-size: 22px; display: block; }
+.author-corner-name:hover { color: var(--red); }
+.author-corner-title { color: var(--red); font-weight: 600; font-size: 13px; margin: 2px 0 8px; }
+.author-corner-summary { color: #555; font-size: 14px; margin: 0 0 10px; }
+.author-corner-all { font-size: 12px; font-weight: 700; }
+.channel-videos, .channel-list-block { margin-top: 30px; }
+.channel-page > .market-widget-compact { margin: 30px 0; }
+
+/* ---------- Aside kompakt market widget ---------- */
+.market-widget-compact .market-widget-charts { padding: 12px; }
+.market-widget-compact .mw-chart-canvas svg.sparkline { height: 90px; }
+.market-widget-compact .market-widget-tabs { gap: 6px; }
+.market-widget-compact .market-widget-tab { padding: 6px 12px; font-size: 13px; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 999px) {
+    .masonry-grid { grid-template-columns: 1fr; }
+    .tumhaberler-layout, .search-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+    .bht-page-band h1 { font-size: 1.5rem; }
+    .news-list-link { flex-direction: column; }
+    .news-list-figure, .news-list-item.is-lead .news-list-figure { flex: 0 0 auto; }
+    .news-list-img, .news-list-item.is-lead .news-list-img { width: 100%; height: auto; aspect-ratio: 1 / 1; }
+    .news-list-title, .news-list-item.is-lead .news-list-title { font-size: 19px; }
+    .breaking-row { flex-direction: column; gap: 6px; }
+    .breaking-time { min-width: 0; }
+    .author-corner, .archive-author { flex-direction: column; }
+    .opinion-grid { grid-template-columns: 1fr; }
+}

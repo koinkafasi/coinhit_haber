@@ -105,7 +105,33 @@ return [
     'search_heading' => 'Arama',
     'search_prompt' => 'Aramak istediğiniz kelimeyi yazın.',
     'search_results' => 'için :count sonuç bulundu.',
+    'search_total' => 'için toplam :count haber bulundu.',
     'no_results' => 'Sonuç bulunamadı.',
+    'related_tags' => 'İlgili Etiketler',
+    'minutes_ago' => 'dakika önce',
+    'hours_ago' => 'saat önce',
+    'days_ago' => 'gün önce',
+
+    // Liste / paylaşım / galeri
+    'share' => 'Paylaş',
+    'copy_link' => 'Bağlantıyı kopyala',
+    'copy_short_link' => 'Kısa linki kopyala',
+    'photo_count' => 'fotoğraf',
+
+    // Görüş / yazar
+    'opinions_title' => 'Görüş',
+    'all_writings' => 'TÜM YAZILAR',
+    'opinion_archive' => 'Görüş Arşivi',
+
+    // Halka arz takvimi
+    'ipo_title' => 'Halka Arz Takvimi',
+    'ipo_intro' => 'Halka arz takvimi, talep toplama süreci devam eden ve yakında işlem görmeye başlayacak şirketlerin bilgilerini bir araya getirir.',
+    'ipo_legal' => 'Bu sayfadaki bilgiler yatırım tavsiyesi niteliği taşımaz; yatırım kararlarınızı yatırım danışmanınızla birlikte değerlendirmeniz önerilir.',
+    'ipo_request_dates' => 'Talep Toplama Tarihleri',
+    'ipo_col_request' => 'Talep Toplama Tarihleri',
+    'ipo_col_company' => 'Şirket (ticker)',
+    'ipo_col_value' => 'Halka Arz Değeri',
+    'ipo_col_price' => 'Halka Arz Fiyatı',
 
     // Çerez
     'cookie_text' => 'Sitemizde deneyiminizi iyileştirmek ve kişiselleştirilmiş içerik sunmak için çerezler kullanılmaktadır. Detaylar için',

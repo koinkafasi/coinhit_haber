@@ -383,6 +383,111 @@
         });
     }
 
+    /**
+     * "Daha fazla yükle / Listele" — bir sonraki sayfayı çekip listeye ekler,
+     * buton yoksa gizler (spec §10, §15.10).
+     */
+    function initLoadMore() {
+        document.querySelectorAll('[data-load-more]').forEach(function (button) {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                var url = button.getAttribute('data-next-url');
+                var selector = button.getAttribute('data-container');
+                var container = selector ? document.querySelector(selector) : null;
+
+                if (!url || !container) {
+                    return;
+                }
+
+                button.classList.add('is-loading');
+
+                fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                    .then(function (response) { return response.ok ? response.text() : Promise.reject(); })
+                    .then(function (html) {
+                        var doc = new DOMParser().parseFromString(html, 'text/html');
+                        var fresh = doc.querySelector(selector);
+
+                        if (fresh) {
+                            Array.prototype.slice.call(fresh.children).forEach(function (child) {
+                                container.appendChild(document.importNode(child, true));
+                            });
+                        }
+
+                        var freshButton = doc.querySelector('[data-load-more]');
+
+                        if (freshButton && freshButton.getAttribute('data-next-url')) {
+                            button.setAttribute('data-next-url', freshButton.getAttribute('data-next-url'));
+                            button.setAttribute('href', freshButton.getAttribute('href') || freshButton.getAttribute('data-next-url'));
+                            button.classList.remove('is-loading');
+                        } else {
+                            button.classList.remove('is-loading');
+                            button.classList.add('is-done');
+                        }
+
+                        if (typeof window.bhtLazyScan === 'function') {
+                            window.bhtLazyScan();
+                        }
+                    })
+                    .catch(function () {
+                        button.classList.remove('is-loading');
+                    });
+            });
+        });
+    }
+
+    /**
+     * Foto galeri slideshow (spec §4, §8 /fotohaber).
+     */
+    function initGallerySlideshow() {
+        document.querySelectorAll('[data-gallery-slideshow]').forEach(function (root) {
+            var slides = root.querySelectorAll('[data-slide]');
+            var scope = root.closest('.gallery-detail') || document;
+            var thumbs = scope.querySelectorAll('[data-gallery-thumb]');
+            var counter = root.querySelector('[data-gallery-counter]');
+            var current = 0;
+
+            if (!slides.length) {
+                return;
+            }
+
+            function render() {
+                slides.forEach(function (slide, index) {
+                    slide.classList.toggle('is-active', index === current);
+                });
+
+                thumbs.forEach(function (thumb, index) {
+                    thumb.classList.toggle('is-active', index === current);
+                });
+
+                if (counter) {
+                    counter.textContent = (current + 1) + ' / ' + slides.length;
+                }
+            }
+
+            function go(index) {
+                current = (index + slides.length) % slides.length;
+                render();
+            }
+
+            var prev = root.querySelector('[data-gallery-prev]');
+            var next = root.querySelector('[data-gallery-next]');
+
+            if (prev) {
+                prev.addEventListener('click', function () { go(current - 1); });
+            }
+            if (next) {
+                next.addEventListener('click', function () { go(current + 1); });
+            }
+
+            thumbs.forEach(function (thumb) {
+                thumb.addEventListener('click', function () {
+                    go(parseInt(thumb.getAttribute('data-gallery-thumb'), 10) || 0);
+                });
+            });
+        });
+    }
+
     function init() {
         initCookie();
         initMenu();
@@ -394,6 +499,8 @@
         initShareCopy();
         initCurrencyConverter();
         initGoldCalculator();
+        initLoadMore();
+        initGallerySlideshow();
     }
 
     if (document.readyState === 'loading') {

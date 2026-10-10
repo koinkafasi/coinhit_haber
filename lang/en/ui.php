@@ -105,7 +105,33 @@ return [
     'search_heading' => 'Search',
     'search_prompt' => 'Type the word you want to search for.',
     'search_results' => '— :count results found for the query.',
+    'search_total' => '— :count news found.',
     'no_results' => 'No results found.',
+    'related_tags' => 'Related Tags',
+    'minutes_ago' => 'minutes ago',
+    'hours_ago' => 'hours ago',
+    'days_ago' => 'days ago',
+
+    // List / sharing / gallery
+    'share' => 'Share',
+    'copy_link' => 'Copy link',
+    'copy_short_link' => 'Copy short link',
+    'photo_count' => 'photos',
+
+    // Opinion / author
+    'opinions_title' => 'Opinion',
+    'all_writings' => 'ALL ARTICLES',
+    'opinion_archive' => 'Opinion Archive',
+
+    // IPO calendar
+    'ipo_title' => 'IPO Calendar',
+    'ipo_intro' => 'The IPO calendar brings together information on companies currently in the book-building process and those about to start trading.',
+    'ipo_legal' => 'The information on this page does not constitute investment advice; evaluate your investment decisions together with your investment advisor.',
+    'ipo_request_dates' => 'Book Building Dates',
+    'ipo_col_request' => 'Book Building Dates',
+    'ipo_col_company' => 'Company (ticker)',
+    'ipo_col_value' => 'IPO Value',
+    'ipo_col_price' => 'IPO Price',
 
     // Cookie
     'cookie_text' => 'We use cookies to improve your experience and offer personalized content. For details, please review the',

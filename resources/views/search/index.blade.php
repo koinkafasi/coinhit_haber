@@ -5,38 +5,32 @@
 @section('robots', 'noindex,follow')
 
 @section('content')
-    <x-breadcrumb :items="[['label' => __('ui.search_heading'), 'url' => \App\Support\Locale::url('/arama')]]" />
+    <div class="search-layout">
+        <div class="search-main">
+            <x-breadcrumb :items="[['label' => __('ui.search_heading'), 'url' => \App\Support\Locale::url('/arama')]]" />
 
-    <div class="section-title">
-        <h1>{{ __('ui.search_heading') }}</h1>
+            <div class="section-title bht-page-band">
+                <h1 class="font-unna font-bold">{{ __('ui.search_heading') }}</h1>
+            </div>
+
+            @if ($query === '')
+                <p class="search-empty">{{ __('ui.search_prompt') }}</p>
+            @else
+                <p class="search-summary">
+                    <strong>&ldquo;{{ $query }}&rdquo;</strong> {{ __('ui.search_total', ['count' => $results->total()]) }}
+                    <span class="search-updated">{{ __('ui.updated') }}: {{ now()->translatedFormat('d.m.Y H:i') }}</span>
+                </p>
+
+                @include('partials.news-list', ['items' => $results, 'showSpot' => true, 'showAge' => true])
+
+                @include('borsa.partials.pagination', ['paginator' => $results])
+
+                @include('partials.related-tags', ['tags' => $relatedTags])
+            @endif
+        </div>
+
+        <aside class="borsa-aside">
+            @include('partials.market-widget-compact')
+        </aside>
     </div>
-
-    @if ($query === '')
-        <p class="search-empty">{{ __('ui.search_prompt') }}</p>
-    @else
-        <p class="search-summary">
-            <strong>&ldquo;{{ $query }}&rdquo;</strong> {{ __('ui.search_results', ['count' => $results->total()]) }}
-        </p>
-
-        <div class="list-grid">
-            @forelse ($results as $item)
-                <article class="news-card">
-                    <a href="{{ $item->url }}">
-                        <x-lazy-image :src="asset($item->image)" alt="" contract="news_card" class="card-img img-contract" />
-                        <div class="card-body">
-                            <span class="category-tag">{{ $item->category?->name }}</span>
-                            <h3>{{ $item->title }}</h3>
-                            <p class="card-time">{{ $item->published_at?->format('d.m.Y H:i') }}</p>
-                        </div>
-                    </a>
-                </article>
-            @empty
-                <p class="search-empty">{{ __('ui.no_results') }}</p>
-            @endforelse
-        </div>
-
-        <div class="pagination">
-            {{ $results->links() }}
-        </div>
-    @endif
 @endsection

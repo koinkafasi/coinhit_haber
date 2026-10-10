@@ -61,4 +61,9 @@
     } else {
         init();
     }
+
+    /**
+     * Dinamik eklenen görseller için yeniden tarama (load-more).
+     */
+    window.bhtLazyScan = init;
 })();

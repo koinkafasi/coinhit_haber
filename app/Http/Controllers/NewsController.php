@@ -2,19 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\BuildsMarketWidget;
 use App\Models\News;
 use Illuminate\Contracts\View\View;
 
 class NewsController extends Controller
 {
+    use BuildsMarketWidget;
+
+    /**
+     * /haberler — 2 sütunlu masonry haber grid'i (spec §8 / §15.10).
+     */
     public function index(): View
     {
+        $news = News::where('status', 'published')
+            ->with(['category', 'author'])
+            ->orderByDesc('published_at')
+            ->paginate(24);
+
         return view('news.index', array_merge([
-            'news' => News::where('status', 'published')
-                ->with(['category', 'author'])
-                ->orderByDesc('published_at')
-                ->paginate(24),
+            'news' => $news,
+            'lead' => $news->first(),
         ], $this->layoutData()));
+    }
+
+    /**
+     * /tumhaberler — tek sütun liste + sayfalama + Piyasalar widget (spec §8 / §15.12).
+     */
+    public function all(): View
+    {
+        $news = News::where('status', 'published')
+            ->with(['category', 'author'])
+            ->orderByDesc('published_at')
+            ->paginate(12);
+
+        return view('news.all', array_merge([
+            'news' => $news,
+        ], $this->marketWidgetData(), $this->layoutData()));
     }
 
     public function show(string $slug, string $newsId): View

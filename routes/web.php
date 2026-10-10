@@ -12,15 +12,18 @@ use App\Http\Controllers\AltinController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BorsaController;
 use App\Http\Controllers\BreakingNewsController;
+use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\ChartArchiveController;
 use App\Http\Controllers\DovizController;
 use App\Http\Controllers\EmtiaController;
 use App\Http\Controllers\FaizBonoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\IpoCalendarController;
 use App\Http\Controllers\KriptoController;
 use App\Http\Controllers\MarketDataController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\PhotoGalleryController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Middleware\EnsureAdmin;
@@ -38,15 +41,53 @@ use Illuminate\Support\Facades\Route;
 $frontRoutes = function (): void {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
+    /*
+    |----------------------------------------------------------------------
+    | Haber listeleri & kategori/içerik sayfaları (Bölüm 8, 15.10-15.13)
+    |----------------------------------------------------------------------
+    */
     Route::get('/haberler', [NewsController::class, 'index'])->name('news.index');
+    Route::get('/tumhaberler', [NewsController::class, 'all'])->name('news.all');
     Route::get('/sondakika', [BreakingNewsController::class, 'index'])->name('breaking.index');
     Route::get('/grafik-arsivi', [ChartArchiveController::class, 'index'])->name('charts.index');
     Route::get('/yazarlar', [AuthorController::class, 'index'])->name('authors.index');
+    Route::get('/gorus', [AuthorController::class, 'opinions'])->name('authors.opinions');
+    Route::get('/yorum/{author}/{segment}', [AuthorController::class, 'archive'])
+        ->where('author', '[A-Za-z0-9\-]+')
+        ->where('segment', '[A-Za-z0-9\-]+')
+        ->name('authors.archive');
+
+    Route::get('/fotohaber', [PhotoGalleryController::class, 'index'])->name('photo.index');
+    Route::get('/fotohaber/{slug}-{id}', [PhotoGalleryController::class, 'show'])
+        ->where('slug', '[^/]+')
+        ->where('id', '[0-9]+')
+        ->name('photo.show');
+
+    Route::get('/halka-arz-takvimi', [IpoCalendarController::class, 'index'])->name('ipo.index');
 
     Route::get('/arama', [SearchController::class, 'index'])->name('search.index');
     Route::get('/arama/{q}', [SearchController::class, 'index'])
         ->where('q', '[^/]+')
         ->name('search.query');
+    Route::get('/haberleri/{tag}', [SearchController::class, 'tag'])
+        ->where('tag', '[A-Za-z0-9\-]+')
+        ->name('search.tag');
+
+    /*
+    |----------------------------------------------------------------------
+    | Kanal/kategori sayfaları (Bölüm 8 / 15.16 — ortak şablon)
+    |----------------------------------------------------------------------
+    */
+    Route::get('/finansal-teknoloji', [ChannelController::class, 'show'])->defaults('channel', 'finansal-teknoloji')->name('channel.finansal-teknoloji');
+    Route::get('/enerji', [ChannelController::class, 'show'])->defaults('channel', 'enerji')->name('channel.enerji');
+    Route::get('/ekonomik-veriler-ve-gundem', [ChannelController::class, 'show'])->defaults('channel', 'ekonomik-veriler-ve-gundem')->name('channel.ekonomik-veriler-ve-gundem');
+    Route::get('/tarim', [ChannelController::class, 'show'])->defaults('channel', 'tarim')->name('channel.tarim');
+    Route::get('/zirve', [ChannelController::class, 'show'])->defaults('channel', 'zirve')->name('channel.zirve');
+    Route::get('/siyaset', [ChannelController::class, 'show'])->defaults('channel', 'siyaset')->name('channel.siyaset');
+    Route::get('/haberler/sektor-haberleri', [ChannelController::class, 'show'])->defaults('channel', 'sektor-haberleri')->name('channel.sektor-haberleri');
+    Route::get('/haberler/turkiye-ekonomisi', [ChannelController::class, 'show'])->defaults('channel', 'turkiye-ekonomisi')->name('channel.turkiye-ekonomisi');
+    Route::get('/haberler/kuresel-piyasalar', [ChannelController::class, 'show'])->defaults('channel', 'kuresel-piyasalar')->name('channel.kuresel-piyasalar');
+    Route::get('/haberler/emtia-enerji', [ChannelController::class, 'show'])->defaults('channel', 'emtia-enerji')->name('channel.emtia-enerji');
 
     /*
     |----------------------------------------------------------------------
