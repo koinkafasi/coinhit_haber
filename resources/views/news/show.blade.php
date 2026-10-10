@@ -2,21 +2,17 @@
 
 @section('title', $news->title.' | '.($news->category?->name ?? 'Haber').' haberleri')
 @section('description', strip_tags($news->spot ?? ''))
-@section('head')
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="{{ $news->title }}">
-    <meta property="og:description" content="{{ strip_tags($news->spot ?? '') }}">
-    <meta property="og:url" content="{{ url($news->url) }}">
-    <meta property="og:image" content="{{ url($news->image_og ?: $news->image ?: '/img/og-default.png') }}">
-    <meta property="og:locale" content="{{ $siteSettings['og_locale'] ?? 'tr_TR' }}">
-@endsection
+@section('og_type', 'article')
+@section('og_title', $news->title)
+@section('og_description', strip_tags($news->spot ?? ''))
+@section('og_image', url($news->image_og ?: $news->image ?: '/img/og-default.png'))
+@section('canonical', url($news->url))
 
 @section('content')
-    <nav class="breadcrumb">
-        <a href="{{ route('home') }}">Bloomberg HT</a>
-        <span>&rsaquo;</span>
-        <span>{{ $news->category?->name }}</span>
-    </nav>
+    <x-breadcrumb :items="[
+        ['label' => $news->category?->name ?? 'Haberler', 'url' => '/haberler'],
+        ['label' => $news->title, 'url' => null],
+    ]" />
 
     <article class="article">
         <span class="category-tag">{{ $news->category?->name }}</span>

@@ -597,3 +597,252 @@ img[data-src].b-lazy-loaded {
     .breaking-list li { flex-direction: column; gap: 2px; }
     .breaking-date { min-width: 0; }
 }
+
+/* ============================================================
+   CH-4 — GLOBAL ÇERÇEVE: mega nav, ticker, footer, cookie,
+   arama, yukarı dön (Bölüm 2 / 17.3, birebir sınıf deseni)
+   ============================================================ */
+
+/* ---------- Mega navigasyon (17.3) ---------- */
+.bht-nav-list {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.bht-nav-item { position: relative; }
+
+.bht-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 8px;
+    white-space: nowrap;
+    line-height: 1.25;
+}
+
+.bht-nav-link:hover,
+.bht-nav-item:hover > .bht-nav-link {
+    background: var(--bht-navy-hover);
+}
+
+.bht-nav-chevron { font-size: 10px; }
+
+.bht-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 220px;
+    width: max-content;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: var(--bht-navy-hover);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, .35);
+    display: none;
+    z-index: 60;
+}
+
+.bht-nav-item:hover .bht-dropdown,
+.bht-nav-item:focus-within .bht-dropdown { display: block; }
+
+.bht-dropdown-item a {
+    display: block;
+    color: #fff;
+    font-size: 14px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--bht-navy);
+}
+
+.bht-dropdown-item a:hover { background: var(--bht-navy); }
+
+.bht-mobile-toggle {
+    display: none;
+    background: none;
+    border: 0;
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 6px;
+}
+
+/* ---------- SON DAKİKA kayan şerit ---------- */
+.bht-breaking { background: var(--breaking-red); color: #fff; }
+
+.breaking-inner { overflow: hidden; }
+
+.breaking-track {
+    display: flex;
+    gap: 28px;
+    width: max-content;
+    animation: bht-marquee 45s linear infinite;
+}
+
+.breaking-track:hover { animation-play-state: paused; }
+
+.breaking-ticker a { flex-shrink: 0; }
+
+@keyframes bht-marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+.ticker-empty { color: #ffeaea; }
+
+@media (prefers-reduced-motion: reduce) {
+    .breaking-track { animation: none; }
+}
+
+/* ---------- Footer arama / rozet / marka şeridi ---------- */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.footer-search {
+    display: flex;
+    gap: 8px;
+    margin: 20px 0 8px;
+    max-width: 680px;
+}
+
+.footer-search input[type="search"] {
+    flex: 1;
+    min-width: 0;
+    background: #1c1c1c;
+    border: 1px solid var(--footer-border);
+    color: #fff;
+    font-size: 13px;
+    padding: 10px 14px;
+}
+
+.footer-search input[type="search"]::placeholder { color: #9aa3ac; }
+
+.footer-search button {
+    background: var(--bht-yellow);
+    color: #000;
+    border: 1px solid var(--bht-yellow);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 10px 22px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.ciner-strip { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.ciner-strip a { color: #b9c1c9; }
+.ciner-strip a:hover { color: var(--bht-yellow); }
+
+.cme-notice { margin-top: 4px; }
+
+/* ---------- Cookie onay bannerı (17.3) ---------- */
+.cookie-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 500;
+    background: #000;
+    color: #fff;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, .35);
+}
+
+.cookie-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 16px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.cookie-text { margin: 0; flex: 1; min-width: 240px; }
+.cookie-text a { color: var(--bht-yellow); text-decoration: underline; }
+
+.cookie-actions { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+
+.cookie-accept {
+    background: var(--bht-yellow);
+    color: #000;
+    border: 0;
+    padding: 8px 22px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.cookie-close {
+    background: none;
+    border: 0;
+    color: #fff;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+/* ---------- Yukarı dön ---------- */
+.scroll-to-top {
+    position: fixed;
+    right: 16px;
+    bottom: 96px;
+    z-index: 500;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    color: #fff;
+    border: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .3);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity .5s ease, transform .5s ease;
+    pointer-events: none;
+    font-size: 20px;
+}
+
+.scroll-to-top.is-visible { opacity: 1; transform: none; pointer-events: auto; }
+
+/* ---------- Breadcrumb / arama ---------- */
+.breadcrumb .bloomberght-icon-font { font-size: 10px; }
+.breadcrumb a:hover { text-decoration: underline; }
+
+.search-summary { font-size: 14px; color: #444; margin-bottom: 18px; }
+.search-empty { color: #666; }
+
+/* ---------- Mobil (≤767) ---------- */
+@media (max-width: 767px) {
+    .bht-mobile-toggle { display: inline-flex; order: 2; margin-left: auto; }
+    .bht-nav {
+        order: 4;
+        width: 100%;
+        flex-basis: 100%;
+        display: none;
+    }
+    body.bht-nav-open .bht-nav { display: block; }
+    .bht-nav-list { flex-direction: column; align-items: stretch; gap: 0; }
+    .bht-nav-link { padding: 12px 8px; border-bottom: 1px solid rgba(255, 255, 255, .08); justify-content: space-between; }
+    .bht-dropdown { position: static; width: 100%; box-shadow: none; background: rgba(0, 0, 0, .2); }
+    .bht-nav-item:hover .bht-dropdown { display: none; }
+    .has-children:focus-within .bht-dropdown { display: block; }
+    .footer-search { flex-direction: column; }
+    .footer-search button { width: 100%; }
+    .cookie-actions { width: 100%; margin-left: 0; }
+}
