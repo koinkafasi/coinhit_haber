@@ -253,6 +253,63 @@
         });
     }
 
+    /**
+     * Döviz Çevirici (Bölüm 6): A↔B kur seçimi + Tutar + HESAPLA.
+     */
+    function initCurrencyConverter() {
+        document.querySelectorAll('[data-currency-converter]').forEach(function (root) {
+            var form = root.querySelector('[data-converter-form]');
+            var from = root.querySelector('[data-converter-from]');
+            var to = root.querySelector('[data-converter-to]');
+            var amount = root.querySelector('[data-converter-amount]');
+            var resultValue = root.querySelector('[data-converter-value]');
+            var resultCurrency = root.querySelector('[data-converter-currency]');
+
+            if (!form || !from || !to || !amount) {
+                return;
+            }
+
+            var rates = {};
+            var decimals = {};
+
+            try { rates = JSON.parse(root.getAttribute('data-rates') || '{}'); } catch (e) { rates = {}; }
+            try { decimals = JSON.parse(root.getAttribute('data-decimals') || '{}'); } catch (e) { decimals = {}; }
+
+            function format(value, code) {
+                var d = (typeof decimals[code] === 'number') ? decimals[code] : 4;
+
+                try {
+                    return value.toLocaleString('tr-TR', { minimumFractionDigits: d, maximumFractionDigits: d });
+                } catch (e) {
+                    return value.toFixed(d).replace('.', ',');
+                }
+            }
+
+            function calculate() {
+                var value = parseFloat(String(amount.value).replace(',', '.')) || 0;
+                var fromRate = (typeof rates[from.value] === 'number') ? rates[from.value] : 1;
+                var toRate = (typeof rates[to.value] === 'number') ? rates[to.value] : 1;
+                var result = toRate > 0 ? (value * fromRate) / toRate : 0;
+
+                if (resultValue) {
+                    resultValue.textContent = format(result, to.value);
+                }
+                if (resultCurrency) {
+                    resultCurrency.textContent = to.value;
+                }
+            }
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                calculate();
+            });
+
+            from.addEventListener('change', calculate);
+            to.addEventListener('change', calculate);
+            amount.addEventListener('input', calculate);
+        });
+    }
+
     function init() {
         initCookie();
         initMenu();
@@ -262,6 +319,7 @@
         initHeroSlider();
         initRangeTabs();
         initShareCopy();
+        initCurrencyConverter();
     }
 
     if (document.readyState === 'loading') {

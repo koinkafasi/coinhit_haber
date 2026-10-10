@@ -12,6 +12,7 @@ use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BorsaController;
 use App\Http\Controllers\BreakingNewsController;
 use App\Http\Controllers\ChartArchiveController;
+use App\Http\Controllers\DovizController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MarketDataController;
@@ -65,6 +66,19 @@ Route::get('/borsa/hisse/{company}/kap-haberi/{kapId}', [BorsaController::class,
     ->where('kapId', '[0-9]+')->name('borsa.kap-detail');
 Route::get('/borsa/hisse/{company}', [BorsaController::class, 'stock'])
     ->where('company', '[A-Za-z0-9\-]+')->name('borsa.stock');
+
+/*
+|--------------------------------------------------------------------------
+| Döviz & Parite bölümü (Bölüm 5, 6, 8, 15.4 — döviz/parite + çevirici)
+|--------------------------------------------------------------------------
+*/
+Route::get('/doviz', [DovizController::class, 'index'])->name('doviz.index');
+Route::get('/doviz/pariteler', [DovizController::class, 'parities'])->name('doviz.parities');
+Route::get('/doviz/parite/{slug}', [DovizController::class, 'parityDetail'])
+    ->where('slug', '[A-Za-z0-9\-]+')->name('doviz.parity-detail');
+Route::get('/doviz/{slug}', [DovizController::class, 'detail'])
+    ->where('slug', '[A-Za-z0-9\-]+')->name('doviz.detail');
+Route::get('/doviz-cevirici', [DovizController::class, 'converter'])->name('doviz.converter');
 
 /*
 |--------------------------------------------------------------------------

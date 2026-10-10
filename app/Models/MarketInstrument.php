@@ -49,6 +49,53 @@ class MarketInstrument extends Model
     /**
      * Grup görünen adları.
      */
+    /**
+     * Döviz kuru detay rotası okunur slug'ları (spec §3, §8).
+     *
+     * Gerçek sitede detay slug'ları kısaltılmıştır (`abd-dolari` → `dolar`).
+     */
+    public const CURRENCY_ROUTE_SLUGS = [
+        'USDTRY' => 'dolar',
+        'EURTRY' => 'euro',
+        'GBPTRY' => 'ingiliz-sterlini',
+        'CHFTRY' => 'isvicre-frangi',
+        'JPYTRY' => 'japon-yeni',
+        'SARTRY' => 'suudi-arabistan-riyali',
+        'NOKTRY' => 'norvec-kronu',
+        'DKKTRY' => 'danimarka-kronu',
+        'AUDTRY' => 'avustralya-dolari',
+        'CADTRY' => 'kanada-dolari',
+        'SEKTRY' => 'isvec-kronu',
+        'RUBTRY' => 'rus-rublesi',
+        'CNYTRY' => 'cin-yuani',
+        'AEDTRY' => 'bae-dirhemi',
+    ];
+
+    /**
+     * Detay rotası slug → enstrüman kodu eşlemesi (takma adlar dahil).
+     */
+    public const CURRENCY_ROUTE_ALIASES = [
+        'dolar' => 'USDTRY',
+        'abd-dolari' => 'USDTRY',
+        'euro' => 'EURTRY',
+        'sterlin' => 'GBPTRY',
+        'ingiliz-sterlini' => 'GBPTRY',
+        'frank' => 'CHFTRY',
+        'isvicre-frangi' => 'CHFTRY',
+        'japon-yeni' => 'JPYTRY',
+        '100-japon-yeni' => 'JPYTRY',
+        'yen' => 'JPYTRY',
+        'suudi-arabistan-riyali' => 'SARTRY',
+        'norvec-kronu' => 'NOKTRY',
+        'danimarka-kronu' => 'DKKTRY',
+        'avustralya-dolari' => 'AUDTRY',
+        'kanada-dolari' => 'CADTRY',
+        'isvec-kronu' => 'SEKTRY',
+        'rus-rublesi' => 'RUBTRY',
+        'cin-yuani' => 'CNYTRY',
+        'bae-dirhemi' => 'AEDTRY',
+    ];
+
     public const GROUPS = [
         self::GROUP_BIST_INDEX => 'BIST Endeksleri',
         self::GROUP_WORLD_INDEX => 'Dünya Borsaları',
@@ -116,6 +163,36 @@ class MarketInstrument extends Model
     public function indexUrl(): string
     {
         return '/borsa/endeks/'.$this->slug;
+    }
+
+    /**
+     * Döviz kuru detay rotası (spec §3, §8): `/doviz/<slug>`.
+     */
+    public function currencyUrl(): string
+    {
+        return '/doviz/'.(self::CURRENCY_ROUTE_SLUGS[$this->code] ?? $this->slug);
+    }
+
+    /**
+     * Parite detay rotası (spec §3, §8): `/doviz/parite/<slug>`.
+     */
+    public function parityUrl(): string
+    {
+        return '/doviz/parite/'.$this->parityRouteSlug();
+    }
+
+    /**
+     * Parite detay okunur slug'ı (spec §3: `eur-usd`, `dolar-endeksi`).
+     */
+    public function parityRouteSlug(): string
+    {
+        if ($this->code === 'DXY') {
+            return 'dolar-endeksi';
+        }
+
+        $code = strtolower($this->code);
+
+        return strlen($code) === 6 ? substr($code, 0, 3).'-'.substr($code, 3, 3) : $code;
     }
 
     /**
