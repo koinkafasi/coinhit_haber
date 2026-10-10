@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 150" role="img" aria-label="Bloomberg HT">
+  <rect width="520" height="150" rx="12" fill="#101418"/>
+  <text x="26" y="64" font-family="Georgia, 'Times New Roman', serif" font-size="40" font-weight="700" fill="#FFE400">BLOOMBERG</text>
+  <text x="28" y="106" font-family="Georgia, 'Times New Roman', serif" font-size="28" font-weight="700" fill="#FFFFFF" letter-spacing="10">H T</text>
+  <rect x="26" y="120" width="120" height="6" fill="#FFE400"/>
+  <text x="430" y="40" font-family="Arial, sans-serif" font-size="13" fill="#9DA6B0">demo · klon</text>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#9b59b6"/>
+  <path d="M0,240 C150,180 260,290 400,210 C480,160 560,190 640,120" fill="none" stroke="#f3eafb" stroke-width="8" opacity="0.55"/>
+  <circle cx="120" cy="236" r="6" fill="#f3eafb"/>
+  <circle cx="316" cy="210" r="6" fill="#f3eafb"/>
+  <circle cx="520" cy="150" r="6" fill="#f3eafb"/>
+  <text x="28" y="330" font-family="Georgia, serif" font-size="34" font-weight="bold" fill="#f3eafb" opacity="0.9">Fintech</text>
+  <text x="28" y="52" font-family="Arial, sans-serif" font-size="16" fill="#f3eafb" opacity="0.7">BLOOMBERG HT · DEMO</text>
+</svg>
