@@ -29,4 +29,15 @@ class ChartArchive extends Model
     {
         return Locale::url('/grafik-arsivi/'.$this->slug.'-'.$this->chart_id);
     }
+
+    /**
+     * Kategori etiketi aktif locale'e göre (master spec §18.4). DB'de TR
+     * etiketi saklanır; slug üzerinden lang anahtarına eşlenir.
+     */
+    public function getCategoryLabelAttribute(): string
+    {
+        $slug = array_search($this->category, \App\Http\Controllers\ChartArchiveController::CATEGORIES, true);
+
+        return $slug !== false ? __('media.chart_category_'.$slug) : (string) $this->category;
+    }
 }

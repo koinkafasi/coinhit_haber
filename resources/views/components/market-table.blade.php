@@ -15,7 +15,7 @@
 @php
     $allLabel = $allLabel ?? __('ui.all_see');
     $columns = $columns ?? [
-        ['label' => 'SON', 'field' => 'last', 'class' => 'lastPrice'],
+        ['label' => __('market.last'), 'field' => 'last', 'class' => 'lastPrice'],
         ['label' => '%', 'field' => 'change_percent', 'class' => 'percentChange', 'color' => true],
     ];
     $firstLabel = $firstLabel ?? $title;

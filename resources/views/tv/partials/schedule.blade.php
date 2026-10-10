@@ -1,5 +1,5 @@
 <div class="tv-schedule" data-widget-type="broadcast-days">
-    <div class="broadcast-day-tabs tab-menu" role="tablist" aria-label="Yayın akışı günleri">
+    <div class="broadcast-day-tabs tab-menu" role="tablist" aria-label="{{ __('media.schedule_days') }}">
         @foreach ($days as $day)
             <button type="button" role="tab"
                     class="tab-button broadcast-day-tab {{ $day['is_today'] ? 'is-active' : '' }}"
@@ -31,8 +31,8 @@
                 </ol>
 
                 <div class="broadcast-actions">
-                    <a class="tv-action-link" href="{{ \App\Support\Locale::url('/tv/programlar') }}">Tüm Programlar</a>
-                    <a class="tv-action-link" href="{{ \App\Support\Locale::url('/tv/frekans-listesi') }}">Frekans Listesi</a>
+                    <a class="tv-action-link" href="{{ \App\Support\Locale::url('/tv/programlar') }}">{{ __('media.all_programs') }}</a>
+                    <a class="tv-action-link" href="{{ \App\Support\Locale::url('/tv/frekans-listesi') }}">{{ __('media.frequencies') }}</a>
                 </div>
             </div>
         @endforeach

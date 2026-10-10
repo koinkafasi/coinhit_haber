@@ -40,7 +40,9 @@ class BroadcastSchedule extends Model
 
     public function getDayNameAttribute(): string
     {
-        return self::DAYS[$this->day_of_week] ?? '';
+        return isset(self::DAYS[$this->day_of_week])
+            ? __('media.day_'.$this->day_of_week)
+            : '';
     }
 
     public function getProgramSlugAttribute(): string

@@ -22,7 +22,7 @@ class PodcastController extends Controller
             ->get();
 
         return view('podcast.index', array_merge([
-            'pageTitle' => 'Podcast',
+            'pageTitle' => __('media.podcast'),
             'podcasts' => $podcasts,
         ], $this->layoutData()));
     }

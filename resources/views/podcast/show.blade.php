@@ -7,14 +7,14 @@
 
 @section('content')
     <div class="podcast-page podcast-show-page">
-        <x-breadcrumb :items="[['label' => 'Podcast', 'url' => \App\Support\Locale::url('/podcastler/')], ['label' => $podcast->title]]" />
+        <x-breadcrumb :items="[['label' => __('media.podcast'), 'url' => \App\Support\Locale::url('/podcastler/')], ['label' => $podcast->title]]" />
 
         <header class="podcast-head">
             <figure class="podcast-head-cover">
                 <x-lazy-image :src="asset($podcast->cover ?: '/img/placeholders/placeholder-1.svg')" alt="" contract="news_card_square" class="img-contract" :eager="true" />
             </figure>
             <div class="podcast-head-info">
-                <span class="program-detail-kicker">Podcast Serisi</span>
+                <span class="program-detail-kicker">{{ __('media.podcast_series') }}</span>
                 <h1 class="podcast-head-title font-unna font-bold">{{ $podcast->title }}</h1>
                 <div class="podcast-head-meta">
                     @if ($podcast->air_days)
@@ -23,7 +23,7 @@
                     @if ($podcast->air_time)
                         <span>{{ $podcast->air_time }}</span>
                     @endif
-                    <span>{{ $episodes->count() }} bölüm</span>
+                    <span>{{ $episodes->count() }} {{ __('media.episode_count') }}</span>
                 </div>
                 @if ($podcast->description)
                     <p class="podcast-head-desc">{{ $podcast->description }}</p>
@@ -32,7 +32,7 @@
         </header>
 
         <section class="podcast-episodes" id="bolumler">
-            <x-section-head title="Bölümler" />
+            <x-section-head :title="__('media.episodes')" />
             <ol class="podcast-episode-list">
                 @foreach ($episodes as $episode)
                     <li class="podcast-episode" data-episode-id="{{ $episode->id }}">
@@ -61,7 +61,7 @@
 
         @if ($others->isNotEmpty())
             <section class="podcast-other">
-                <x-section-head title="Diğer Seriler" href="/podcastler/" allLabel="TÜMÜ" />
+                <x-section-head :title="__('media.other_series')" :href="\App\Support\Locale::url('/podcastler/')" :allLabel="__('ui.all')" />
                 <div class="podcast-grid">
                     @foreach ($others as $item)
                         <article class="podcast-card">

@@ -131,11 +131,11 @@ class FundDataService
         $right = $this->snapshot($b, $at);
 
         $rows = [
-            ['label' => 'Fon Fiyatı (TL)', 'a' => $left['price_formatted'], 'b' => $right['price_formatted'], 'aNum' => $left['price'], 'bNum' => $right['price'], 'higher' => true],
-            ['label' => 'Günlük Getiri', 'a' => $left['change_tl_formatted'], 'b' => $right['change_tl_formatted'], 'aNum' => $left['change_tl'], 'bNum' => $right['change_tl'], 'higher' => true],
+            ['label' => __('media.fund_price_tl'), 'a' => $left['price_formatted'], 'b' => $right['price_formatted'], 'aNum' => $left['price'], 'bNum' => $right['price'], 'higher' => true],
+            ['label' => __('media.daily_return'), 'a' => $left['change_tl_formatted'], 'b' => $right['change_tl_formatted'], 'aNum' => $left['change_tl'], 'bNum' => $right['change_tl'], 'higher' => true],
         ];
 
-        foreach (Fund::RETURN_COLUMNS as $column) {
+        foreach (Fund::returnColumns() as $column) {
             $field = $column['field'];
             if ($field === 'return_daily') {
                 continue;
@@ -151,7 +151,7 @@ class FundDataService
         }
 
         $rows[] = [
-            'label' => 'Risk Değeri',
+            'label' => __('media.risk_value'),
             'a' => $left['risk_value'].' / 7',
             'b' => $right['risk_value'].' / 7',
             'aNum' => $left['risk_value'],

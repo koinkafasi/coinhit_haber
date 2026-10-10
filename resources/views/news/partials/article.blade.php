@@ -39,7 +39,7 @@
 
     {{-- Google News promo (spec §9) --}}
     <a class="google-news-bar" href="https://www.google.com/preferences/source?q=bloomberght.com" target="_blank" rel="noopener">
-        Türkiye'nin ekonomi platformu Bloomberg HT'yi Google listesine ekleyin
+        {{ __('content.google_news_promo') }}
     </a>
 
     <figure class="article-image">
@@ -73,7 +73,7 @@
 
     {{-- Paylaş satırı: yazı boyutu + hover dropdown (spec §9, §17.3) --}}
     <div class="article-tools" data-article-tools>
-        <button type="button" class="article-tool text-increase" data-text-increase aria-label="Yazı boyutunu artır">
+        <button type="button" class="article-tool text-increase" data-text-increase aria-label="{{ __('content.increase_font_size') }}">
             <span class="ti-small" aria-hidden="true">A</span><span class="ti-large" aria-hidden="true">A</span>
         </button>
 
@@ -87,7 +87,7 @@
                 <li><a href="https://nsosyal.com/share?url={{ $u }}" target="_blank" rel="noopener noreferrer" aria-label="nSosyal"><x-icon name="nsosyal" /></a></li>
                 <li><a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $u }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><x-icon name="linkedin" /></a></li>
                 <li><a href="https://wa.me/?text={{ $t }}%20{{ $u }}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><x-icon name="whatsapp" /></a></li>
-                <li><a href="mailto:?subject={{ $t }}&body={{ $u }}" aria-label="E-posta"><x-icon name="mail" /></a></li>
+                <li><a href="mailto:?subject={{ $t }}&body={{ $u }}" aria-label="{{ __('content.email') }}"><x-icon name="mail" /></a></li>
                 <li>
                     <button type="button" class="share-copy" data-copy-link="{{ $news->shortlink_url }}" aria-label="{{ __('ui.copy_short_link') }}">
                         <x-icon name="copy" /> <span class="shortlink-text">{{ $news->shortlink }}</span>

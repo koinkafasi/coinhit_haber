@@ -37,7 +37,7 @@
                            href="{{ $tabUrl($slug) }}"
                            data-tab-id="{{ $slug }}"
                            role="tab"
-                           aria-selected="{{ $activeCategory === $slug ? 'true' : 'false' }}">{{ $label }}</a>
+                           aria-selected="{{ $activeCategory === $slug ? 'true' : 'false' }}">{{ __('media.chart_category_'.$slug) }}</a>
                     @endforeach
                 </div>
             </div>

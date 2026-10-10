@@ -30,7 +30,7 @@ class FundController extends Controller
         $showAll = $request->boolean('tumu');
 
         $classes = [];
-        foreach (Fund::CLASSES as $key => $label) {
+        foreach (Fund::classLabels() as $key => $label) {
             $classes[] = [
                 'key' => $key,
                 'label' => $label,
@@ -41,7 +41,7 @@ class FundController extends Controller
         $allRows = $this->funds->all();
 
         return view('fund.index', array_merge([
-            'pageTitle' => 'Yatırım Fonları',
+            'pageTitle' => __('media.fund_title'),
             'direction' => $direction,
             'fundClasses' => $classes,
             'kpi' => $this->funds->kpi(),
@@ -63,7 +63,7 @@ class FundController extends Controller
         $b = $this->resolveFund($request->query('b'), $a?->id);
 
         return view('fund.compare', array_merge([
-            'pageTitle' => 'Fon Karşılaştır',
+            'pageTitle' => __('media.compare_funds'),
             'toolLinks' => $this->toolLinks(),
             'fundOptions' => Fund::where('is_active', true)->orderBy('code')->get(),
             'a' => $a,
@@ -82,7 +82,7 @@ class FundController extends Controller
         $fund = $this->resolveFund($request->query('fon'));
 
         return view('fund.portfolio', array_merge([
-            'pageTitle' => 'Fon Portföy Dağılımı',
+            'pageTitle' => __('media.fund_portfolio_allocation'),
             'toolLinks' => $this->toolLinks(),
             'fundOptions' => Fund::where('is_active', true)->orderBy('code')->get(),
             'fund' => $fund,
@@ -165,9 +165,9 @@ class FundController extends Controller
     private function toolLinks(): array
     {
         return [
-            ['label' => 'Fon Karşılaştır', 'url' => '/yatirim-fonlari/fon-karsilastirma', 'anchor' => false],
-            ['label' => 'Fon Sınıflarında Bugün', 'url' => '/yatirim-fonlari#fon-siniflari', 'anchor' => true],
-            ['label' => 'Fon Portföy Dağılımı', 'url' => '/yatirim-fonlari/fon-portfoy-dagilim', 'anchor' => false],
+            ['label' => __('media.compare_funds'), 'url' => '/yatirim-fonlari/fon-karsilastirma', 'anchor' => false],
+            ['label' => __('media.fund_classes_today'), 'url' => '/yatirim-fonlari#fon-siniflari', 'anchor' => true],
+            ['label' => __('media.fund_portfolio_allocation'), 'url' => '/yatirim-fonlari/fon-portfoy-dagilim', 'anchor' => false],
         ];
     }
 }

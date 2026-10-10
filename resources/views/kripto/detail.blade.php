@@ -1,7 +1,7 @@
 @extends('front.layouts.app')
 
-@section('title', $instrument->name.' | Kripto | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
-@section('description', $instrument->name.' güncel fiyatı, 24 saatlik/7 günlük değişim, hacim ve piyasa değeri.')
+@section('title', $instrument->name.' | '.__('market.crypto').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('description', $instrument->name.__('market.kripto_detail_desc_suffix'))
 
 @section('content')
     @php
@@ -20,7 +20,7 @@
                         <span class="lastPrice font-bold {{ $dirClass }}" data-market-field="last">{{ $quote->formattedUsdPrice() }}</span>
                         <span class="percentChange {{ $dirClass }}" data-market-field="change_percent">{{ $quote->formattedChangePercent() }}</span>
                     </div>
-                    <p class="market-updated text-xs">Güncelleme: <span data-market-updated>{{ $lastUpdated }}</span></p>
+                    <p class="market-updated text-xs">{{ __('ui.updated') }}: <span data-market-updated>{{ $lastUpdated }}</span></p>
                 </div>
 
                 @include('doviz.partials.quote-stats', ['quote' => $quote])
@@ -38,7 +38,7 @@
                 @include('kripto.partials.quick-quotes')
 
                 <div class="aside-block">
-                    <x-section-head title="Öne Çıkanlar" :href="null" />
+                    <x-section-head :title="__('market.featured')" :href="null" />
                     <ul class="aside-list">
                         @foreach ($featured as $item)
                             <li><a href="{{ $item->url }}">{{ $item->title }}</a></li>

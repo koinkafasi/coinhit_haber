@@ -61,7 +61,7 @@
 
     @if ($related->isNotEmpty())
         <section class="related">
-            <x-section-head :title="__('ui.photo_news')" href="/fotohaber" />
+            <x-section-head :title="__('ui.photo_news')" :href="\App\Support\Locale::url('/fotohaber')" />
             <div class="gallery-grid">
                 @foreach ($related as $item)
                     <article class="gallery-card">

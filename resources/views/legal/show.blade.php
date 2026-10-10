@@ -2,7 +2,7 @@
 
 @section('title', $pageTitle)
 @section('description', $pageDescription)
-@section('canonical', url('/'.$slug))
+@section('canonical', url(\App\Support\Locale::url('/'.$slug)))
 @section('og_type', 'website')
 @section('og_image', url('/img/manifest-192.png'))
 @section('og_image_width', '180')
@@ -17,11 +17,11 @@
     $legalHtml = trim(strip_tags(implode(' ', array_column($page['sections'] ?? [], 'body'))));
     $webPage = [
         '@type' => 'WebPage',
-        '@id' => url('/'.$slug),
-        'url' => url('/'.$slug),
+        '@id' => url(\App\Support\Locale::url('/'.$slug)),
+        'url' => url(\App\Support\Locale::url('/'.$slug)),
         'name' => $page['title'],
         'description' => $pageDescription,
-        'inLanguage' => 'tr-TR',
+        'inLanguage' => app()->getLocale() === 'en' ? 'en-US' : 'tr-TR',
         'isPartOf' => [
             '@type' => 'WebSite',
             'name' => $siteSettings['site_name'] ?? 'Bloomberg HT',
@@ -46,7 +46,7 @@
     </div>
 
     <div class="static-layout">
-        <x-breadcrumb :items="[['label' => $page['title'], 'url' => '/'.$slug]]" />
+        <x-breadcrumb :items="[['label' => $page['title'], 'url' => \App\Support\Locale::url('/'.$slug)]]" />
 
         <article class="static-page legal-page">
             <h1 class="static-title font-unna font-bold">{{ $page['title'] }}</h1>

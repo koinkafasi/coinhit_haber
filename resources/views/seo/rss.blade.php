@@ -6,7 +6,7 @@
         <title>{{ $title }}</title>
         <link>{{ $siteUrl }}</link>
         <description>{{ $description }}</description>
-        <language>tr-TR</language>
+        <language>{{ app()->getLocale() === 'en' ? 'en-US' : 'tr-TR' }}</language>
         <lastBuildDate>{{ ($items->first()?->modified_at ?? $items->first()?->published_at ?? now())->toRfc2822String() }}</lastBuildDate>
         <atom:link href="{{ $selfUrl }}" rel="self" type="application/rss+xml"/>
         @foreach ($items as $item)

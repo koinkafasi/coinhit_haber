@@ -1,16 +1,16 @@
 @extends('front.layouts.app')
 
-@section('title', 'Yatırım Fonları | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
-@section('description', 'Yatırım fonları: fon haberleri, Fon Saati, günün özeti, fon sınıfları lider tablosu ve karşılaştırmalı fon getirileri. Karma, borçlanma araçları, hisse senedi, katılım, kıymetli madenler ve para piyasası fonları.')
+@section('title', __('media.fund_title').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('description', __('media.fund_index_desc'))
 
 @section('content')
     <div class="fund-page">
-        <h1 class="page-title font-unna font-bold">Yatırım Fonları</h1>
+        <h1 class="page-title font-unna font-bold">{{ __('media.fund_title') }}</h1>
 
         {{-- Fon haberleri grid (9 kart, 640x360) — spec §8 --}}
         @if ($fundNews->isNotEmpty())
             <section class="fund-news" id="fon-haberleri">
-                <x-section-head title="Fon Haberleri" href="/haberler" />
+                <x-section-head :title="__('media.fund_news')" :href="\App\Support\Locale::url('/haberler')" />
                 <div class="fund-news-grid">
                     @foreach ($fundNews as $i => $item)
                         <article class="fund-news-card" data-type="news-card-type4" data-news-id="{{ $item->news_id }}">
@@ -38,7 +38,7 @@
         {{-- Fon Saati — TV program epizot listesi (6 video) --}}
         @if ($fonSaati->isNotEmpty())
             <section class="fund-saati" id="fon-saati">
-                <x-section-head title="Fon Saati" href="/tv/program/fon-saati" />
+                <x-section-head :title="__('media.fon_saati')" :href="\App\Support\Locale::url('/tv/program/fon-saati')" />
                 <div class="program-list">
                     @foreach ($fonSaati as $episode)
                         <article class="program-card">
@@ -61,22 +61,22 @@
 
         {{-- Günün Özeti — KPI bloğu (canlı sahte veri) --}}
         <section class="fund-kpi" id="gunun-ozeti">
-            <x-section-head title="Günün Özeti" />
+            <x-section-head :title="__('media.today_summary')" />
             <div class="fund-kpi-grid">
                 <div class="fund-kpi-card">
-                    <span class="fund-kpi-label">Portföy Değeri</span>
+                    <span class="fund-kpi-label">{{ __('media.portfolio_value') }}</span>
                     <span class="fund-kpi-value">{{ $kpi['portfolio_value_formatted'] }}</span>
                 </div>
                 <div class="fund-kpi-card">
-                    <span class="fund-kpi-label">Portföy %</span>
+                    <span class="fund-kpi-label">{{ __('media.portfolio_pct') }}</span>
                     <span class="fund-kpi-value {{ $kpi['portfolio_change'] > 0 ? 'text-green-700' : ($kpi['portfolio_change'] < 0 ? 'text-red-700' : 'text-gray-400') }}">{{ $kpi['portfolio_change_formatted'] }}</span>
                 </div>
                 <div class="fund-kpi-card">
-                    <span class="fund-kpi-label">Fon Sayısı</span>
+                    <span class="fund-kpi-label">{{ __('media.fund_count') }}</span>
                     <span class="fund-kpi-value">{{ $kpi['fund_count_formatted'] }}</span>
                 </div>
                 <div class="fund-kpi-card">
-                    <span class="fund-kpi-label">Yatırımcı Sayısı</span>
+                    <span class="fund-kpi-label">{{ __('media.investor_count') }}</span>
                     <span class="fund-kpi-value">{{ $kpi['investor_count_formatted'] }}</span>
                 </div>
             </div>
@@ -84,9 +84,9 @@
 
         {{-- Fon Sınıflarında Bugün — 7 sekme + Yükselen/Düşen toggle + lider tablo --}}
         <section class="fund-classes" id="fon-siniflari" data-widget-type="fund-classes">
-            <x-section-head title="Fon Sınıflarında Bugün" />
+            <x-section-head :title="__('media.fund_classes_today')" />
 
-            <div class="fund-class-tabs tab-menu" role="tablist" aria-label="Fon sınıfları">
+            <div class="fund-class-tabs tab-menu" role="tablist" aria-label="{{ __('media.fund_classes_aria') }}">
                 @foreach ($fundClasses as $i => $class)
                     <button type="button" role="tab"
                             class="tab-button fund-class-tab {{ $i === 0 ? 'is-active' : '' }}"
@@ -95,11 +95,11 @@
                 @endforeach
             </div>
 
-            <div class="fund-direction-toggle" role="group" aria-label="Yükselen veya düşen fonlar">
+            <div class="fund-direction-toggle" role="group" aria-label="{{ __('media.direction_aria') }}">
                 <a class="fund-direction-button {{ $direction === 'yukselen' ? 'is-active' : '' }}"
-                   href="{{ \App\Support\Locale::url('/yatirim-fonlari?yon=yukselen#fon-siniflari') }}">Yükselen Fonlar</a>
+                   href="{{ \App\Support\Locale::url('/yatirim-fonlari?yon=yukselen#fon-siniflari') }}">{{ __('media.rising_funds') }}</a>
                 <a class="fund-direction-button {{ $direction === 'dusen' ? 'is-active' : '' }}"
-                   href="{{ \App\Support\Locale::url('/yatirim-fonlari?yon=dusen#fon-siniflari') }}">Düşen Fonlar</a>
+                   href="{{ \App\Support\Locale::url('/yatirim-fonlari?yon=dusen#fon-siniflari') }}">{{ __('media.falling_funds') }}</a>
             </div>
 
             <div class="fund-class-panels">
@@ -113,7 +113,7 @@
 
         {{-- Karşılaştırmalı Fon Getirileri — büyük tablo --}}
         <section class="fund-returns" id="fon-getirileri">
-            <x-section-head title="Karşılaştırmalı Fon Getirileri" :href="'/yatirim-fonlari/fon-karsilastirma'" allLabel="Fon Karşılaştır" />
+            <x-section-head :title="__('media.comparative_returns')" :href="\App\Support\Locale::url('/yatirim-fonlari/fon-karsilastirma')" :allLabel="__('media.compare_funds')" />
             @include('fund.partials.returns-table', [
                 'rows' => $returnRows,
                 'showAll' => $showAll,

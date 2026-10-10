@@ -1,7 +1,7 @@
 {{-- Serbest Piyasada Altın tablosu — 17 satır (ALIŞ | SATIŞ | % | SAAT), spec §5/§8 --}}
 @php
     $dirClass = fn ($quote) => $quote->direction() === 'up' ? 'text-green-700' : ($quote->direction() === 'down' ? 'text-red-700' : 'text-gray-400');
-    $title = $title ?? 'Serbest Piyasada Altın';
+    $title = $title ?? __('market.free_market_gold');
     $href = $href ?? null;
     $allLabel = $allLabel ?? null;
 @endphp
@@ -12,11 +12,11 @@
         <table data-type="table-type1" class="market-table w-full text-center text-sm bg-white">
             <thead>
                 <tr class="border-b">
-                    <th class="sticky left-0 p-4 text-left bg-white">Serbest Piyasada Altın</th>
-                    <th class="p-4">ALIŞ</th>
-                    <th class="p-4">SATIŞ</th>
+                    <th class="sticky left-0 p-4 text-left bg-white">{{ __('market.free_market_gold') }}</th>
+                    <th class="p-4">{{ __('market.bid') }}</th>
+                    <th class="p-4">{{ __('market.ask') }}</th>
                     <th class="p-4">%</th>
-                    <th class="p-4">SAAT</th>
+                    <th class="p-4">{{ __('market.time') }}</th>
                 </tr>
             </thead>
             <tbody data-connection="true">

@@ -1,22 +1,22 @@
 @extends('front.layouts.app')
 
-@section('title', 'Fon Portföy Dağılımı | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
-@section('description', 'Yatırım fonlarının varlık sınıfı bazında portföy dağılımı: hisse senedi, borçlanma araçları, ters repo, mevduat ve diğer kalemlerin oranları.')
+@section('title', __('media.fund_portfolio_allocation').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('description', __('media.fund_portfolio_desc'))
 
 @section('content')
     <div class="fund-page fund-tool-page">
         <x-breadcrumb :items="[
-            ['label' => 'Yatırım Fonları', 'url' => \App\Support\Locale::url('/yatirim-fonlari')],
-            ['label' => 'Fon Portföy Dağılımı'],
+            ['label' => __('media.fund_title'), 'url' => \App\Support\Locale::url('/yatirim-fonlari')],
+            ['label' => __('media.fund_portfolio_allocation')],
         ]" />
 
-        <h1 class="page-title font-unna font-bold">Fon Portföy Dağılımı</h1>
+        <h1 class="page-title font-unna font-bold">{{ __('media.fund_portfolio_allocation') }}</h1>
 
         @include('fund.partials.tool-nav', ['toolLinks' => $toolLinks])
 
         <form class="fund-portfolio-form" method="get" action="{{ \App\Support\Locale::url('/yatirim-fonlari/fon-portfoy-dagilim') }}">
             <div class="fund-compare-field">
-                <label for="fund-select">Fon Seçiniz</label>
+                <label for="fund-select">{{ __('media.select_fund') }}</label>
                 <select id="fund-select" name="fon">
                     @foreach ($fundOptions as $option)
                         <option value="{{ $option->code }}" @selected($fund && $fund->code === $option->code)>
@@ -25,19 +25,19 @@
                     @endforeach
                 </select>
             </div>
-            <button type="submit" class="fund-compare-submit">Görüntüle</button>
+            <button type="submit" class="fund-compare-submit">{{ __('media.view') }}</button>
         </form>
 
         @if ($fund && ! empty($distribution))
             <section class="fund-portfolio-result">
-                <x-section-head :title="$fund->name.' — Portföy Dağılımı'" />
+                <x-section-head :title="__('media.portfolio_allocation_title', ['name' => $fund->name])" />
 
                 @if ($snapshot)
                     <div class="fund-portfolio-quote">
                         <span class="fund-detail-code">{{ $fund->code }}</span>
                         <span class="fund-detail-class">{{ $fund->class_name }}</span>
                         <span class="fund-detail-price lastPrice font-bold">{{ $snapshot['price_formatted'] }} TL</span>
-                        <span class="fund-detail-change">Risk Değeri: {{ $snapshot['risk_value'] }} / 7 · {{ $snapshot['risk_label'] }}</span>
+                        <span class="fund-detail-change">{{ __('media.risk_value') }}: {{ $snapshot['risk_value'] }} / 7 · {{ $snapshot['risk_label'] }}</span>
                     </div>
                 @endif
 

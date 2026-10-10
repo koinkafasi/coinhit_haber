@@ -16,8 +16,8 @@ class ManifestController extends Controller
         return response()->json([
             'name' => 'Bloomberg HT',
             'short_name' => 'Bloomberg HT',
-            'description' => 'Türkiye\'nin ekonomi ve finans platformu',
-            'lang' => 'tr',
+            'description' => __('content.manifest_description'),
+            'lang' => app()->getLocale(),
             'start_url' => '/',
             'scope' => '/',
             'display' => 'browser',

@@ -8,7 +8,7 @@
 @endphp
 
 @if ($last > 1)
-    <nav class="pagination flex w-full gap-2 text-sm" aria-label="Sayfalama">
+    <nav class="pagination flex w-full gap-2 text-sm" aria-label="{{ __('market.pagination_aria') }}">
         @for ($p = $start; $p <= $end; $p++)
             @if ($p === $current)
                 <span class="page-btn is-active" aria-current="page">{{ $p }}</span>
@@ -19,7 +19,7 @@
 
         @if ($paginator->hasMorePages())
             <a class="page-btn page-next" href="{{ $paginator->nextPageUrl() }}">
-                Sonraki <x-icon name="chevron-right" />
+                {{ __('ui.next') }} <x-icon name="chevron-right" />
             </a>
         @endif
     </nav>

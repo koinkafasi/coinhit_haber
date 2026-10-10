@@ -1,17 +1,17 @@
 @extends('front.layouts.app')
 
-@section('title', 'Dünya Borsaları | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
-@section('description', 'Amerika, Avrupa ve Asya Pasifik borsa endeksleri ile vadeli kontratlar.')
+@section('title', __('market.world_markets').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('description', __('market.borsa_world_desc'))
 
 @section('content')
     <div class="borsa-page">
-        <h1 class="page-title font-unna font-bold">Dünya Borsaları</h1>
+        <h1 class="page-title font-unna font-bold">{{ __('market.world_markets') }}</h1>
 
         @include('borsa.partials.quick-links')
 
         @php
             $columns = [
-                ['label' => 'SON', 'field' => 'last', 'class' => 'lastPrice'],
+                ['label' => __('market.last'), 'field' => 'last', 'class' => 'lastPrice'],
                 ['label' => '%', 'field' => 'change_percent', 'class' => 'percentChange', 'color' => true],
             ];
             $indexUrl = fn ($q) => $q->instrument->indexUrl();

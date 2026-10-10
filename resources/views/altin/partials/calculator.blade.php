@@ -6,9 +6,9 @@
 
 <section class="altin-calculator doviz-converter" data-gold-calculator
          data-values='@json($calculator['values'])'>
-    <x-section-head title="Altın Hesaplama" :href="null" />
+    <x-section-head :title="__('market.gold_calculator')" :href="null" />
 
-    <div class="gold-calc-modes" role="tablist" aria-label="İşlem yönü">
+    <div class="gold-calc-modes" role="tablist" aria-label="{{ __('market.gold_calc_mode_aria') }}">
         @foreach ($calculator['modes'] as $key => $label)
             <button type="button" role="tab"
                     class="range-btn gold-calc-mode {{ $key === $calculator['mode'] ? 'is-active' : '' }}"
@@ -19,7 +19,7 @@
 
     <form class="converter-form" data-gold-form>
         <div class="converter-field">
-            <label for="gold-from">Mevcut Altın</label>
+            <label for="gold-from">{{ __('market.gold_calc_from') }}</label>
             <select id="gold-from" name="from" data-gold-from>
                 @foreach ($options as $key => $label)
                     <option value="{{ $key }}" @selected($key === $calculator['from'])>{{ $label }}</option>
@@ -28,7 +28,7 @@
         </div>
 
         <div class="converter-field">
-            <label for="gold-to">Çevrilecek Altın</label>
+            <label for="gold-to">{{ __('market.gold_calc_to') }}</label>
             <select id="gold-to" name="to" data-gold-to>
                 @foreach ($options as $key => $label)
                     <option value="{{ $key }}" @selected($key === $calculator['to'])>{{ $label }}</option>
@@ -37,12 +37,12 @@
         </div>
 
         <div class="converter-field">
-            <label for="gold-amount">Tutar</label>
+            <label for="gold-amount">{{ __('market.amount') }}</label>
             <input id="gold-amount" name="amount" type="number" inputmode="decimal"
                    min="0" step="0.01" value="{{ $calculator['amount'] }}" data-gold-amount>
         </div>
 
-        <button type="submit" class="converter-submit" data-gold-submit>HESAPLA</button>
+        <button type="submit" class="converter-submit" data-gold-submit>{{ __('market.calculate') }}</button>
 
         <output class="converter-result" data-gold-result aria-live="polite">
             <span class="converter-result-value" data-gold-value>{{ $resultText }}</span>

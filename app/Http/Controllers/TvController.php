@@ -22,7 +22,7 @@ class TvController extends Controller
         $today = CarbonImmutable::now()->isoWeekday();
 
         return view('tv.index', array_merge([
-            'pageTitle' => 'TV',
+            'pageTitle' => __('media.tv'),
             'liveProgram' => $this->liveProgram($today),
             'days' => $this->scheduleDays($today),
             'today' => $today,
@@ -37,7 +37,7 @@ class TvController extends Controller
         $today = CarbonImmutable::now()->isoWeekday();
 
         return view('tv.schedule', array_merge([
-            'pageTitle' => 'Yayın Akışı',
+            'pageTitle' => __('media.broadcast_schedule'),
             'days' => $this->scheduleDays($today),
             'today' => $today,
         ], $this->layoutData()));
@@ -54,7 +54,7 @@ class TvController extends Controller
             ->get();
 
         return view('tv.programs', array_merge([
-            'pageTitle' => 'Tüm Programlar',
+            'pageTitle' => __('media.all_programs'),
             'programs' => $programs,
             'series' => $programs->where('is_series', true)->values(),
             'tvPrograms' => $programs->where('is_series', false)->values(),
@@ -67,18 +67,18 @@ class TvController extends Controller
     public function frequencies(): View
     {
         return view('tv.frequencies', array_merge([
-            'pageTitle' => 'Frekans Listesi',
+            'pageTitle' => __('media.frequencies'),
             'satellite' => [
-                ['Türksat 4A', '42.0° Doğu', '12034 V', '27500', '3/4'],
-                ['Türksat 4A', '42.0° Doğu', '12126 V', '27500', '5/6'],
-                ['Eutelsat', '7.0° Doğu', '11534 V', '30000', '3/4'],
+                ['Türksat 4A', '42.0° '.__('media.east'), '12034 V', '27500', '3/4'],
+                ['Türksat 4A', '42.0° '.__('media.east'), '12126 V', '27500', '5/6'],
+                ['Eutelsat', '7.0° '.__('media.east'), '11534 V', '30000', '3/4'],
             ],
             'cable' => [
-                ['TTNet Tivibu', 'Kanal 102'],
-                ['Digiturk', 'Kanal 41'],
-                ['D-Smart', 'Kanal 63'],
-                ['Turkcell TV+', 'Kanal 28'],
-                ['Vodafone TV', 'Kanal 55'],
+                ['TTNet Tivibu', __('media.channel').' 102'],
+                ['Digiturk', __('media.channel').' 41'],
+                ['D-Smart', __('media.channel').' 63'],
+                ['Turkcell TV+', __('media.channel').' 28'],
+                ['Vodafone TV', __('media.channel').' 55'],
             ],
         ], $this->layoutData()));
     }
@@ -151,7 +151,7 @@ class TvController extends Controller
         foreach (BroadcastSchedule::DAYS as $number => $name) {
             $days[] = [
                 'day' => $number,
-                'name' => $name,
+                'name' => __('media.day_'.$number),
                 'is_today' => $number === $today,
                 'rows' => ($grouped[$number] ?? collect())->values(),
             ];

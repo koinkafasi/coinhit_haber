@@ -61,11 +61,11 @@ class KriptoController extends Controller
             'instrument' => $instrument,
             'quote' => $quote,
             'breadcrumb' => [
-                ['label' => 'Kripto', 'url' => '/kripto'],
+                ['label' => __('market.crypto'), 'url' => \App\Support\Locale::url('/kripto')],
                 ['label' => $instrument->name],
             ],
             'chart' => $this->market->sparklineSvg($instrument, 90, 900, 300),
-            'ranges' => ['1G', '1H', 'Tümü'],
+            'ranges' => ['1G', '1H', __('market.all_range')],
             'cryptoQuotes' => $this->market->quotes(MarketInstrument::GROUP_CRYPTO),
             'relatedNews' => $this->categoryNews('kripto', 4, 'piyasalar'),
             'featured' => $this->featured(4),

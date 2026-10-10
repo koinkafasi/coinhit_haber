@@ -8,8 +8,8 @@
 @section('content')
     <div class="video-page video-detail-page">
         <x-breadcrumb :items="[
-            ['label' => 'Video', 'url' => \App\Support\Locale::url('/video')],
-            ['label' => $series?->name ?? 'Videolar', 'url' => $series ? \App\Support\Locale::url('/video/'.$series->slug) : null],
+            ['label' => __('media.video'), 'url' => \App\Support\Locale::url('/video')],
+            ['label' => $series?->name ?? __('media.videos'), 'url' => $series ? \App\Support\Locale::url('/video/'.$series->slug) : null],
             ['label' => \Illuminate\Support\Str::limit($episode->display_title, 60)],
         ]" />
 
@@ -19,7 +19,7 @@
                     <video class="video-player-media" controls preload="metadata"
                            poster="{{ asset($episode->thumbnail ?: '/img/placeholders/placeholder-1.svg') }}">
                         <source src="{{ $episode->video_url }}" type="video/mp4">
-                        Tarayıcınız video oynatmayı desteklemiyor.
+                        {{ __('media.video_not_supported') }}
                     </video>
                 @else
                     <div class="video-player-placeholder">
@@ -41,7 +41,7 @@
             </div>
 
             @if ($episode->guest)
-                <p class="video-detail-guest">Konuk: {{ $episode->guest }}</p>
+                <p class="video-detail-guest">{{ __('media.guest') }}: {{ $episode->guest }}</p>
             @endif
 
             @if ($episode->program?->description)
@@ -51,7 +51,7 @@
 
         @if ($related->isNotEmpty())
             <section class="video-related" id="ilgili-videolar">
-                <x-section-head title="İlgili Videolar" />
+                <x-section-head :title="__('media.related_videos')" />
                 <div class="video-list">
                     @foreach ($related as $item)
                         @include('video.partials.card', ['episode' => $item])

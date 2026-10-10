@@ -14,7 +14,7 @@
         <news:news>
             <news:publication>
                 <news:name>BloombergHT</news:name>
-                <news:language>tr</news:language>
+                <news:language>{{ app()->getLocale() === 'en' ? 'en' : 'tr' }}</news:language>
             </news:publication>
             <news:publication_date>{{ $item['publication_date'] }}</news:publication_date>
             <news:title>{{ $item['title'] }}</news:title>

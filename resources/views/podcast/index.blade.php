@@ -1,12 +1,12 @@
 @extends('front.layouts.app')
 
-@section('title', 'Podcast | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
-@section('description', 'Bloomberg HT podcast serileri: ekonomi, piyasa, teknoloji ve tarım üzerine yayınlar. Tüm serileri dinleyin.')
+@section('title', __('media.podcast').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('description', __('media.podcast_index_desc'))
 @section('canonical', url(\App\Support\Locale::url('/podcastler/')))
 
 @section('content')
     <div class="podcast-page">
-        <h1 class="page-title font-unna font-bold">Podcast</h1>
+        <h1 class="page-title font-unna font-bold">{{ __('media.podcast') }}</h1>
 
         <div class="podcast-grid">
             @foreach ($podcasts as $podcast)

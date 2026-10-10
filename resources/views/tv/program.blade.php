@@ -7,40 +7,40 @@
 
 @section('content')
     <div class="tv-page tv-program-page">
-        <x-breadcrumb :items="[['label' => 'TV', 'url' => \App\Support\Locale::url('/tv')], ['label' => $program->name]]" />
+        <x-breadcrumb :items="[['label' => __('media.tv'), 'url' => \App\Support\Locale::url('/tv')], ['label' => $program->name]]" />
 
         <header class="program-detail-head">
             <figure class="program-detail-figure">
                 <x-lazy-image :src="asset($program->thumbnail ?: '/img/placeholders/placeholder-1.svg')" alt="" contract="video_thumb" class="img-contract" :eager="true" />
             </figure>
             <div class="program-detail-info">
-                <span class="program-detail-kicker">{{ $program->is_series ? 'Video Serisi' : 'TV Programı' }}</span>
+                <span class="program-detail-kicker">{{ $program->is_series ? __('media.video_series') : __('media.tv_program') }}</span>
                 <h1 class="program-detail-name font-unna font-bold">{{ $program->name }}</h1>
                 <div class="program-detail-meta">
                     @if ($program->host)
                         <span class="program-detail-host">{{ $program->host }}</span>
                     @endif
                     @if ($program->air_time)
-                        <span class="program-detail-time">Her gün {{ $program->air_time }}</span>
+                        <span class="program-detail-time">{{ __('media.every_day') }} {{ $program->air_time }}</span>
                     @endif
                 </div>
                 @if ($program->description)
                     <p class="program-detail-desc">{{ $program->description }}</p>
                 @endif
                 <div class="tv-action-links">
-                    <a class="tv-action-link" href="{{ \App\Support\Locale::url('/yayinakisi') }}">Yayın Akışı</a>
+                    <a class="tv-action-link" href="{{ \App\Support\Locale::url('/yayinakisi') }}">{{ __('media.broadcast_schedule') }}</a>
                     @if ($program->is_series)
-                        <a class="tv-action-link" href="{{ \App\Support\Locale::url('/video/'.$program->slug) }}">Seri Sayfası</a>
+                        <a class="tv-action-link" href="{{ \App\Support\Locale::url('/video/'.$program->slug) }}">{{ __('media.series_page') }}</a>
                     @endif
                 </div>
             </div>
         </header>
 
         <section class="program-archive" id="bolumler">
-            <x-section-head title="Bölümler" />
+            <x-section-head :title="__('media.episodes')" />
 
             @if ($episodes->isEmpty())
-                <p class="tv-empty">Bu program için henüz bölüm bulunmuyor.</p>
+                <p class="tv-empty">{{ __('media.no_episodes') }}</p>
             @else
                 <div class="program-list">
                     @foreach ($episodes as $episode)
@@ -67,7 +67,7 @@
 
         @if ($related->isNotEmpty())
             <section class="program-related">
-                <x-section-head title="Diğer Programlar" />
+                <x-section-head :title="__('media.other_programs')" />
                 <div class="program-grid">
                     @foreach ($related as $item)
                         <article class="program-grid-card">

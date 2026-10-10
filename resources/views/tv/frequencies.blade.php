@@ -1,27 +1,27 @@
 @extends('front.layouts.app')
 
-@section('title', 'Frekans Listesi | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
-@section('description', 'Bloomberg HT uydu ve kablo frekans bilgileri: Türksat, Eutelsat ve operatör kanal numaraları.')
+@section('title', __('media.frequencies').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('description', __('media.frequencies_desc'))
 @section('canonical', url(\App\Support\Locale::url('/tv/frekans-listesi')))
 
 @section('content')
     <div class="tv-page tv-frequencies-page">
-        <x-breadcrumb :items="[['label' => 'TV', 'url' => \App\Support\Locale::url('/tv')], ['label' => 'Frekans Listesi']]" />
+        <x-breadcrumb :items="[['label' => __('media.tv'), 'url' => \App\Support\Locale::url('/tv')], ['label' => __('media.frequencies')]]" />
 
-        <x-section-head title="Frekans Listesi" level="h1" />
+        <x-section-head :title="__('media.frequencies')" level="h1" />
 
-        <p class="tv-freq-intro">Bloomberg HT yayınlarını aşağıdaki uydu ve kablo platformlarından izleyebilirsiniz.</p>
+        <p class="tv-freq-intro">{{ __('media.frequencies_intro') }}</p>
 
-        <h2 class="tv-group-title font-unna font-bold">Uydu Frekansları</h2>
+        <h2 class="tv-group-title font-unna font-bold">{{ __('media.satellite_frequencies') }}</h2>
         <div class="tv-table-wrap">
             <table class="tv-freq-table">
                 <thead>
                     <tr>
-                        <th>Uydu</th>
-                        <th>Konum</th>
-                        <th>Frekans</th>
-                        <th>Sembol Oranı</th>
-                        <th>FEC</th>
+                        <th>{{ __('media.satellite') }}</th>
+                        <th>{{ __('media.position') }}</th>
+                        <th>{{ __('media.frequency') }}</th>
+                        <th>{{ __('media.symbol_rate') }}</th>
+                        <th>{{ __('media.fec') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,13 +38,13 @@
             </table>
         </div>
 
-        <h2 class="tv-group-title font-unna font-bold">Kablo / Platform Kanalları</h2>
+        <h2 class="tv-group-title font-unna font-bold">{{ __('media.cable_channels') }}</h2>
         <div class="tv-table-wrap">
             <table class="tv-freq-table">
                 <thead>
                     <tr>
-                        <th>Platform</th>
-                        <th>Kanal</th>
+                        <th>{{ __('media.platform') }}</th>
+                        <th>{{ __('media.channel') }}</th>
                     </tr>
                 </thead>
                 <tbody>

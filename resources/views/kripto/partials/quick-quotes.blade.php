@@ -27,7 +27,7 @@
                 <div class="mini-quote-sparkline">{!! $card['svg'] !!}</div>
             </div>
 
-            <p class="mini-quote-updated text-xs">Güncelleme: <span data-market-field="updated">{{ $q->updatedAt->format((string) config('market.timestamp_format', 'Y/m/d H:i:s')) }}</span></p>
+            <p class="mini-quote-updated text-xs">{{ __('ui.updated') }}: <span data-market-field="updated">{{ $q->updatedAt->format((string) config('market.timestamp_format', 'Y/m/d H:i:s')) }}</span></p>
         </article>
     @endforeach
 </div>

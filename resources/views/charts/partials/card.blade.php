@@ -11,7 +11,7 @@
                           alt="{{ $chart->title }}" contract="news_card" class="chart-img" />
         </figure>
         <figcaption class="chart-caption">
-            <div class="category text-xs">{{ $chart->category }}</div>
+            <div class="category text-xs">{{ $chart->category_label }}</div>
             <div class="font-unna font-bold chart-title line-clamp-2">{{ $chart->title }}</div>
         </figcaption>
     </a>

@@ -1,13 +1,13 @@
 @extends('front.layouts.app')
 
-@section('title', $disclosure->company_code.' '.$disclosure->title.' | KAP | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
-@section('description', $disclosure->company_name.' tarafından Kamuyu Aydınlatma Platformu\'na yapılan bildirim: '.$disclosure->title)
+@section('title', $disclosure->company_code.' '.$disclosure->title.' | '.__('market.kap').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('description', $disclosure->company_name.__('market.kap_detail_desc_prefix').$disclosure->title)
 
 @section('content')
     <div class="borsa-page kap-page">
         <x-breadcrumb :items="[
-            ['label' => 'KAP HABERLERİ', 'url' => '/borsa/hisseler/kap-haberleri'],
-            ['label' => $disclosure->company_code.'/'.$disclosure->company_name, 'url' => '/borsa/hisseler/kap-haberleri'],
+            ['label' => __('market.kap_news_heading'), 'url' => \App\Support\Locale::url('/borsa/hisseler/kap-haberleri')],
+            ['label' => $disclosure->company_code.'/'.$disclosure->company_name, 'url' => \App\Support\Locale::url('/borsa/hisseler/kap-haberleri')],
             ['label' => \Illuminate\Support\Str::limit($disclosure->title, 40)],
         ]" />
 
@@ -58,7 +58,7 @@
 
             <aside class="borsa-aside">
                 <div class="aside-block">
-                    <x-section-head title="İlgili KAP Haberleri" href="/borsa/hisseler/kap-haberleri" />
+                    <x-section-head :title="__('market.related_kap_news')" :href="\App\Support\Locale::url('/borsa/hisseler/kap-haberleri')" />
                     @include('borsa.partials.kap-list', ['disclosures' => $relatedDisclosures])
                 </div>
                 <x-ad-zone :zone="1257" :index="1" />

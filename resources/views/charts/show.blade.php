@@ -12,12 +12,12 @@
         <nav class="chart-breadcrumb" aria-label="{{ __('ui.breadcrumb') }}">
             <a href="{{ \App\Support\Locale::url('/grafik-arsivi') }}">{{ __('ui.chart_archive') }}</a>
             <x-icon name="chevron-right" />
-            <span>{{ $chart->category }}</span>
+            <span>{{ $chart->category_label }}</span>
         </nav>
 
         <h1 class="font-unna font-bold chart-detail-title">{{ $chart->title }}</h1>
 
-        <div class="chart-detail-category category text-xs">{{ $chart->category }}</div>
+        <div class="chart-detail-category category text-xs">{{ $chart->category_label }}</div>
 
         <figure class="chart-detail-figure">
             <img src="{{ asset($chart->image ?: '/img/og-default.png') }}"

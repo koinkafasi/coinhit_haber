@@ -1,5 +1,5 @@
 {{-- Yatırım fonları alt-tool nav (3 buton) — spec §8, §15.8 --}}
-<nav class="fund-tool-nav" aria-label="Yatırım fonları araçları">
+<nav class="fund-tool-nav" aria-label="{{ __('media.fund_tools_aria') }}">
     @foreach ($toolLinks as $link)
         <a class="fund-tool-link {{ ! empty($link['anchor']) ? 'is-anchor' : '' }}"
            href="{{ \App\Support\Locale::url($link['url']) }}">

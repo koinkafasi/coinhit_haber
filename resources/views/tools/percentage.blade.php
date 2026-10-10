@@ -2,25 +2,25 @@
 
 @section('title', $pageTitle)
 @section('description', $pageDescription)
-@section('canonical', url('/yuzde-hesaplama'))
+@section('canonical', url(\App\Support\Locale::url('/yuzde-hesaplama')))
 @section('og_image', url('/img/manifest-192.png'))
 @section('og_image_width', '180')
 @section('og_image_height', '180')
 
 @section('content')
     <div class="static-layout tool-layout">
-        <x-breadcrumb :items="[['label' => 'Yüzde Hesaplama', 'url' => '/yuzde-hesaplama']]" />
+        <x-breadcrumb :items="[['label' => __('content.percentage_title'), 'url' => \App\Support\Locale::url('/yuzde-hesaplama')]]" />
 
         <article class="static-page tool-page">
-            <h1 class="static-title font-unna font-bold">Yüzde Hesaplama</h1>
-            <p>Bir sayının yüzdesini veya iki sayı arasındaki yüzde değişimi hesaplayın.</p>
+            <h1 class="static-title font-unna font-bold">{{ __('content.percentage_title') }}</h1>
+            <p>{{ __('content.percentage_description') }}</p>
 
             <form class="tool-form" data-percentage-calculator>
                 <div class="tool-fields">
-                    <label>Değer <input type="number" step="any" name="value" value="100" inputmode="decimal"></label>
-                    <label>Yüzde (%) <input type="number" step="any" name="percent" value="10" inputmode="decimal"></label>
+                    <label>{{ __('content.percentage_value') }} <input type="number" step="any" name="value" value="100" inputmode="decimal"></label>
+                    <label>{{ __('content.percentage_percent') }} <input type="number" step="any" name="percent" value="10" inputmode="decimal"></label>
                 </div>
-                <p class="tool-result">Sonuç: <output data-result>110</output></p>
+                <p class="tool-result">{{ __('content.percentage_result') }} <output data-result>110</output></p>
             </form>
         </article>
     </div>

@@ -6,14 +6,14 @@
 
 @section('content')
     <div class="video-page video-series-page">
-        <x-breadcrumb :items="[['label' => 'Video', 'url' => \App\Support\Locale::url('/video')], ['label' => $series->name]]" />
+        <x-breadcrumb :items="[['label' => __('media.video'), 'url' => \App\Support\Locale::url('/video')], ['label' => $series->name]]" />
 
         <header class="series-head">
             <figure class="series-head-figure">
                 <x-lazy-image :src="asset($series->thumbnail ?: '/img/placeholders/placeholder-1.svg')" alt="" contract="video_thumb" class="img-contract" :eager="true" />
             </figure>
             <div class="series-head-info">
-                <span class="program-detail-kicker">Video Serisi</span>
+                <span class="program-detail-kicker">{{ __('media.video_series') }}</span>
                 <h1 class="series-head-name font-unna font-bold">{{ $series->name }}</h1>
                 @if ($series->host)
                     <span class="series-head-host">{{ $series->host }}</span>
@@ -21,17 +21,17 @@
                 @if ($series->description)
                     <p class="series-head-desc">{{ $series->description }}</p>
                 @endif
-                <a class="tv-action-link" href="{{ \App\Support\Locale::url('/video') }}">Tüm Seriler</a>
+                <a class="tv-action-link" href="{{ \App\Support\Locale::url('/video') }}">{{ __('media.all_series') }}</a>
             </div>
         </header>
 
         <section class="series-episodes">
-            <x-section-head title="Bölümler" />
+            <x-section-head :title="__('media.episodes')" />
             <div class="video-list" data-load-more-container>
                 @forelse ($episodes as $episode)
                     @include('video.partials.card', ['episode' => $episode])
                 @empty
-                    <p class="tv-empty">Bu seride henüz bölüm bulunmuyor.</p>
+                    <p class="tv-empty">{{ __('media.no_series_episodes') }}</p>
                 @endforelse
             </div>
 
@@ -46,7 +46,7 @@
 
         @if ($otherSeries->isNotEmpty())
             <section class="series-other">
-                <x-section-head title="Diğer Seriler" />
+                <x-section-head :title="__('media.other_series')" />
                 <div class="series-grid">
                     @foreach ($otherSeries as $item)
                         <article class="series-card">

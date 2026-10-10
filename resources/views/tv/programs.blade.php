@@ -1,17 +1,17 @@
 @extends('front.layouts.app')
 
-@section('title', 'Tüm Programlar | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
-@section('description', 'Bloomberg HT program rehberi: haber, ekonomi ve piyasa programları ile dijital video serilerinin tümü.')
+@section('title', __('media.all_programs').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('description', __('media.programs_desc'))
 @section('canonical', url(\App\Support\Locale::url('/tv/programlar')))
 
 @section('content')
     <div class="tv-page tv-programs-page">
-        <x-breadcrumb :items="[['label' => 'TV', 'url' => \App\Support\Locale::url('/tv')], ['label' => 'Tüm Programlar']]" />
+        <x-breadcrumb :items="[['label' => __('media.tv'), 'url' => \App\Support\Locale::url('/tv')], ['label' => __('media.all_programs')]]" />
 
-        <x-section-head title="Tüm Programlar" level="h1" />
+        <x-section-head :title="__('media.all_programs')" level="h1" />
 
         @if ($tvPrograms->isNotEmpty())
-            <h2 class="tv-group-title font-unna font-bold">Televizyon Programları</h2>
+            <h2 class="tv-group-title font-unna font-bold">{{ __('media.tv_programs') }}</h2>
             <div class="program-grid">
                 @foreach ($tvPrograms as $program)
                     <article class="program-grid-card">
@@ -33,7 +33,7 @@
         @endif
 
         @if ($series->isNotEmpty())
-            <h2 class="tv-group-title font-unna font-bold">Video Serileri</h2>
+            <h2 class="tv-group-title font-unna font-bold">{{ __('media.video_series_plural') }}</h2>
             <div class="program-grid">
                 @foreach ($series as $program)
                     <article class="program-grid-card">
@@ -45,7 +45,7 @@
                             @if ($program->host)
                                 <span class="program-grid-host">{{ $program->host }}</span>
                             @endif
-                            <span class="program-grid-time">{{ $program->episodes_count }} bölüm</span>
+                            <span class="program-grid-time">{{ $program->episodes_count }} {{ __('media.episode_count') }}</span>
                         </a>
                     </article>
                 @endforeach

@@ -24,18 +24,21 @@ class AltinController extends Controller
      * /altin alt-hızlı bağlantıları (spec §15.5: Ons|Gram|Çeyrek|Cumhuriyet|
      * Ziynet|14 Ayar|22 Ayar|Diğer Emtia).
      *
-     * @var array<int, array{label: string, url: string}>
+     * @return array<int, array{label: string, url: string}>
      */
-    public const QUICK_LINKS = [
-        ['label' => 'Ons Altın', 'url' => '/altin/altin-ons'],
-        ['label' => 'Gram Altın', 'url' => '/altin/gram-altin'],
-        ['label' => 'Çeyrek Altın', 'url' => '/altin/ceyrek-altin'],
-        ['label' => 'Cumhuriyet Altını', 'url' => '/altin/cumhuriyet-altini'],
-        ['label' => 'Ziynet Altını', 'url' => '/altin/ziynet-altini'],
-        ['label' => '14 Ayar Bilezik', 'url' => '/altin/14-ay-bilezik-gr'],
-        ['label' => '22 Ayar Bilezik', 'url' => '/altin/22-ay-bilezik-gr'],
-        ['label' => 'Diğer Emtia', 'url' => '/emtia'],
-    ];
+    protected function quickLinks(): array
+    {
+        return [
+            ['label' => __('market.gold_ons'), 'url' => '/altin/altin-ons'],
+            ['label' => __('market.gold_gram'), 'url' => '/altin/gram-altin'],
+            ['label' => __('market.gold_ceyrek'), 'url' => '/altin/ceyrek-altin'],
+            ['label' => __('market.gold_cumhuriyet'), 'url' => '/altin/cumhuriyet-altini'],
+            ['label' => __('market.gold_ziynet'), 'url' => '/altin/ziynet-altini'],
+            ['label' => __('market.gold_14_ayar'), 'url' => '/altin/14-ay-bilezik-gr'],
+            ['label' => __('market.gold_22_ayar'), 'url' => '/altin/22-ay-bilezik-gr'],
+            ['label' => __('market.other_commodities'), 'url' => '/emtia'],
+        ];
+    }
 
     /**
      * Serbest Piyasada Altın tablosu — 17 satır birebir sıra (spec §5, §8).
@@ -66,7 +69,7 @@ class AltinController extends Controller
     public function index(): View
     {
         return view('altin.index', array_merge([
-            'quickLinks' => self::QUICK_LINKS,
+            'quickLinks' => $this->quickLinks(),
             'featureQuotes' => $this->quotesFor(self::FEATURE_CODES),
             'serbestQuotes' => $this->serbestQuotes(),
             'otherCommodity' => $this->market->quotes(MarketInstrument::GROUP_PRECIOUS_METAL),
@@ -88,15 +91,15 @@ class AltinController extends Controller
         $quote = $this->market->quote($instrument);
 
         return view('altin.detail', array_merge([
-            'quickLinks' => self::QUICK_LINKS,
+            'quickLinks' => $this->quickLinks(),
             'instrument' => $instrument,
             'quote' => $quote,
             'breadcrumb' => [
-                ['label' => 'Altın', 'url' => '/altin'],
+                ['label' => __('market.gold'), 'url' => \App\Support\Locale::url('/altin')],
                 ['label' => $instrument->name],
             ],
             'chart' => $this->market->sparklineSvg($instrument, 90, 900, 300),
-            'ranges' => ['1G', '1H', 'Tümü'],
+            'ranges' => ['1G', '1H', __('market.all_range')],
             'serbestQuotes' => $this->serbestQuotes(),
             'relatedNews' => $this->categoryNews('piyasalar', 4),
             'featured' => $this->featured(4),
@@ -111,7 +114,7 @@ class AltinController extends Controller
     public function calculator(): View
     {
         return view('altin.calculator', array_merge([
-            'quickLinks' => self::QUICK_LINKS,
+            'quickLinks' => $this->quickLinks(),
             'calculator' => $this->calculator->defaultContext(),
             'relatedNews' => $this->categoryNews('piyasalar', 4),
             'featured' => $this->featured(4),

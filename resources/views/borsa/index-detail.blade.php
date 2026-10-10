@@ -1,21 +1,21 @@
 @extends('front.layouts.app')
 
-@section('title', $instrument->name.' | Endeksler | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
-@section('description', $instrument->name.' canlı değeri, günlük değişimi ve güniçi grafiği.')
+@section('title', $instrument->name.' | '.__('market.indices').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('description', $instrument->name.__('market.borsa_index_detail_desc_suffix'))
 
 @section('content')
     @php
         $dirClass = $quote->direction() === 'up' ? 'text-green-700' : ($quote->direction() === 'down' ? 'text-red-700' : 'text-gray-400');
         $shortColumns = [
-            ['label' => 'SON', 'field' => 'last', 'class' => 'lastPrice'],
+            ['label' => __('market.last'), 'field' => 'last', 'class' => 'lastPrice'],
             ['label' => '%', 'field' => 'change_percent', 'class' => 'percentChange', 'color' => true],
         ];
     @endphp
 
     <div class="borsa-page">
         <x-breadcrumb :items="[
-            ['label' => 'Borsa', 'url' => '/borsa'],
-            ['label' => 'Endeksler', 'url' => '/borsa/endeksler'],
+            ['label' => __('market.borsa'), 'url' => \App\Support\Locale::url('/borsa')],
+            ['label' => __('market.indices'), 'url' => \App\Support\Locale::url('/borsa/endeksler')],
             ['label' => $instrument->name],
         ]" />
 
@@ -38,8 +38,8 @@
 
             <aside class="borsa-aside">
                 <div class="aside-block">
-                    <x-section-head title="BIST Endeksleri" href="/borsa/endeksler" />
-                    <x-market-table title="ENDEKSLER" firstLabel="ENDEKSLER" :quotes="$indices" :columns="$shortColumns"
+                    <x-section-head :title="__('market.bist_indices')" :href="\App\Support\Locale::url('/borsa/endeksler')" />
+                    <x-market-table :title="__('market.indices_heading')" :firstLabel="__('market.indices_heading')" :quotes="$indices" :columns="$shortColumns"
                         :urlResolver="fn ($q) => $q->instrument->indexUrl()" :head="false" />
                 </div>
                 <x-ad-zone :zone="1257" :index="1" />

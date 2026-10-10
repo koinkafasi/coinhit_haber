@@ -41,6 +41,35 @@ class Fund extends Model
         ['field' => 'return_5y', 'label' => '5 Yıllık(%)'],
     ];
 
+    /**
+     * Aktif locale'e göre fon sınıfı etiketleri (master spec §18.4).
+     *
+     * @return array<string, string>
+     */
+    public static function classLabels(): array
+    {
+        $labels = [];
+
+        foreach (self::CLASSES as $key => $label) {
+            $labels[$key] = __('media.fund_class_'.$key);
+        }
+
+        return $labels;
+    }
+
+    /**
+     * Aktif locale'e göre getiri matrisi kolonları.
+     *
+     * @return array<int, array{field: string, label: string}>
+     */
+    public static function returnColumns(): array
+    {
+        return array_map(static fn (array $column): array => [
+            'field' => $column['field'],
+            'label' => __('media.'.$column['field']),
+        ], self::RETURN_COLUMNS);
+    }
+
     protected $fillable = [
         'code',
         'name',
@@ -99,7 +128,9 @@ class Fund extends Model
      */
     public function getClassNameAttribute(): string
     {
-        return self::CLASSES[$this->fund_class] ?? $this->fund_class;
+        return isset(self::CLASSES[$this->fund_class])
+            ? __('media.fund_class_'.$this->fund_class)
+            : $this->fund_class;
     }
 
     /**
@@ -107,15 +138,17 @@ class Fund extends Model
      */
     public function getRiskLabelAttribute(): string
     {
-        return match (true) {
-            $this->risk_value <= 1 => 'Çok Düşük',
-            $this->risk_value === 2 => 'Düşük',
-            $this->risk_value === 3 => 'Düşük-Orta',
-            $this->risk_value === 4 => 'Orta',
-            $this->risk_value === 5 => 'Orta-Yüksek',
-            $this->risk_value === 6 => 'Yüksek',
-            default => 'Çok Yüksek',
+        $level = match (true) {
+            $this->risk_value <= 1 => 1,
+            $this->risk_value === 2 => 2,
+            $this->risk_value === 3 => 3,
+            $this->risk_value === 4 => 4,
+            $this->risk_value === 5 => 5,
+            $this->risk_value === 6 => 6,
+            default => 7,
         };
+
+        return __('media.risk_'.$level);
     }
 
     /**

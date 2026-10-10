@@ -4,11 +4,11 @@
     <table class="market-table fund-leader-table w-full text-center text-sm bg-white">
         <thead>
             <tr class="border-b">
-                <th class="p-4 text-left">Kod</th>
-                <th class="p-4 text-left">Ad</th>
-                <th class="p-4">Fon Fiyatı (TL)</th>
-                <th class="p-4">Değişim (TL) %</th>
-                <th class="p-4">Değişim (USD) %</th>
+                <th class="p-4 text-left">{{ __('media.code') }}</th>
+                <th class="p-4 text-left">{{ __('media.name') }}</th>
+                <th class="p-4">{{ __('media.fund_price_tl') }}</th>
+                <th class="p-4">{{ __('media.change_tl_pct') }}</th>
+                <th class="p-4">{{ __('media.change_usd_pct') }}</th>
             </tr>
         </thead>
         <tbody>

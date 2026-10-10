@@ -1,11 +1,11 @@
 @extends('front.layouts.app')
 
-@section('title', 'KAP Haberleri | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
-@section('description', 'Kamuyu Aydınlatma Platformu (KAP) bildirimleri: firma açıklamaları ters kronolojik akış.')
+@section('title', __('market.kap_news').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('description', __('market.borsa_kap_news_desc'))
 
 @section('content')
     <div class="borsa-page">
-        <h1 class="page-title font-unna font-bold">KAP Haberleri</h1>
+        <h1 class="page-title font-unna font-bold">{{ __('market.kap_news') }}</h1>
 
         @include('borsa.partials.quick-links')
 
@@ -16,7 +16,7 @@
                 @include('borsa.partials.pagination', ['paginator' => $disclosures])
 
                 <section class="kap-videos">
-                    <x-section-head title="Öne Çıkan Videolar" href="/video" />
+                    <x-section-head :title="__('market.featured_videos')" :href="\App\Support\Locale::url('/video')" />
                     <div class="video-list">
                         @foreach ($videos as $episode)
                             <article class="video-card">

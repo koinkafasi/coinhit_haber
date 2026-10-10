@@ -24,26 +24,26 @@
             </header>
 
             <dl class="mini-quote-stats">
-                <div><dt>ALIŞ</dt><dd data-market-field="bid">{{ $q->formattedBid() }}</dd></div>
-                <div><dt>SATIŞ</dt><dd data-market-field="ask">{{ $q->formattedAsk() }}</dd></div>
-                <div><dt>FARK</dt><dd class="{{ $directionClass($q) }}" data-market-field="change">{{ $q->formattedChange() }}</dd></div>
-                <div><dt>ÖNCEKİ KAPIŞ</dt><dd data-market-field="previous_close">{{ $q->format($q->previousClose) }}</dd></div>
-                <div><dt>EN YÜKSEK</dt><dd data-market-field="high">{{ $q->format($q->high) }}</dd></div>
-                <div><dt>EN DÜŞÜK</dt><dd data-market-field="low">{{ $q->format($q->low) }}</dd></div>
+                <div><dt>{{ __('market.bid') }}</dt><dd data-market-field="bid">{{ $q->formattedBid() }}</dd></div>
+                <div><dt>{{ __('market.ask') }}</dt><dd data-market-field="ask">{{ $q->formattedAsk() }}</dd></div>
+                <div><dt>{{ __('market.change') }}</dt><dd class="{{ $directionClass($q) }}" data-market-field="change">{{ $q->formattedChange() }}</dd></div>
+                <div><dt>{{ __('market.previous_close') }}</dt><dd data-market-field="previous_close">{{ $q->format($q->previousClose) }}</dd></div>
+                <div><dt>{{ __('market.high_max') }}</dt><dd data-market-field="high">{{ $q->format($q->high) }}</dd></div>
+                <div><dt>{{ __('market.low_min') }}</dt><dd data-market-field="low">{{ $q->format($q->low) }}</dd></div>
             </dl>
 
             <div class="mini-quote-chart">
-                <div class="mini-quote-tabs" role="tablist" aria-label="Grafik zaman aralığı">
+                <div class="mini-quote-tabs" role="tablist" aria-label="{{ __('market.chart_time_range_aria') }}">
                     <button type="button" class="tab-button" data-tab="tab-0" aria-selected="false">1G</button>
                     <button type="button" class="tab-button" data-tab="tab-1" aria-selected="false">1H</button>
-                    <button type="button" class="tab-button is-active" data-tab="tab-2" aria-selected="true">Tümü</button>
+                    <button type="button" class="tab-button is-active" data-tab="tab-2" aria-selected="true">{{ __('market.all_range') }}</button>
                 </div>
                 <div class="mini-quote-sparkline">
                     {!! $card['svg'] !!}
                 </div>
             </div>
 
-            <p class="mini-quote-updated text-xs">Güncelleme: <span data-market-field="updated">{{ $q->updatedAt->format((string) config('market.timestamp_format', 'Y/m/d H:i:s')) }}</span></p>
+            <p class="mini-quote-updated text-xs">{{ __('ui.updated') }}: <span data-market-field="updated">{{ $q->updatedAt->format((string) config('market.timestamp_format', 'Y/m/d H:i:s')) }}</span></p>
         </article>
     @endforeach
 </div>

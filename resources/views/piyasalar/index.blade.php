@@ -2,7 +2,7 @@
 
 @section('title', $pageTitle)
 @section('description', $pageDescription)
-@section('canonical', url('/piyasalar'))
+@section('canonical', url(\App\Support\Locale::url('/piyasalar')))
 @section('og_type', 'website')
 @section('og_image', url('/img/manifest-192.png'))
 @section('og_image_width', '180')
@@ -21,7 +21,7 @@
     </div>
 
     <div class="markets-layout">
-        <x-breadcrumb :items="[['label' => __('ui.markets'), 'url' => '/piyasalar']]" />
+        <x-breadcrumb :items="[['label' => __('ui.markets'), 'url' => \App\Support\Locale::url('/piyasalar')]]" />
 
         <div class="section-title bht-page-band">
             <h1 class="font-unna font-bold">{{ __('ui.markets') }}</h1>

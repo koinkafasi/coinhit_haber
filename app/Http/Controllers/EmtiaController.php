@@ -23,16 +23,19 @@ class EmtiaController extends Controller
     /**
      * /emtia alt-hızlı bağlantıları (özet tablolara çapa).
      *
-     * @var array<int, array{label: string, url: string}>
+     * @return array<int, array{label: string, url: string}>
      */
-    public const QUICK_LINKS = [
-        ['label' => 'Kıymetli Metaller', 'url' => '/emtia#kiymetli-metaller'],
-        ['label' => 'Tarım Emtia', 'url' => '/emtia#tarim-emtia'],
-        ['label' => 'Sanayi Emtia', 'url' => '/emtia#sanayi-emtia'],
-        ['label' => 'Sanayi Emtia 3 Aylık', 'url' => '/emtia#sanayi-emtia-3-aylik'],
-        ['label' => 'Enerji Emtia', 'url' => '/emtia#enerji-emtia'],
-        ['label' => 'Serbest Piyasada Altın', 'url' => '/altin'],
-    ];
+    protected function quickLinks(): array
+    {
+        return [
+            ['label' => __('market.precious_metals'), 'url' => '/emtia#kiymetli-metaller'],
+            ['label' => __('market.agricultural_commodities'), 'url' => '/emtia#tarim-emtia'],
+            ['label' => __('market.industrial_commodities'), 'url' => '/emtia#sanayi-emtia'],
+            ['label' => __('market.industrial_3m'), 'url' => '/emtia#sanayi-emtia-3-aylik'],
+            ['label' => __('market.energy_commodities'), 'url' => '/emtia#enerji-emtia'],
+            ['label' => __('market.free_market_gold'), 'url' => '/altin'],
+        ];
+    }
 
     public function __construct(private readonly MarketDataService $market) {}
 
@@ -44,7 +47,7 @@ class EmtiaController extends Controller
         $industry = $this->market->quotes(MarketInstrument::GROUP_INDUSTRY);
 
         return view('emtia.index', array_merge([
-            'quickLinks' => self::QUICK_LINKS,
+            'quickLinks' => $this->quickLinks(),
             'preciousMetals' => $this->market->quotes(MarketInstrument::GROUP_PRECIOUS_METAL),
             'agriculture' => $this->market->quotes(MarketInstrument::GROUP_AGRICULTURE),
             'industry' => $industry->reject(fn (Quote $q) => self::isForward($q->code()))->values(),
@@ -71,11 +74,11 @@ class EmtiaController extends Controller
             'instrument' => $instrument,
             'quote' => $quote,
             'breadcrumb' => [
-                ['label' => 'Emtia', 'url' => '/emtia'],
+                ['label' => __('market.commodities'), 'url' => \App\Support\Locale::url('/emtia')],
                 ['label' => $instrument->name],
             ],
             'chart' => $this->market->sparklineSvg($instrument, 90, 900, 300),
-            'ranges' => ['1G', '1H', 'Tümü'],
+            'ranges' => ['1G', '1H', __('market.all_range')],
             'relatedNews' => $this->categoryNews('piyasalar', 4),
             'cmeNote' => $this->market->sourceNote('cme'),
         ], $this->layoutData()));

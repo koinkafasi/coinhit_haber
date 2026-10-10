@@ -1,11 +1,11 @@
 @extends('front.layouts.app')
 
-@section('title', 'Döviz Çevirici | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
-@section('description', '22 para birimi arasında güncel kurlarla döviz çevirisi yapın.')
+@section('title', __('market.converter').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('description', __('market.doviz_converter_desc'))
 
 @section('content')
     <div class="borsa-page doviz-page">
-        <h1 class="page-title font-unna font-bold">Döviz Çevirici</h1>
+        <h1 class="page-title font-unna font-bold">{{ __('market.converter') }}</h1>
 
         <div class="borsa-layout">
             <div class="borsa-main">

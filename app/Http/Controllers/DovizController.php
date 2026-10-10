@@ -21,15 +21,18 @@ class DovizController extends Controller
     /**
      * /doviz alt-hızlı bağlantıları (spec §15.4: Dolar|Euro|Sterlin|Frank|Pariteler).
      *
-     * @var array<int, array{label: string, url: string}>
+     * @return array<int, array{label: string, url: string}>
      */
-    private const QUICK_LINKS = [
-        ['label' => 'Dolar', 'url' => '/doviz/dolar'],
-        ['label' => 'Euro', 'url' => '/doviz/euro'],
-        ['label' => 'Sterlin', 'url' => '/doviz/ingiliz-sterlini'],
-        ['label' => 'Frank', 'url' => '/doviz/isvicre-frangi'],
-        ['label' => 'Pariteler', 'url' => '/doviz/pariteler'],
-    ];
+    protected function quickLinks(): array
+    {
+        return [
+            ['label' => __('market.dollar'), 'url' => '/doviz/dolar'],
+            ['label' => __('market.euro'), 'url' => '/doviz/euro'],
+            ['label' => __('market.sterling'), 'url' => '/doviz/ingiliz-sterlini'],
+            ['label' => __('market.frank'), 'url' => '/doviz/isvicre-frangi'],
+            ['label' => __('market.parities'), 'url' => '/doviz/pariteler'],
+        ];
+    }
 
     /**
      * /doviz Pariteler tablosu: 6 parite + DOLAR ENDEKSİ (spec §8).
@@ -56,7 +59,7 @@ class DovizController extends Controller
     public function index(): View
     {
         return view('doviz.index', array_merge([
-            'quickLinks' => self::QUICK_LINKS,
+            'quickLinks' => $this->quickLinks(),
             'currencyQuotes' => $this->market->quotes(MarketInstrument::GROUP_CURRENCY),
             'parityQuotes' => $this->parityQuotes(),
             'emergingQuotes' => $this->market->quotes(MarketInstrument::GROUP_EMERGING_FX),
@@ -73,7 +76,7 @@ class DovizController extends Controller
     public function parities(): View
     {
         return view('doviz.parities', array_merge([
-            'quickLinks' => self::QUICK_LINKS,
+            'quickLinks' => $this->quickLinks(),
             'parityQuotes' => $this->market->quotes(MarketInstrument::GROUP_PARITY),
             'emergingQuotes' => $this->market->quotes(MarketInstrument::GROUP_EMERGING_FX),
             'relatedNews' => $this->categoryNews('piyasalar', 4),
@@ -152,13 +155,13 @@ class DovizController extends Controller
         abort_unless($instrument, 404);
 
         return view('doviz.tracking', array_merge([
-            'pageTitle' => 'TL/Euro',
+            'pageTitle' => __('market.tl_euro'),
             'quote' => $this->market->quote($instrument),
             'chart' => $this->market->sparklineSvg($instrument, 90, 900, 300),
-            'ranges' => ['1G', '1H', 'Tümü'],
+            'ranges' => ['1G', '1H', __('market.all_range')],
             'breadcrumb' => [
-                ['label' => 'Döviz', 'url' => '/doviz'],
-                ['label' => 'TL/Euro'],
+                ['label' => __('market.doviz'), 'url' => \App\Support\Locale::url('/doviz')],
+                ['label' => __('market.tl_euro')],
             ],
             'currencyQuotes' => $this->market->quotes(MarketInstrument::GROUP_CURRENCY),
             'relatedNews' => $this->categoryNews('piyasalar', 4),
@@ -181,7 +184,7 @@ class DovizController extends Controller
         $direction = $change > 0 ? 'up' : ($change < 0 ? 'down' : 'flat');
 
         return view('doviz.tracking', array_merge([
-            'pageTitle' => 'Sepet Kur',
+            'pageTitle' => __('market.basket_rate'),
             'basket' => [
                 'last' => number_format($last, 4, ',', '.'),
                 'previous_close' => number_format($previousClose, 4, ',', '.'),
@@ -192,8 +195,8 @@ class DovizController extends Controller
                 'weight' => 50,
             ],
             'breadcrumb' => [
-                ['label' => 'Döviz', 'url' => '/doviz'],
-                ['label' => 'Sepet Kur'],
+                ['label' => __('market.doviz'), 'url' => \App\Support\Locale::url('/doviz')],
+                ['label' => __('market.basket_rate')],
             ],
             'currencyQuotes' => $this->market->quotes(MarketInstrument::GROUP_CURRENCY),
             'relatedNews' => $this->categoryNews('piyasalar', 4),
@@ -222,23 +225,23 @@ class DovizController extends Controller
 
         $breadcrumb = $isParity
             ? [
-                ['label' => 'Döviz', 'url' => '/doviz'],
-                ['label' => 'Pariteler', 'url' => '/doviz/pariteler'],
+                ['label' => __('market.doviz'), 'url' => \App\Support\Locale::url('/doviz')],
+                ['label' => __('market.parities'), 'url' => \App\Support\Locale::url('/doviz/pariteler')],
                 ['label' => $instrument->name],
             ]
             : [
-                ['label' => 'Döviz', 'url' => '/doviz'],
+                ['label' => __('market.doviz'), 'url' => \App\Support\Locale::url('/doviz')],
                 ['label' => $instrument->name],
             ];
 
         return [
-            'quickLinks' => self::QUICK_LINKS,
+            'quickLinks' => $this->quickLinks(),
             'isParity' => $isParity,
             'instrument' => $instrument,
             'quote' => $quote,
             'breadcrumb' => $breadcrumb,
             'chart' => $this->market->sparklineSvg($instrument, 90, 900, 300),
-            'ranges' => ['1G', '1H', 'Tümü'],
+            'ranges' => ['1G', '1H', __('market.all_range')],
             'currencyQuotes' => $this->market->quotes(MarketInstrument::GROUP_CURRENCY),
             'parityQuotes' => $this->parityQuotes(),
             'relatedNews' => $this->categoryNews('piyasalar', 4),

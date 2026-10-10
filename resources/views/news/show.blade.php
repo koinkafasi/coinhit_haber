@@ -35,7 +35,7 @@
         'articleSection' => $news->category?->name,
         'datePublished' => $published,
         'dateModified' => $modified,
-        'inLanguage' => 'tr-TR',
+        'inLanguage' => app()->getLocale() === 'en' ? 'en-US' : 'tr-TR',
         'mainEntityOfPage' => ['@type' => 'WebPage', '@id' => url($news->url)],
         'image' => [
             '@type' => 'ImageObject',
@@ -46,7 +46,7 @@
         'author' => [
             '@type' => 'Person',
             'name' => $authorName,
-            'url' => url('/kunye'),
+            'url' => url(\App\Support\Locale::url('/kunye')),
         ],
         'publisher' => [
             '@type' => 'Organization',
@@ -124,7 +124,7 @@
         </div>
 
         <aside class="article-sidebar">
-            <x-featured-widget variant="sidebar" title="Öne Çıkanlar" :items="$featured" class="headlines-widget" />
+            <x-featured-widget variant="sidebar" :title="__('content.featured_title')" :items="$featured" class="headlines-widget" />
         </aside>
     </div>
 @endsection

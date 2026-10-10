@@ -1,30 +1,30 @@
 @extends('front.layouts.app')
 
-@section('title', ($pageTitle ?? 'Faiz Bono').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
-@section('description', 'Tahvil, repo, eurobond ve uluslararası tahvil faiz oranları; TR 2/5/10 yıllık tahvil ve ABD/Almanya/İngiltere/Japonya getirileri.')
+@section('title', ($pageTitle ?? __('market.faiz_bono')).' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('description', __('market.faiz_index_desc'))
 
 @section('content')
     @php
-        $pageTitle = $pageTitle ?? 'Faiz Bono';
+        $pageTitle = $pageTitle ?? __('market.faiz_bono');
         $sonColumns = [
-            ['label' => 'SON', 'field' => 'last', 'class' => 'lastPrice'],
+            ['label' => __('market.last'), 'field' => 'last', 'class' => 'lastPrice'],
             ['label' => '%', 'field' => 'change_percent', 'class' => 'percentChange', 'color' => true],
         ];
         $bondUrl = fn ($q) => $q->instrument->bondUrl();
         $repoUrl = fn ($q) => $q->instrument->repoUrl();
         $eurobondUrl = fn ($q) => $q->instrument->eurobondUrl();
         $quickLinks = [
-            ['label' => 'Tahvil', 'url' => '/faiz-bono#tahvil'],
-            ['label' => 'Repo', 'url' => '/faiz-bono#repo'],
-            ['label' => 'Eurobondlar', 'url' => '/faiz-bono#eurobondlar'],
-            ['label' => 'Uluslararası Tahviller', 'url' => '/faiz-bono#uluslararasi-tahviller'],
+            ['label' => __('market.bond'), 'url' => '/faiz-bono#tahvil'],
+            ['label' => __('market.repo'), 'url' => '/faiz-bono#repo'],
+            ['label' => __('market.eurobonds'), 'url' => '/faiz-bono#eurobondlar'],
+            ['label' => __('market.intl_bonds'), 'url' => '/faiz-bono#uluslararasi-tahviller'],
         ];
     @endphp
 
     <div class="borsa-page faiz-bono-page">
         <h1 class="page-title font-unna font-bold">{{ $pageTitle }}</h1>
 
-        <nav class="borsa-quick-links faiz-bono-quick-links" aria-label="Faiz bono hızlı bağlantılar">
+        <nav class="borsa-quick-links faiz-bono-quick-links" aria-label="{{ __('market.faiz_quick_links') }}">
             @foreach ($quickLinks as $link)
                 <a href="{{ \App\Support\Locale::url($link['url']) }}">{{ $link['label'] }}</a>
             @endforeach
@@ -32,17 +32,17 @@
 
         <div class="borsa-layout">
             <div class="borsa-main">
-                <x-market-table title="Tahvil" firstLabel="TAHVİL" :quotes="$bondTr"
-                    href="/faiz-bono" :columns="$sonColumns" :urlResolver="$bondUrl" id="tahvil" />
+                <x-market-table :title="__('market.bond')" :firstLabel="__('market.bond_heading')" :quotes="$bondTr"
+                    :href="\App\Support\Locale::url('/faiz-bono')" :columns="$sonColumns" :urlResolver="$bondUrl" id="tahvil" />
 
-                <x-market-table title="Repo" firstLabel="REPO" :quotes="$repo"
-                    href="/faiz-bono" :columns="$sonColumns" :urlResolver="$repoUrl" id="repo" />
+                <x-market-table :title="__('market.repo')" :firstLabel="__('market.repo_heading')" :quotes="$repo"
+                    :href="\App\Support\Locale::url('/faiz-bono')" :columns="$sonColumns" :urlResolver="$repoUrl" id="repo" />
 
-                <x-market-table title="Eurobondlar" firstLabel="EUROBONDLAR" :quotes="$eurobonds"
-                    href="/faiz-bono" :columns="$sonColumns" :urlResolver="$eurobondUrl" id="eurobondlar" />
+                <x-market-table :title="__('market.eurobonds')" :firstLabel="__('market.eurobonds_heading')" :quotes="$eurobonds"
+                    :href="\App\Support\Locale::url('/faiz-bono')" :columns="$sonColumns" :urlResolver="$eurobondUrl" id="eurobondlar" />
 
-                <x-market-table title="Uluslararası Tahviller" firstLabel="Faiz" :quotes="$intlBonds"
-                    href="/faiz-bono" :columns="$sonColumns" :urlResolver="$bondUrl" id="uluslararasi-tahviller" />
+                <x-market-table :title="__('market.intl_bonds')" :firstLabel="__('market.interest')" :quotes="$intlBonds"
+                    :href="\App\Support\Locale::url('/faiz-bono')" :columns="$sonColumns" :urlResolver="$bondUrl" id="uluslararasi-tahviller" />
 
                 @include('borsa.partials.related-news', ['items' => $relatedNews])
             </div>

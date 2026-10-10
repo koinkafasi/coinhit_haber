@@ -1,17 +1,17 @@
 @extends('front.layouts.app')
 
-@section('title', 'Altın Fiyatları | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
-@section('description', 'Güncel ve anlık serbest piyasa altın fiyatları: gram altın, çeyrek altın, cumhuriyet altını, ons altın alış/satış ve altın hesaplama.')
+@section('title', __('market.gold_prices').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('description', __('market.altin_index_desc'))
 
 @section('content')
     @php
         $goldColumns = [
-            ['label' => 'ALIŞ', 'field' => 'bid', 'class' => 'lastPrice'],
-            ['label' => 'SATIŞ', 'field' => 'ask', 'class' => 'lastPrice'],
+            ['label' => __('market.bid'), 'field' => 'bid', 'class' => 'lastPrice'],
+            ['label' => __('market.ask'), 'field' => 'ask', 'class' => 'lastPrice'],
             ['label' => '%', 'field' => 'change_percent', 'class' => 'percentChange', 'color' => true],
         ];
         $sonColumns = [
-            ['label' => 'SON', 'field' => 'last', 'class' => 'lastPrice'],
+            ['label' => __('market.last'), 'field' => 'last', 'class' => 'lastPrice'],
             ['label' => '%', 'field' => 'change_percent', 'class' => 'percentChange', 'color' => true],
         ];
         $goldUrl = fn ($q) => $q->instrument->goldUrl();
@@ -19,13 +19,13 @@
     @endphp
 
     <div class="borsa-page altin-page">
-        <h1 class="page-title font-unna font-bold">Altın</h1>
+        <h1 class="page-title font-unna font-bold">{{ __('market.gold') }}</h1>
 
         @include('altin.partials.quick-links')
 
         <div class="borsa-layout">
             <div class="borsa-main">
-                <x-market-table title="Altın Fiyatları" firstLabel="ALTIN FİYATLARI" :quotes="$featureQuotes"
+                <x-market-table :title="__('market.gold_prices')" :firstLabel="__('market.gold_prices_heading')" :quotes="$featureQuotes"
                     :columns="$goldColumns" :urlResolver="$goldUrl" id="altin-fiyatlari" />
 
                 @include('altin.partials.serbest', ['quotes' => $serbestQuotes])
@@ -41,8 +41,8 @@
 
         @include('home.partials.market-widget')
 
-        <x-market-table title="Diğer Emtia" firstLabel="KIYMETLİ METAL" :quotes="$otherCommodity"
-            href="/emtia" :columns="$sonColumns" :urlResolver="$commodityUrl" id="diger-emtia" />
+        <x-market-table :title="__('market.other_commodities')" :firstLabel="__('market.precious_metal_heading')" :quotes="$otherCommodity"
+            :href="\App\Support\Locale::url('/emtia')" :columns="$sonColumns" :urlResolver="$commodityUrl" id="diger-emtia" />
 
         @include('altin.partials.calculator')
 

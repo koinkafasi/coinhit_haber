@@ -18,12 +18,12 @@ class RssController extends Controller
 {
     public function index(): Response
     {
-        return $this->feed('Bloomberg HT', 'Bloomberg HT son haberleri', '/rss', false);
+        return $this->feed('Bloomberg HT', __('content.rss_index_description'), '/rss', false);
     }
 
     public function all(): Response
     {
-        return $this->feed('Bloomberg HT — Tüm Haberler', 'Bloomberg HT tüm haber akışı', '/rss/tum-haberler.xml', true);
+        return $this->feed(__('content.rss_all_title'), __('content.rss_all_description'), '/rss/tum-haberler.xml', true);
     }
 
     public function category(string $slug): Response
@@ -31,8 +31,8 @@ class RssController extends Controller
         $category = Category::where('slug', $slug)->firstOrFail();
 
         return $this->feed(
-            'Bloomberg HT — '.$category->name,
-            $category->name.' kategorisindeki son haberler',
+            __('content.rss_category_prefix', ['category' => $category->name]),
+            __('content.rss_category_description', ['category' => $category->name]),
             '/rss/kategori/'.$slug.'.xml',
             false,
             fn ($query) => $query->where('category_id', $category->id)
@@ -44,8 +44,8 @@ class RssController extends Controller
         $author = Author::where('slug', $slug)->firstOrFail();
 
         return $this->feed(
-            'Bloomberg HT — '.$author->name,
-            $author->name.' yazıları',
+            __('content.rss_author_prefix', ['author' => $author->name]),
+            __('content.rss_author_description', ['author' => $author->name]),
             '/rss/yazar/'.$slug.'.xml',
             false,
             fn ($query) => $query->where('author_id', $author->id)

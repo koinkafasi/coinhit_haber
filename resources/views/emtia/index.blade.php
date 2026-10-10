@@ -1,40 +1,40 @@
 @extends('front.layouts.app')
 
-@section('title', 'Emtia Fiyatları | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
-@section('description', 'Kıymetli metaller, tarım emtia, sanayi emtia (3 aylık vadeli), enerji emtia ve serbest piyasa altın fiyatları.')
+@section('title', __('market.commodity_prices').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('description', __('market.emtia_index_desc'))
 
 @section('content')
     @php
         $sonColumns = [
-            ['label' => 'SON', 'field' => 'last', 'class' => 'lastPrice'],
+            ['label' => __('market.last'), 'field' => 'last', 'class' => 'lastPrice'],
             ['label' => '%', 'field' => 'change_percent', 'class' => 'percentChange', 'color' => true],
         ];
         $commodityUrl = fn ($q) => $q->instrument->commodityUrl();
     @endphp
 
     <div class="borsa-page emtia-page">
-        <h1 class="page-title font-unna font-bold">Emtia</h1>
+        <h1 class="page-title font-unna font-bold">{{ __('market.commodities') }}</h1>
 
-        <nav class="borsa-quick-links emtia-quick-links" aria-label="Emtia hızlı bağlantılar">
+        <nav class="borsa-quick-links emtia-quick-links" aria-label="{{ __('market.emtia_quick_links') }}">
             @foreach ($quickLinks as $link)
                 <a href="{{ \App\Support\Locale::url($link['url']) }}">{{ $link['label'] }}</a>
             @endforeach
         </nav>
 
-        <x-market-table title="Kıymetli Metaller" firstLabel="KIYMETLİ METAL" :quotes="$preciousMetals"
-            href="/emtia" :columns="$sonColumns" :urlResolver="$commodityUrl" id="kiymetli-metaller" />
+        <x-market-table :title="__('market.precious_metals')" :firstLabel="__('market.precious_metal_heading')" :quotes="$preciousMetals"
+            :href="\App\Support\Locale::url('/emtia')" :columns="$sonColumns" :urlResolver="$commodityUrl" id="kiymetli-metaller" />
 
-        <x-market-table title="Tarım Emtia" firstLabel="TARIM EMTİA" :quotes="$agriculture"
-            href="/emtia" :columns="$sonColumns" :urlResolver="$commodityUrl" id="tarim-emtia" />
+        <x-market-table :title="__('market.agricultural_commodities')" :firstLabel="__('market.agricultural_heading')" :quotes="$agriculture"
+            :href="\App\Support\Locale::url('/emtia')" :columns="$sonColumns" :urlResolver="$commodityUrl" id="tarim-emtia" />
 
-        <x-market-table title="Sanayi Emtia" firstLabel="SANAYİ EMTİA" :quotes="$industry"
-            href="/emtia" :columns="$sonColumns" :urlResolver="$commodityUrl" id="sanayi-emtia" />
+        <x-market-table :title="__('market.industrial_commodities')" :firstLabel="__('market.industrial_heading')" :quotes="$industry"
+            :href="\App\Support\Locale::url('/emtia')" :columns="$sonColumns" :urlResolver="$commodityUrl" id="sanayi-emtia" />
 
-        <x-market-table title="Sanayi Emtia 3 Aylık" firstLabel="SANAYİ EMTİA" :quotes="$industryForward"
-            href="/emtia" :columns="$sonColumns" :urlResolver="$commodityUrl" id="sanayi-emtia-3-aylik" />
+        <x-market-table :title="__('market.industrial_3m')" :firstLabel="__('market.industrial_heading')" :quotes="$industryForward"
+            :href="\App\Support\Locale::url('/emtia')" :columns="$sonColumns" :urlResolver="$commodityUrl" id="sanayi-emtia-3-aylik" />
 
-        <x-market-table title="Enerji Emtia" firstLabel="ENERJİ EMTİA" :quotes="$energy"
-            href="/emtia" :columns="$sonColumns" :urlResolver="$commodityUrl" id="enerji-emtia" />
+        <x-market-table :title="__('market.energy_commodities')" :firstLabel="__('market.energy_heading')" :quotes="$energy"
+            :href="\App\Support\Locale::url('/emtia')" :columns="$sonColumns" :urlResolver="$commodityUrl" id="enerji-emtia" />
 
         @include('borsa.partials.related-news', ['items' => $relatedNews])
 
@@ -42,8 +42,8 @@
 
         @include('altin.partials.serbest', [
             'quotes' => $serbestQuotes,
-            'href' => '/altin',
-            'allLabel' => 'Altın Listesi',
+            'href' => \App\Support\Locale::url('/altin'),
+            'allLabel' => __('market.gold_list'),
         ])
 
         @include('altin.partials.cme-note')

@@ -9,6 +9,6 @@
             </a>
         </li>
     @empty
-        <li class="kap-empty">KAP bildirimi bulunmuyor.</li>
+        <li class="kap-empty">{{ __('market.no_kap') }}</li>
     @endforelse
 </ul>

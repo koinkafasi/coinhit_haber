@@ -13,7 +13,7 @@
     <li><a href="https://nsosyal.com/share?url={{ $u }}" target="_blank" rel="noopener noreferrer" aria-label="nSosyal"><x-icon name="nsosyal" /></a></li>
     <li><a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $u }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><x-icon name="linkedin" /></a></li>
     <li><a href="https://wa.me/?text={{ $t }}%20{{ $u }}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><x-icon name="whatsapp" /></a></li>
-    <li><a href="mailto:?subject={{ $t }}&body={{ $u }}" aria-label="E-posta"><x-icon name="mail" /></a></li>
+    <li><a href="mailto:?subject={{ $t }}&body={{ $u }}" aria-label="{{ __('content.email') }}"><x-icon name="mail" /></a></li>
     @if ($short !== '')
         <li>
             <button type="button" class="share-copy shortlink-copy" data-copy-link="{{ $shortUrl }}" aria-label="{{ __('ui.copy_short_link') }}">

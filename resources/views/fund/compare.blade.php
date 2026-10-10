@@ -1,22 +1,22 @@
 @extends('front.layouts.app')
 
-@section('title', 'Fon Karşılaştır | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
-@section('description', 'İki yatırım fonunu seçin; fon fiyatı, günlük, haftalık, aylık, 3 aylık, 6 aylık, 1 yıllık, 3 yıllık ve 5 yıllık getirileri ile risk değerini karşılaştırın.')
+@section('title', __('media.compare_funds').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('description', __('media.fund_compare_desc'))
 
 @section('content')
     <div class="fund-page fund-tool-page">
         <x-breadcrumb :items="[
-            ['label' => 'Yatırım Fonları', 'url' => \App\Support\Locale::url('/yatirim-fonlari')],
-            ['label' => 'Fon Karşılaştır'],
+            ['label' => __('media.fund_title'), 'url' => \App\Support\Locale::url('/yatirim-fonlari')],
+            ['label' => __('media.compare_funds')],
         ]" />
 
-        <h1 class="page-title font-unna font-bold">Fon Karşılaştır</h1>
+        <h1 class="page-title font-unna font-bold">{{ __('media.compare_funds') }}</h1>
 
         @include('fund.partials.tool-nav', ['toolLinks' => $toolLinks])
 
         <form class="fund-compare-form" method="get" action="{{ \App\Support\Locale::url('/yatirim-fonlari/fon-karsilastirma') }}">
             <div class="fund-compare-field">
-                <label for="fund-a">1. Fon</label>
+                <label for="fund-a">{{ __('media.fund_1') }}</label>
                 <select id="fund-a" name="a">
                     @foreach ($fundOptions as $option)
                         <option value="{{ $option->code }}" @selected($a && $a->code === $option->code)>
@@ -26,7 +26,7 @@
                 </select>
             </div>
             <div class="fund-compare-field">
-                <label for="fund-b">2. Fon</label>
+                <label for="fund-b">{{ __('media.fund_2') }}</label>
                 <select id="fund-b" name="b">
                     @foreach ($fundOptions as $option)
                         <option value="{{ $option->code }}" @selected($b && $b->code === $option->code)>
@@ -35,17 +35,17 @@
                     @endforeach
                 </select>
             </div>
-            <button type="submit" class="fund-compare-submit">Karşılaştır</button>
+            <button type="submit" class="fund-compare-submit">{{ __('media.compare') }}</button>
         </form>
 
         @if ($a && $b && ! empty($rows))
             <section class="fund-compare-result">
-                <x-section-head title="Karşılaştırma Sonucu" />
+                <x-section-head :title="__('media.comparison_result')" />
                 <div class="table-scroll">
                     <table class="market-table fund-compare-table w-full text-center text-sm bg-white">
                         <thead>
                             <tr class="border-b">
-                                <th class="p-4 text-left">Kriter</th>
+                                <th class="p-4 text-left">{{ __('media.criterion') }}</th>
                                 <th class="p-4">{{ $a->code }} — {{ $a->name }}</th>
                                 <th class="p-4">{{ $b->code }} — {{ $b->name }}</th>
                             </tr>

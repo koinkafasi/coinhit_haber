@@ -16,11 +16,17 @@ class LegalController extends Controller
     /**
      * @var array<int, string>
      */
-    private const CONTACT_SUBJECTS = ['Öneri', 'İstek', 'Şikayet', 'Teşekkür', 'Yardım'];
+    private const CONTACT_SUBJECT_KEYS = [
+        'content.contact_subject_suggestion',
+        'content.contact_subject_request',
+        'content.contact_subject_complaint',
+        'content.contact_subject_thanks',
+        'content.contact_subject_help',
+    ];
 
     public function show(string $slug): View
     {
-        $pages = config('legal.pages', []);
+        $pages = __('legal.pages');
 
         abort_unless(array_key_exists($slug, $pages), 404);
 
@@ -33,9 +39,9 @@ class LegalController extends Controller
             'pageTitle' => $page['title'].' | Bloomberght',
             'pageDescription' => $page['description'] ?? '',
             'pageType' => 'legal',
-            'contactSubjects' => self::CONTACT_SUBJECTS,
+            'contactSubjects' => array_map(static fn (string $key): string => __($key), self::CONTACT_SUBJECT_KEYS),
             'breadcrumbs' => [
-                ['label' => $page['title'], 'url' => '/'.$slug],
+                ['label' => $page['title'], 'url' => \App\Support\Locale::url('/'.$slug)],
             ],
         ], $this->layoutData()));
     }
@@ -54,6 +60,6 @@ class LegalController extends Controller
             'message' => ['required', 'string', 'max:4000'],
         ]);
 
-        return back()->with('contact_status', 'Mesajınız alınmıştır. Teşekkür ederiz.');
+        return back()->with('contact_status', __('content.contact_status_message'));
     }
 }

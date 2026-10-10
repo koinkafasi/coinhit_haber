@@ -1,21 +1,21 @@
 @extends('front.layouts.app')
 
 @section('title', $instrument->name.' ('.$instrument->code.') | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
-@section('description', $instrument->name.' hisse senedi canlı fiyatı, alış/satış, yüksek/düşük, hacim ve güniçi grafiği.')
+@section('description', $instrument->name.__('market.borsa_stock_detail_desc_suffix'))
 
 @section('content')
     @php
         $dirClass = $quote->direction() === 'up' ? 'text-green-700' : ($quote->direction() === 'down' ? 'text-red-700' : 'text-gray-400');
         $shortColumns = [
-            ['label' => 'SON', 'field' => 'last', 'class' => 'lastPrice'],
+            ['label' => __('market.last'), 'field' => 'last', 'class' => 'lastPrice'],
             ['label' => '%', 'field' => 'change_percent', 'class' => 'percentChange', 'color' => true],
         ];
     @endphp
 
     <div class="borsa-page">
         <x-breadcrumb :items="[
-            ['label' => 'Borsa', 'url' => '/borsa'],
-            ['label' => 'Hisse Senetleri', 'url' => '/borsa/hisseler'],
+            ['label' => __('market.borsa'), 'url' => \App\Support\Locale::url('/borsa')],
+            ['label' => __('market.stocks'), 'url' => \App\Support\Locale::url('/borsa/hisseler')],
             ['label' => $instrument->code],
         ]" />
 
@@ -46,14 +46,14 @@
                 @include('borsa.partials.az-tabs', ['azBase' => '/borsa/hisseler', 'letters' => $letters, 'letter' => null])
 
                 <div class="aside-block">
-                    <x-section-head title="Endeksler" href="/borsa/endeksler" />
-                    <x-market-table title="ENDEKSLER" firstLabel="ENDEKSLER" :quotes="$indicesPreview" :columns="$shortColumns"
+                    <x-section-head :title="__('market.indices')" :href="\App\Support\Locale::url('/borsa/endeksler')" />
+                    <x-market-table :title="__('market.indices_heading')" :firstLabel="__('market.indices_heading')" :quotes="$indicesPreview" :columns="$shortColumns"
                         :urlResolver="fn ($q) => $q->instrument->indexUrl()" :head="false" />
                 </div>
 
                 @if ($kapDisclosures->isNotEmpty())
                     <div class="aside-block">
-                        <x-section-head title="KAP Haberleri" href="/borsa/hisseler/kap-haberleri" />
+                        <x-section-head :title="__('market.kap_news')" :href="\App\Support\Locale::url('/borsa/hisseler/kap-haberleri')" />
                         @include('borsa.partials.kap-list', ['disclosures' => $kapDisclosures])
                     </div>
                 @endif

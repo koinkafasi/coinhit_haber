@@ -1,16 +1,16 @@
 @extends('front.layouts.app')
 
-@section('title', 'Kripto Para | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
-@section('description', 'Bitcoin, Ethereum, XRP ve diğer kripto para fiyatları, 24 saatlik ve 7 günlük değişim, hacim ve piyasa değerleri.')
+@section('title', __('market.crypto_title').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('description', __('market.kripto_index_desc'))
 
 @section('content')
     <div class="borsa-page kripto-page">
-        <h1 class="page-title font-unna font-bold">Kripto</h1>
+        <h1 class="page-title font-unna font-bold">{{ __('market.crypto') }}</h1>
 
         {{-- Hero haber kartları (12) --}}
         @if ($hero->isNotEmpty())
             <section class="kripto-hero-news">
-                <x-section-head title="Kripto Haberleri" href="/haberler" />
+                <x-section-head :title="__('market.crypto_news')" :href="\App\Support\Locale::url('/haberler')" />
                 <div class="news-card-grid cols-3">
                     @foreach ($hero as $item)
                         <x-news-card :news="$item" type="type2" :showSpot="false" />
@@ -31,7 +31,7 @@
                 @include('kripto.partials.crypto-table', ['quotes' => $quotes])
 
                 {{-- Kripto fiyat swiper şeridi --}}
-                <section class="crypto-swiper finance-strip" data-type="finance-strip" aria-label="Kripto fiyatları">
+                <section class="crypto-swiper finance-strip" data-type="finance-strip" aria-label="{{ __('market.crypto_prices_aria') }}">
                     <div class="finance-strip-track">
                         @foreach ($allQuotes as $sweep)
                             <a class="finance-strip-item" href="{{ $sweep->instrument->cryptoUrl() ?? \App\Support\Locale::url('/kripto') }}" data-market-code="{{ $sweep->code() }}">

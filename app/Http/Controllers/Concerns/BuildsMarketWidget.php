@@ -125,8 +125,8 @@ trait BuildsMarketWidget
                 'href' => Locale::url('/altin'),
                 'quotes' => $market->quotes('gold'),
                 'columns' => [
-                    ['label' => 'ALIŞ', 'field' => 'bid', 'class' => 'lastPrice'],
-                    ['label' => 'SATIŞ', 'field' => 'ask', 'class' => 'lastPrice'],
+                    ['label' => __('market.bid'), 'field' => 'bid', 'class' => 'lastPrice'],
+                    ['label' => __('market.ask'), 'field' => 'ask', 'class' => 'lastPrice'],
                     ['label' => '%', 'field' => 'change_percent', 'class' => 'percentChange', 'color' => true],
                 ],
             ],

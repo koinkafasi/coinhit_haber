@@ -42,7 +42,7 @@
 
         @if ($related->isNotEmpty())
             <section class="borsa-related">
-                <x-section-head :title="__('ui.related')" href="/haberler" />
+                <x-section-head :title="__('ui.related')" :href="\App\Support\Locale::url('/haberler')" />
                 <div class="news-card-grid cols-2">
                     @foreach ($related as $item)
                         <x-news-card :news="$item" type="type2" :showSpot="true" />
@@ -53,7 +53,7 @@
 
         @if ($featured->isNotEmpty())
             <section class="borsa-related">
-                <x-section-head :title="__('ui.featured')" href="/haberler" />
+                <x-section-head :title="__('ui.featured')" :href="\App\Support\Locale::url('/haberler')" />
                 <div class="news-card-grid cols-2">
                     @foreach ($featured as $item)
                         <x-news-card :news="$item" type="type1" />

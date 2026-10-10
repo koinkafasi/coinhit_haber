@@ -1,25 +1,23 @@
 @extends('front.layouts.app')
 
-@section('title', 'Altın Hesaplama | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
-@section('description', 'Gram altın, çeyrek altın, yarım altın, tam altın ve diğer altın çeşitleri arasında anlık dönüşüm yapın.')
+@section('title', __('market.gold_calculator').' | '.($siteSettings['site_name'] ?? 'Bloomberg HT'))
+@section('description', __('market.gold_calc_desc'))
 
 @section('content')
     <div class="borsa-page altin-page altin-calc-page">
         <x-breadcrumb :items="[
-            ['label' => 'Altın', 'url' => '/altin'],
-            ['label' => 'Altın Hesaplama'],
+            ['label' => __('market.gold'), 'url' => \App\Support\Locale::url('/altin')],
+            ['label' => __('market.gold_calculator')],
         ]" />
 
-        <h1 class="page-title font-unna font-bold">Altın Hesaplama</h1>
+        <h1 class="page-title font-unna font-bold">{{ __('market.gold_calculator') }}</h1>
 
         <div class="borsa-layout">
             <div class="borsa-main">
                 @include('altin.partials.calculator')
 
                 <p class="altin-calc-desc">
-                    Altın çevirici hesaplamamız ile gram altın, çeyrek altın, yarım altın ve tam altın arasındaki dönüşümleri
-                    anlık olarak gerçekleştirebilirsiniz. Türkiye'nin en güncel altın fiyatlarını baz alan aracımız; 14 ayar ve
-                    22 ayar altın seçenekleriyle birikim yapanlar ve altın yatırımcıları için hızlı ve güvenilir sonuçlar sunar.
+                    {{ __('market.gold_calc_intro') }}
                 </p>
 
                 @include('borsa.partials.related-news', ['items' => $relatedNews])
@@ -31,7 +29,7 @@
                 <x-ad-zone :zone="1257" :index="1" />
 
                 <div class="aside-block">
-                    <x-section-head title="Öne Çıkanlar" :href="null" />
+                    <x-section-head :title="__('market.featured')" :href="null" />
                     <ul class="aside-list">
                         @foreach ($featured as $item)
                             <li><a href="{{ $item->url }}">{{ $item->title }}</a></li>

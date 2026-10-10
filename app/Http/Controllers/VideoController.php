@@ -35,7 +35,7 @@ class VideoController extends Controller
             ->withQueryString();
 
         return view('video.index', array_merge([
-            'pageTitle' => 'Video',
+            'pageTitle' => __('media.video'),
             'series' => $series,
             'videos' => $videos,
             'categories' => $this->categoryLinks($series),
@@ -126,7 +126,7 @@ class VideoController extends Controller
      */
     private function categoryLinks(Collection $series): array
     {
-        $links = [['label' => 'Tümü', 'url' => \App\Support\Locale::url('/video')]];
+        $links = [['label' => __('ui.trend_all'), 'url' => \App\Support\Locale::url('/video')]];
 
         foreach ($series as $item) {
             $links[] = ['label' => $item->name, 'url' => \App\Support\Locale::url('/video/'.$item->slug)];

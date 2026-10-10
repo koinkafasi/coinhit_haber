@@ -19,8 +19,8 @@ class PiyasalarController extends Controller
     public function index(): View
     {
         return view('piyasalar.index', array_merge([
-            'pageTitle' => 'Piyasalar | Bloomberght',
-            'pageDescription' => 'Borsa, döviz, altın, emtia ve faiz verileri; canlı piyasa tabloları ve piyasa haberleri.',
+            'pageTitle' => __('market.markets_page_title'),
+            'pageDescription' => __('market.markets_page_desc'),
             'pageType' => 'markets',
             'marketTables' => $this->marketTableData(),
             'videos' => ProgramEpisode::with('program')->orderByDesc('air_at')->take(8)->get(),

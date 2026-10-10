@@ -145,4 +145,75 @@ class I18nTest extends TestCase
         $response->assertSee('x-default', false);
         $response->assertSee(url('/en'), false);
     }
+
+    public function test_legal_pages_render_localized_content(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $this->get('/kunye')->assertOk()->assertSee('Künye')->assertSee('Yayın Kuruluşu');
+
+        $this->get('/en/kunye')->assertOk()
+            ->assertSee('Imprint')
+            ->assertSee('Broadcaster')
+            ->assertDontSee('Yayın Kuruluşu');
+
+        $this->get('/en/kullanimkosullari')->assertOk()
+            ->assertSee('Terms of Use')
+            ->assertSee('Content and Copyright')
+            ->assertDontSee('Kullanım Koşulları');
+    }
+
+    public function test_fund_labels_are_localized(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $this->get('/yatirim-fonlari')->assertOk()
+            ->assertSee('Karma ve Değişken')
+            ->assertSee('Günlük(%)');
+
+        $this->get('/en/yatirim-fonlari')->assertOk()
+            ->assertSee('Mixed and Variable')
+            ->assertSee('Daily(%)')
+            ->assertDontSee('Karma ve Değişken');
+    }
+
+    public function test_tv_schedule_day_names_are_localized(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $this->get('/tv')->assertOk()->assertSee('Çarşamba');
+        $this->get('/en/tv')->assertOk()->assertSee('Wednesday')->assertDontSee('Çarşamba');
+    }
+
+    public function test_chart_category_label_is_localized(): void
+    {
+        $chart = new \App\Models\ChartArchive(['category' => 'Aktüel']);
+
+        app()->setLocale('en');
+        $this->assertSame('Current', $chart->category_label);
+
+        app()->setLocale('tr');
+        $this->assertSame('Aktüel', $chart->category_label);
+    }
+
+    public function test_new_module_pages_render_in_english(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $paths = [
+            '/en/piyasalar', '/en/yuzde-hesaplama', '/en/haberler', '/en/tumhaberler',
+            '/en/sondakika', '/en/grafik-arsivi', '/en/trendler', '/en/gorus',
+            '/en/fotohaber', '/en/halka-arz-takvimi', '/en/borsa',
+            '/en/doviz', '/en/doviz-cevirici', '/en/faiz-bono', '/en/kripto',
+            '/en/altin', '/en/altin-cevirici', '/en/emtia',
+            '/en/yatirim-fonlari', '/en/yatirim-fonlari/fon-karsilastirma',
+            '/en/yatirim-fonlari/fon-portfoy-dagilim',
+            '/en/tv', '/en/tv/programlar', '/en/yayinakisi',
+            '/en/podcastler', '/en/video', '/en/kunye', '/en/bizeulasin',
+        ];
+
+        foreach ($paths as $path) {
+            $this->get($path)->assertOk()->assertSee('lang="en"', false);
+        }
+    }
 }

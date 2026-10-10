@@ -48,18 +48,21 @@ class BorsaController extends Controller
     /**
      * /borsa alt-hızlı bağlantıları (spec §15.3).
      *
-     * @var array<int, array{label: string, url: string}>
+     * @return array<int, array{label: string, url: string}>
      */
-    private const QUICK_LINKS = [
-        ['label' => 'BIST', 'url' => '/borsa'],
-        ['label' => 'Hisse Senetleri', 'url' => '/borsa/hisseler'],
-        ['label' => 'Yükselen/Düşen Hisseler', 'url' => '/borsa/en-cok'],
-        ['label' => 'KAP Haberleri', 'url' => '/borsa/hisseler/kap-haberleri'],
-        ['label' => 'Dünya Borsaları', 'url' => '/borsa/dunya-borsalari'],
-        ['label' => 'Endeksler', 'url' => '/borsa/endeksler'],
-        ['label' => 'Borsa Kapanış', 'url' => '/borsa/borsa-kapanis'],
-        ['label' => 'Alternatif Piyasalar', 'url' => '/alternatif'],
-    ];
+    protected function quickLinks(): array
+    {
+        return [
+            ['label' => __('market.bist'), 'url' => '/borsa'],
+            ['label' => __('market.stocks'), 'url' => '/borsa/hisseler'],
+            ['label' => __('market.rising_falling_slash'), 'url' => '/borsa/en-cok'],
+            ['label' => __('market.kap_news'), 'url' => '/borsa/hisseler/kap-haberleri'],
+            ['label' => __('market.world_markets'), 'url' => '/borsa/dunya-borsalari'],
+            ['label' => __('market.indices'), 'url' => '/borsa/endeksler'],
+            ['label' => __('market.market_close'), 'url' => '/borsa/borsa-kapanis'],
+            ['label' => __('market.alternative_markets'), 'url' => '/alternatif'],
+        ];
+    }
 
     public function __construct(private readonly MarketDataService $market) {}
 
@@ -71,7 +74,7 @@ class BorsaController extends Controller
         $stocks = $this->market->quotes(MarketInstrument::GROUP_STOCK);
 
         return view('borsa.index', array_merge([
-            'quickLinks' => self::QUICK_LINKS,
+            'quickLinks' => $this->quickLinks(),
             'bistQuotes' => $this->market->quotes(MarketInstrument::GROUP_BIST_INDEX)->take(15)->values(),
             'gainers' => $this->topBy($stocks, fn (Quote $q) => $q->changePercent, 10),
             'losers' => $this->topBy($stocks, fn (Quote $q) => -$q->changePercent, 10),
@@ -92,7 +95,7 @@ class BorsaController extends Controller
         $paginator = $this->paginateCollection($quotes, $request, 8);
 
         return view('borsa.stocks', array_merge([
-            'quickLinks' => self::QUICK_LINKS,
+            'quickLinks' => $this->quickLinks(),
             'paginator' => $paginator,
             'letter' => $letter ? strtoupper($letter) : null,
             'letters' => $this->letters(),
@@ -111,7 +114,7 @@ class BorsaController extends Controller
         $paginator = $this->paginateCollection($quotes, $request, 8);
 
         return view('borsa.closing', array_merge([
-            'quickLinks' => self::QUICK_LINKS,
+            'quickLinks' => $this->quickLinks(),
             'paginator' => $paginator,
             'letter' => $letter ? strtoupper($letter) : null,
             'letters' => $this->letters(),
@@ -121,7 +124,7 @@ class BorsaController extends Controller
                 'yil' => $request->query('yil'),
             ],
             'days' => range(1, 31),
-            'months' => ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+            'months' => array_map(fn (int $month) => __('market.month_'.$month), range(1, 12)),
             'years' => range(2019, 2026),
         ], $this->layoutData()));
     }
@@ -134,7 +137,7 @@ class BorsaController extends Controller
         $stocks = $this->market->quotes(MarketInstrument::GROUP_STOCK);
 
         return view('borsa.most', array_merge([
-            'quickLinks' => self::QUICK_LINKS,
+            'quickLinks' => $this->quickLinks(),
             'gainers' => $this->topBy($stocks, fn (Quote $q) => $q->changePercent, 20),
             'losers' => $this->topBy($stocks, fn (Quote $q) => -$q->changePercent, 20),
             'actives' => $this->topBy($stocks, fn (Quote $q) => $q->volumeTl, 20),
@@ -147,7 +150,7 @@ class BorsaController extends Controller
     public function kapNews(Request $request): View
     {
         return view('borsa.kap-news', array_merge([
-            'quickLinks' => self::QUICK_LINKS,
+            'quickLinks' => $this->quickLinks(),
             'disclosures' => KapDisclosure::orderByDesc('published_at')->paginate(20)->withQueryString(),
             'videos' => ProgramEpisode::with('program')->orderByDesc('air_at')->take(2)->get(),
             'parities' => $this->paritySidebar(),
@@ -162,10 +165,10 @@ class BorsaController extends Controller
         $world = $this->market->quotes(MarketInstrument::GROUP_WORLD_INDEX)->keyBy(fn (Quote $q) => $q->code());
 
         $groups = [
-            ['key' => 'amerika', 'title' => 'Amerika', 'codes' => ['DOW', 'SP500', 'NASDAQ']],
-            ['key' => 'avrupa', 'title' => 'Avrupa', 'codes' => ['DAX', 'FTSE100', 'CAC40']],
-            ['key' => 'asya', 'title' => 'Asya Pasifik', 'codes' => ['SHANGHAI', 'NIKKEI225', 'KOSPI', 'HANGSENG']],
-            ['key' => 'vadeliler', 'title' => 'Vadeliler', 'codes' => ['SPFUT', 'NASDAQFUT']],
+            ['key' => 'amerika', 'title' => __('market.america'), 'codes' => ['DOW', 'SP500', 'NASDAQ']],
+            ['key' => 'avrupa', 'title' => __('market.europe'), 'codes' => ['DAX', 'FTSE100', 'CAC40']],
+            ['key' => 'asya', 'title' => __('market.asia_pacific'), 'codes' => ['SHANGHAI', 'NIKKEI225', 'KOSPI', 'HANGSENG']],
+            ['key' => 'vadeliler', 'title' => __('market.futures'), 'codes' => ['SPFUT', 'NASDAQFUT']],
         ];
 
         $tables = [];
@@ -179,7 +182,7 @@ class BorsaController extends Controller
         }
 
         return view('borsa.world', array_merge([
-            'quickLinks' => self::QUICK_LINKS,
+            'quickLinks' => $this->quickLinks(),
             'tables' => $tables,
             'cmeNote' => $this->market->sourceNote('cme'),
         ], $this->layoutData()));
@@ -191,7 +194,7 @@ class BorsaController extends Controller
     public function indices(): View
     {
         return view('borsa.indices', array_merge([
-            'quickLinks' => self::QUICK_LINKS,
+            'quickLinks' => $this->quickLinks(),
             'quotes' => $this->market->quotes(MarketInstrument::GROUP_BIST_INDEX),
         ], $this->layoutData()));
     }
@@ -210,12 +213,12 @@ class BorsaController extends Controller
         $quote = $this->market->quote($instrument);
 
         return view('borsa.index-detail', array_merge([
-            'quickLinks' => self::QUICK_LINKS,
+            'quickLinks' => $this->quickLinks(),
             'instrument' => $instrument,
             'quote' => $quote,
             'series' => $this->market->sparkline($instrument, 48, 900),
             'chart' => $this->market->sparklineSvg($instrument, 90, 900, 300),
-            'ranges' => ['1G', '1H', 'Tümü'],
+            'ranges' => ['1G', '1H', __('market.all_range')],
             'indices' => $this->market->quotes(MarketInstrument::GROUP_BIST_INDEX),
             'relatedNews' => $this->categoryNews('piyasalar', 4),
         ], $this->layoutData()));
@@ -227,7 +230,7 @@ class BorsaController extends Controller
     public function alternative(): View
     {
         return view('borsa.alternative', array_merge([
-            'quickLinks' => self::QUICK_LINKS,
+            'quickLinks' => $this->quickLinks(),
             'baltic' => $this->market->quotes(MarketInstrument::GROUP_BALTIC),
             'alternatives' => $this->market->quotes(MarketInstrument::GROUP_ALTERNATIVE),
             'featured' => $this->featured(4),
@@ -252,12 +255,12 @@ class BorsaController extends Controller
         $quote = $this->market->quote($instrument);
 
         return view('borsa.stock-detail', array_merge([
-            'quickLinks' => self::QUICK_LINKS,
+            'quickLinks' => $this->quickLinks(),
             'instrument' => $instrument,
             'quote' => $quote,
             'series' => $this->market->sparkline($instrument, 48, 900),
             'chart' => $this->market->sparklineSvg($instrument, 90, 900, 300),
-            'ranges' => ['1G', '1H', 'Tümü'],
+            'ranges' => ['1G', '1H', __('market.all_range')],
             'indices' => $this->market->quotes(MarketInstrument::GROUP_BIST_INDEX),
             'indexOptions' => $this->indexOptions(),
             'letters' => $this->letters(),

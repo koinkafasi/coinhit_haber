@@ -1,12 +1,12 @@
 {{-- KAP detay / kap-haberleri kenar çubuğu pariteleri (BIST100, USD/TRY, ..., BRENT) --}}
 @php($marketService = app(\App\Services\Market\MarketDataService::class))
 <div class="parities-sidebar" data-market-poll="{{ config('market.poll_seconds', 5) }}">
-    <x-section-head title="Pariteler" href="/doviz/pariteler" />
+    <x-section-head :title="__('market.parities')" :href="\App\Support\Locale::url('/doviz/pariteler')" />
     <table data-type="table-type1" class="market-table w-full text-center text-sm bg-white">
         <thead>
             <tr class="border-b">
-                <th class="sticky left-0 p-4 text-left bg-white">PARİTE</th>
-                <th class="p-4">SON</th>
+                <th class="sticky left-0 p-4 text-left bg-white">{{ __('market.parity_heading') }}</th>
+                <th class="p-4">{{ __('market.last') }}</th>
                 <th class="p-4">%</th>
             </tr>
         </thead>
@@ -25,5 +25,5 @@
             @endforeach
         </tbody>
     </table>
-    <p class="market-updated text-xs">Güncelleme: <span data-market-updated>{{ $marketService->lastUpdated() }}</span></p>
+    <p class="market-updated text-xs">{{ __('ui.updated') }}: <span data-market-updated>{{ $marketService->lastUpdated() }}</span></p>
 </div>

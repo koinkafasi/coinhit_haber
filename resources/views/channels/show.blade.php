@@ -45,7 +45,7 @@
 
         @if ($videos->isNotEmpty())
             <section class="channel-videos">
-                <x-section-head :title="__('ui.video_news')" href="/video" />
+                <x-section-head :title="__('ui.video_news')" :href="\App\Support\Locale::url('/video')" />
                 <div class="program-list">
                     @foreach ($videos as $episode)
                         <article class="program-card">

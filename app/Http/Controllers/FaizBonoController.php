@@ -24,8 +24,10 @@ class FaizBonoController extends Controller
     /**
      * /faiz-bono — Tahvil + Repo + Eurobondlar + Uluslararası Tahviller + haberler.
      */
-    public function index(string $pageTitle = 'Faiz Bono'): View
+    public function index(?string $pageTitle = null): View
     {
+        $pageTitle ??= __('market.faiz_bono');
+
         return view('faiz-bono.index', array_merge([
             'pageTitle' => $pageTitle,
             'bondTr' => $this->market->quotes(MarketInstrument::GROUP_BOND_TR),
@@ -42,7 +44,7 @@ class FaizBonoController extends Controller
      */
     public function tahvilFaiz(): View
     {
-        return $this->index('Tahvil');
+        return $this->index(__('market.bond'));
     }
 
     /**
@@ -55,11 +57,11 @@ class FaizBonoController extends Controller
         abort_unless($instrument, 404);
 
         return view('faiz-bono.detail', array_merge($this->detailData($instrument), [
-            'groupTitle' => 'Tahvil',
+            'groupTitle' => __('market.bond'),
             'groupQuotes' => $this->market->quotes($instrument->group),
             'urlResolver' => fn (Quote $q) => $q->instrument->bondUrl(),
             'breadcrumb' => [
-                ['label' => 'Faiz Bono', 'url' => '/faiz-bono'],
+                ['label' => __('market.faiz_bono'), 'url' => \App\Support\Locale::url('/faiz-bono')],
                 ['label' => $instrument->name],
             ],
         ], $this->layoutData()));
@@ -79,11 +81,11 @@ class FaizBonoController extends Controller
         abort_unless($instrument, 404);
 
         return view('faiz-bono.detail', array_merge($this->detailData($instrument), [
-            'groupTitle' => 'Repo',
+            'groupTitle' => __('market.repo'),
             'groupQuotes' => $this->market->quotes(MarketInstrument::GROUP_REPO),
             'urlResolver' => fn (Quote $q) => $q->instrument->repoUrl(),
             'breadcrumb' => [
-                ['label' => 'Faiz Bono', 'url' => '/faiz-bono'],
+                ['label' => __('market.faiz_bono'), 'url' => \App\Support\Locale::url('/faiz-bono')],
                 ['label' => $instrument->name],
             ],
         ], $this->layoutData()));
@@ -103,11 +105,11 @@ class FaizBonoController extends Controller
         abort_unless($instrument, 404);
 
         return view('faiz-bono.detail', array_merge($this->detailData($instrument), [
-            'groupTitle' => 'Eurobondlar',
+            'groupTitle' => __('market.eurobonds'),
             'groupQuotes' => $this->market->quotes(MarketInstrument::GROUP_EUROBOND),
             'urlResolver' => fn (Quote $q) => $q->instrument->eurobondUrl(),
             'breadcrumb' => [
-                ['label' => 'Faiz Bono', 'url' => '/faiz-bono'],
+                ['label' => __('market.faiz_bono'), 'url' => \App\Support\Locale::url('/faiz-bono')],
                 ['label' => $instrument->name],
             ],
         ], $this->layoutData()));
@@ -126,7 +128,7 @@ class FaizBonoController extends Controller
             'instrument' => $instrument,
             'quote' => $quote,
             'chart' => $this->market->sparklineSvg($instrument, 90, 900, 300),
-            'ranges' => ['1G', '1H', 'Tümü'],
+            'ranges' => ['1G', '1H', __('market.all_range')],
             'relatedNews' => $this->categoryNews('piyasalar', 4),
             'featured' => $this->featured(4),
             'note' => $this->market->sourceNote('foreks'),

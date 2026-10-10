@@ -6,17 +6,17 @@
 @endphp
 
 <section class="market-data-block" id="kripto-para">
-    <x-section-head title="Kripto Para" href="/kripto" />
+    <x-section-head :title="__('market.crypto_title')" :href="\App\Support\Locale::url('/kripto')" />
     <div class="table-scroll">
         <table data-type="table-type1" class="market-table w-full text-center text-sm bg-white">
             <thead>
                 <tr class="border-b">
-                    <th class="sticky left-0 p-4 text-left bg-white">KRİPTO PARA</th>
-                    <th class="p-4">FİYAT($)</th>
-                    <th class="p-4">%(24s)</th>
-                    <th class="p-4">%(7g)</th>
-                    <th class="p-4">24s Hacim($)</th>
-                    <th class="p-4">Piyasa Değ($)</th>
+                    <th class="sticky left-0 p-4 text-left bg-white">{{ __('market.crypto_table_heading') }}</th>
+                    <th class="p-4">{{ __('market.price_usd') }}</th>
+                    <th class="p-4">{{ __('market.change_24h') }}</th>
+                    <th class="p-4">{{ __('market.change_7d') }}</th>
+                    <th class="p-4">{{ __('market.volume_24h') }}</th>
+                    <th class="p-4">{{ __('market.market_cap_usd') }}</th>
                 </tr>
             </thead>
             <tbody data-connection="true">

@@ -1,7 +1,7 @@
 {{-- İlgili Haberler bloğu (spec §8) --}}
 @if (($items ?? collect())->isNotEmpty())
     <section class="borsa-related">
-        <x-section-head :title="$title ?? 'İlgili Haberler'" href="/haberler" />
+        <x-section-head :title="$title ?? __('market.related_news')" :href="\App\Support\Locale::url('/haberler')" />
         <div class="news-card-grid cols-2">
             @foreach ($items as $item)
                 <x-news-card :news="$item" type="type2" :showSpot="true" />
