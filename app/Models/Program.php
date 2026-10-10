@@ -21,12 +21,14 @@ class Program extends Model
         'air_time',
         'day_of_week',
         'is_live',
+        'is_series',
         'sort_order',
         'is_active',
     ];
 
     protected $casts = [
         'is_live' => 'boolean',
+        'is_series' => 'boolean',
         'is_active' => 'boolean',
         'sort_order' => 'integer',
     ];
@@ -34,6 +36,14 @@ class Program extends Model
     public function episodes(): HasMany
     {
         return $this->hasMany(ProgramEpisode::class);
+    }
+
+    /**
+     * Yalnız video serileri (Bölüm 8 /video).
+     */
+    public function scopeSeries($query)
+    {
+        return $query->where('is_series', true);
     }
 
     public function schedules(): HasMany

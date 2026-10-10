@@ -42,4 +42,14 @@ class BroadcastSchedule extends Model
     {
         return self::DAYS[$this->day_of_week] ?? '';
     }
+
+    public function getProgramSlugAttribute(): string
+    {
+        return $this->program?->slug ?? \Illuminate\Support\Str::slug((string) $this->program_name);
+    }
+
+    public function getUrlAttribute(): string
+    {
+        return \App\Support\Locale::url('/tv/program/'.$this->program_slug);
+    }
 }

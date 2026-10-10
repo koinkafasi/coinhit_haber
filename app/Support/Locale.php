@@ -56,6 +56,14 @@ class Locale
     }
 
     /**
+     * İki harfli olsa da dil prefix'i sayılmayacak rezerve kök segmentler.
+     * (örn. `/tv` bir rota köküdür, `tv` dili değildir.)
+     *
+     * @var array<int, string>
+     */
+    private const RESERVED_PREFIXES = ['tv'];
+
+    /**
      * İstek yolundan locale'i çıkarır. Bilinmeyen locale prefix'i için null.
      */
     public static function detect(Request $request): ?string
@@ -64,6 +72,10 @@ class Locale
         $default = self::default();
 
         if ($first === null || $first === '') {
+            return $default;
+        }
+
+        if (in_array($first, self::RESERVED_PREFIXES, true)) {
             return $default;
         }
 

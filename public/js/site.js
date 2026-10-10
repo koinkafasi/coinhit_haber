@@ -151,6 +151,10 @@
         document.querySelectorAll('[data-widget-type="fund-classes"]').forEach(function (container) {
             bindTabs(container, '.fund-class-tabs > [data-tab]', '.fund-class-panels > [data-id]');
         });
+
+        document.querySelectorAll('[data-widget-type="broadcast-days"]').forEach(function (container) {
+            bindTabs(container, '.broadcast-day-tabs > [data-tab]', '.broadcast-day-panels > [data-id]');
+        });
     }
 
     /**

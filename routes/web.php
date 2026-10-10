@@ -25,8 +25,11 @@ use App\Http\Controllers\KriptoController;
 use App\Http\Controllers\MarketDataController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PhotoGalleryController;
+use App\Http\Controllers\PodcastController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\TvController;
+use App\Http\Controllers\VideoController;
 use App\Http\Middleware\EnsureAdmin;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Support\Facades\Route;
@@ -177,6 +180,34 @@ $frontRoutes = function (): void {
     Route::get('/yatirim-fonlari/fon-portfoy-dagilim', [FundController::class, 'portfolio'])->name('fund.portfolio');
     Route::get('/yatirim-fonlari/{slug}', [FundController::class, 'show'])
         ->where('slug', '[A-Za-z0-9\-]+')->name('fund.show');
+
+    /*
+    |----------------------------------------------------------------------
+    | TV / Yayın Akışı / Video / Podcast bölümü (Bölüm 8, §14.3, §15.9)
+    |----------------------------------------------------------------------
+    */
+    Route::get('/tv', [TvController::class, 'index'])->name('tv.index');
+    Route::get('/tv/programlar', [TvController::class, 'programs'])->name('tv.programs');
+    Route::get('/tv/frekans-listesi', [TvController::class, 'frequencies'])->name('tv.frequencies');
+    Route::get('/tv/program/{slug}', [TvController::class, 'program'])
+        ->where('slug', '[A-Za-z0-9\-]+')->name('tv.program');
+    Route::get('/yayinakisi', [TvController::class, 'schedule'])->name('tv.schedule');
+
+    Route::get('/podcastler', [PodcastController::class, 'index'])->name('podcast.index');
+    Route::get('/podcastler/{slug}', [PodcastController::class, 'show'])
+        ->where('slug', '[A-Za-z0-9\-]+')->name('podcast.show');
+
+    Route::get('/video', [VideoController::class, 'index'])->name('video.index');
+    Route::get('/video/embed/{id}', [VideoController::class, 'embed'])
+        ->where('id', '[0-9]+')->name('video.embed');
+    Route::get('/video/{series}', [VideoController::class, 'series'])
+        ->where('series', '[A-Za-z0-9\-]+')->name('video.series');
+    Route::get('/pandoranin-meraki', [VideoController::class, 'series'])
+        ->defaults('series', 'pandoranin-meraki')->name('video.pandora');
+    Route::get('/{series}/video/{slug}/{id}', [VideoController::class, 'show'])
+        ->where('series', '[A-Za-z0-9\-]+')
+        ->where('slug', '[A-Za-z0-9\-]+')
+        ->where('id', '[0-9]+')->name('video.show');
 
     /*
     |----------------------------------------------------------------------

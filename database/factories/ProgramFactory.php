@@ -25,6 +25,7 @@ class ProgramFactory extends Factory
             'air_time' => sprintf('%02d:%02d', fake()->numberBetween(6, 22), fake()->randomElement([0, 15, 30, 45])),
             'day_of_week' => fake()->numberBetween(1, 5),
             'is_live' => false,
+            'is_series' => false,
             'sort_order' => fake()->numberBetween(0, 40),
             'is_active' => true,
         ];
