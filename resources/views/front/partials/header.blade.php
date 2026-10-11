@@ -126,49 +126,45 @@
 @include('front.partials.finance-slider')
 
 {{-- ============================================================
-     MOBİL MEGA MENÜ paneli (hamburger açılır; dil değiştirici buraya
-     taşındı — CH-24 kuralı)
+     HAMBURGER MEGA MENÜ MODALI (referans widgetMegaMenu —
+     tam genişlik, logo + ara + 4 sütun bağlantı grid'i)
      ============================================================ --}}
-<div class="mega-menu-panel bht-mega-menu-panel" data-widget-type="widgetMegaMenu" data-mega-menu-panel hidden>
-    <div class="mega-menu-panel-inner">
-        <div class="mega-menu-head flex items-center justify-between px-4 py-3 bg-[#384552] text-white">
-            <span class="font-bold text-base">{{ __('ui.menu') }}</span>
-            <button type="button" class="mega-menu-close text-2xl leading-none" data-menu-close aria-label="{{ __('ui.close') }}">&times;</button>
-        </div>
+<div data-widget-type="widgetMegaMenu" data-mega-menu-panel
+     class="menu-modal bg-[#384552] w-full h-screen sm:h-auto fixed top-0 left-0 px-4 z-600 hidden">
+    <span class="bg-[#384552]/30 w-full h-full fixed left-0 top-0 menu-area-close z-1" data-menu-close></span>
 
-        <div class="mega-menu-body">
-            <div class="px-4 py-3">
-                @include('front.partials.language-switcher')
-            </div>
-
-            <form class="mega-menu-search flex items-center gap-2 px-4 py-3 border-b border-[#707070]" action="{{ \App\Support\Locale::route('search.index') }}" method="get" role="search" data-search-form>
-                <input class="flex-1 min-w-0 border border-[#707070] rounded-full px-4 py-2 text-sm" type="search" name="q" autocomplete="off" placeholder="{{ __('ui.search_placeholder') }}">
-                <button type="submit" class="bg-[#FFE400] text-black rounded-full px-4 py-2 text-sm font-bold">{{ __('ui.list') }}</button>
+    <div class="flex flex-col md:flex-row justify-between gap-4 items-start md:items-center py-4 mb-4 border-b border-gray-600 2xl:max-w-screen-xl mx-auto max-w-screen-lg relative">
+        <a href="{{ \App\Support\Locale::route('home') }}" title="Bloomberght" class="block">
+            <img src="{{ asset($settings['logo_white_path'] ?? '/brand/logo-white.svg') }}" alt="{{ $settings['logo_alt'] ?? 'Bloomberg HT' }}" class="w-auto h-8 sm:h-16">
+        </a>
+        <div class="relative w-full md:w-auto h-11 mr-8">
+            <form action="{{ \App\Support\Locale::url('/arama') }}" method="get" role="search">
+                <input type="search" name="q" class="search-input rounded-3xl w-full h-full pr-10 outline-none bg-[#384552] text-gray-400 border border-gray-600 py-2 px-4 text-xs sm:text-sm" placeholder="{{ $settings['search_menu_placeholder'] ?? 'Bloomberght\'de ara' }}">
+                <button type="submit" aria-label="Search" class="search-button absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer">
+                    <i class="bloomberght-icon-font-search"></i>
+                </button>
             </form>
+        </div>
+        <button type="button" class="absolute right-0 menu-button-close cursor-pointer text-white text-xl bloomberght-icon-font-close" data-menu-close aria-label="{{ __('ui.close') }}"></button>
+    </div>
 
-            <nav class="mega-menu-nav" aria-label="{{ __('ui.main_nav') }}">
-                @foreach ($mega as $item)
-                    @php($hasChildren = ! empty($item['children']))
-                    <div class="mega-menu-item border-b border-[#707070]">
-                        <div class="mega-menu-link-row flex items-center justify-between">
-                            <a href="{{ \App\Support\Locale::navUrl($item['url']) }}" class="mega-menu-link flex-1 block px-4 py-3 text-sm font-medium text-white"
-                               @if (! empty($item['external'])) {!! $newWindow !!} @endif>{{ \App\Support\Locale::navLabel($item['label']) }}</a>
-                            @if ($hasChildren)
-                                <button type="button" class="mega-menu-caret px-4 py-3 text-white bloomberght-icon-font-chevron-bottom" data-menu-caret aria-expanded="false" aria-label="{{ __('ui.menu') }}"></button>
-                            @endif
-                        </div>
-                        @if ($hasChildren)
-                            <ul class="mega-menu-children hidden bg-[#4D596A]">
-                                @foreach ($item['children'] as $child)
-                                    <li>
-                                        <a href="{{ \App\Support\Locale::navUrl($child['url']) }}" class="block px-6 py-3 text-sm text-white border-b border-[#384552]">{{ \App\Support\Locale::navLabel($child['label']) }}</a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @endif
-                    </div>
-                @endforeach
-            </nav>
+    <div class="w-full h-screen md:h-full overflow-auto max-w-screen-lg 2xl:max-w-screen-xl mx-auto bg-[#384552] text-white relative grid grid-cols-1 md:grid-cols-4 gap-4 pb-96 md:pb-8 relative">
+        @foreach ($megaMenu ?? config('navigation.mega_menu', []) as $column)
+            <div class="menu-list md:border-r border-gray-600 pr-4">
+                <a href="{{ \App\Support\Locale::navUrl($column['url']) }}" class="inline-block mb-4 font-unna font-bold text-2xl">{{ \App\Support\Locale::navLabel($column['title']) }}</a>
+                <ul class="text-base md:text-sm flex flex-col gap-2 md:flex-wrap lg:max-h-72">
+                    @foreach ($column['links'] as $link)
+                        <li class="flex items-center w-full lg:w-1/2">
+                            <a href="{{ \App\Support\Locale::navUrl($link['url']) }}"
+                               @if (str_starts_with($link['url'], 'http')) target="_blank" rel="noopener noreferrer" @endif>{{ \App\Support\Locale::navLabel($link['label']) }}</a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endforeach
+        <div class="menu-list md:border-r border-gray-600 pr-4">
+            <span class="inline-block mb-4 font-unna font-bold text-2xl">{{ __('ui.language') }}</span>
+            @include('front.partials.language-switcher')
         </div>
     </div>
 </div>

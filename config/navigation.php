@@ -78,6 +78,71 @@ return [
     ],
 
     /*
+    | Hamburger mega menü modalı (referans widgetMegaMenu) — 4 sütun, birebir.
+    | Harici linkler (Radyo) yeni sekmede açılır.
+    */
+    'mega_menu' => [
+        [
+            'title' => 'Haberler',
+            'url' => '/',
+            'links' => [
+                ['label' => 'Piyasalar', 'url' => '/piyasalar'],
+                ['label' => 'Tarım', 'url' => '/tarim'],
+                ['label' => 'Fintech', 'url' => '/finansal-teknoloji'],
+                ['label' => 'Enerji', 'url' => '/enerji'],
+                ['label' => 'Makro', 'url' => '/ekonomik-veriler-ve-gundem'],
+                ['label' => 'Kripto', 'url' => '/kripto'],
+                ['label' => 'Görüş', 'url' => '/gorus'],
+                ['label' => 'Ekonomi', 'url' => '/haberler'],
+                ['label' => 'Trendler', 'url' => '/trendler'],
+                ['label' => 'Zirve', 'url' => '/zirve'],
+            ],
+        ],
+        [
+            'title' => 'Medya',
+            'url' => '/video',
+            'links' => [
+                ['label' => 'Video', 'url' => '/video'],
+                ['label' => 'BusinessHT Live', 'url' => '/video/businessht-live'],
+                ['label' => 'Foto Haber', 'url' => '/fotohaber'],
+                ['label' => 'Canlı Yayın', 'url' => '/tv'],
+                ['label' => 'Radyo', 'url' => 'https://www.bloomberghtradyo.com/'],
+                ['label' => 'Yayın Akışı', 'url' => '/yayinakisi'],
+                ['label' => 'Grafik Arşivi', 'url' => '/grafik-arsivi'],
+                ['label' => 'Podcastler', 'url' => '/podcastler'],
+            ],
+        ],
+        [
+            'title' => 'Piyasa Verileri',
+            'url' => '/piyasalar',
+            'links' => [
+                ['label' => 'Döviz Kurları', 'url' => '/doviz'],
+                ['label' => 'Altın - Emtia', 'url' => '/altin'],
+                ['label' => 'Borsa Verileri', 'url' => '/borsa'],
+                ['label' => 'Hisse Senetleri', 'url' => '/borsa/hisseler'],
+                ['label' => 'Yatırım Fonları', 'url' => '/yatirim-fonlari'],
+                ['label' => 'Kripto', 'url' => '/kripto'],
+                ['label' => 'Alternatif', 'url' => '/alternatif'],
+                ['label' => 'Faiz Bono', 'url' => '/faiz-bono'],
+            ],
+        ],
+        [
+            'title' => 'Yasal İçerikler',
+            'url' => '/',
+            'links' => [
+                ['label' => 'Aydınlatma Metni', 'url' => '/aydinlatma-metni'],
+                ['label' => 'Künye', 'url' => '/kunye'],
+                ['label' => 'İletişim', 'url' => '/bizeulasin'],
+                ['label' => 'Biyografi', 'url' => '/biyografi'],
+                ['label' => 'İzleyici Temsilcisi', 'url' => '/bizeulasin/izleyicitemsilcisi'],
+                ['label' => 'Kullanım Koşulları', 'url' => '/kullanimkosullari'],
+                ['label' => 'Gizlilik', 'url' => '/privacy'],
+                ['label' => 'Çerez Politikası', 'url' => '/cerez-politikasi'],
+            ],
+        ],
+    ],
+
+    /*
     | Footer 5 bağlantı sütunu (Bölüm 2.7 — sıra ve metinler birebir).
     | "Sterin Kaç TL" canlı sitedeki typo'dur; hedefi İngiliz Sterlini sayfasıdır.
     */

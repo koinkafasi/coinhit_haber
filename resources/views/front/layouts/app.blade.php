@@ -168,7 +168,8 @@
     </script>
     <script src="{{ asset('js/lazy.js') }}" defer></script>
     <script src="{{ asset('js/swiper-bundle.min.js') }}" defer></script>
-    <script src="{{ asset('js/site.js') }}" defer></script>
+    @php($__siteJs = @filemtime(public_path('js/site.js')) ?: 1)
+    <script src="{{ asset('js/site.js') }}?v={{ $__siteJs }}" defer></script>
     <script src="{{ asset('js/market-live.js') }}" defer></script>
     @stack('scripts')
 </body>
