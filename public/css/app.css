@@ -2633,6 +2633,18 @@ figure { max-width: 100%; }
 .percentChange .q-arrow, .mw-card-change .q-arrow { font-size: .85em; }
 .market-table .q-arrow { margin-right: 4px; }
 
+/* ---------- CH-26: referans ok ikonları (setIcon bloomberght-icon-font-icon-graphic-*) ----------
+   Referans kartlarda değer + ok ikonu + değişim (örn. price ▴ 0,43). Ok ikonu
+   currentColor ile boyanır, böylece text-green-700 / text-red-700 renk kuralı korunur. */
+.q-arrow-up::before,
+.q-arrow-down::before { content: ""; display: inline-block; width: .95em; height: .95em; margin-right: 2px; background: currentColor; -webkit-mask: no-repeat center / contain; mask: no-repeat center / contain; vertical-align: -.1em; }
+.q-arrow-up::before   { -webkit-mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 4l8 9h-5v7h-6v-7H4z'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 4l8 9h-5v7h-6v-7H4z'/%3E%3C/svg%3E"); }
+.q-arrow-down::before { -webkit-mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 20l8-9h-5V4h-6v7H4z'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 20l8-9h-5V4h-6v7H4z'/%3E%3C/svg%3E"); }
+.bloomberght-icon-font-icon-graphic-up::before,
+.bloomberght-icon-font-icon-graphic-down::before { content: ""; display: inline-block; width: 1em; height: 1em; background: currentColor; -webkit-mask: no-repeat center / contain; mask: no-repeat center / contain; }
+.bloomberght-icon-font-icon-graphic-up::before { -webkit-mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 4l8 9h-5v7h-6v-7H4z'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 4l8 9h-5v7h-6v-7H4z'/%3E%3C/svg%3E"); }
+.bloomberght-icon-font-icon-graphic-down::before { -webkit-mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 20l8-9h-5V4h-6v7H4z'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 20l8-9h-5V4h-6v7H4z'/%3E%3C/svg%3E"); }
+
 /* ---------- 2) Öne Çıkanlar (highlights) kartları ---------- */
 .highlights-list { display: flex; flex-direction: column; gap: 14px; }
 .highlights-item { color: #1a1a1a; display: block; }

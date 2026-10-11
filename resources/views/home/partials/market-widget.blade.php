@@ -34,7 +34,11 @@
                                     <span class="mw-card-name">{{ $quote->instrument->name }}</span>
                                     <span class="mw-card-price lastPrice font-bold {{ $dir === 'up' ? 'text-green-700' : ($dir === 'down' ? 'text-red-700' : 'text-gray-400') }}" data-market-field="last">{{ $quote->formattedLast() }}</span>
                                     <span class="mw-card-change percentChange {{ $dir === 'up' ? 'text-green-700' : ($dir === 'down' ? 'text-red-700' : 'text-gray-400') }}" data-market-field="change_percent">
-                                        <i class="q-arrow q-arrow-{{ $dir }}" aria-hidden="true"></i>{{ $quote->formattedChangePercent() }}
+                                        @if ($dir === 'flat')
+                                            <span class="q-arrow q-arrow-flat text-gray-400" aria-hidden="true"></span>{{ $quote->format($quote->changePercent, 2) }}
+                                        @else
+                                            <i class="setIcon bloomberght-icon-font-icon-graphic-{{ $dir }}" aria-hidden="true"></i>{{ $quote->format($quote->changePercent, 2) }}
+                                        @endif
                                     </span>
                                     <span class="mw-card-spark">{!! $item['svg'] !!}</span>
                                 </button>
@@ -50,7 +54,11 @@
                                         <span class="mw-chart-name">{{ $quote->instrument->name }}</span>
                                         <span class="mw-chart-price lastPrice font-bold {{ $dir === 'up' ? 'text-green-700' : ($dir === 'down' ? 'text-red-700' : 'text-gray-400') }}">{{ $quote->formattedLast() }}</span>
                                         <span class="mw-chart-change percentChange {{ $dir === 'up' ? 'text-green-700' : ($dir === 'down' ? 'text-red-700' : 'text-gray-400') }}">
-                                            <i class="q-arrow q-arrow-{{ $dir }}" aria-hidden="true"></i>{{ $quote->formattedChangePercent() }}
+                                            @if ($dir === 'flat')
+                                            <span class="q-arrow q-arrow-flat text-gray-400" aria-hidden="true"></span>{{ $quote->format($quote->changePercent, 2) }}
+                                        @else
+                                            <i class="setIcon bloomberght-icon-font-icon-graphic-{{ $dir }}" aria-hidden="true"></i>{{ $quote->format($quote->changePercent, 2) }}
+                                        @endif
                                         </span>
                                     </div>
                                     <div class="mw-chart-canvas highchart-container">{!! $item['svg_big'] ?? $item['svg'] !!}</div>

@@ -89,15 +89,26 @@
         @foreach ($mega as $item)
             @php($hasChildren = ! empty($item['children']))
             <div class="sub-menu-wrapper relative text-sm lg:text-base text-white group h-full">
-                <a href="{{ \App\Support\Locale::navUrl($item['url']) }}"
-                   title="{{ \App\Support\Locale::navLabel($item['label']) }}"
-                   class="py-2.5 px-1.5 h-full flex items-center justify-center gap-1 font-medium group-hover:bg-[#4D596A] group-hover:font-medium hover:font-medium"
-                   @if (! empty($item['external'])) {!! $newWindow !!} @endif>
-                    <span>{{ \App\Support\Locale::navLabel($item['label']) }}</span>
-                    @if ($hasChildren)
-                        <span class="bloomberght-icon-font-chevron-bottom text-[.5rem] text-white"></span>
-                    @endif
-                </a>
+                @if (! empty($item['logo']))
+                    <a href="{{ \App\Support\Locale::navUrl($item['url']) }}"
+                       title="{{ \App\Support\Locale::navLabel($item['label']) }}"
+                       class="h-full flex items-center justify-center font-medium"
+                       @if (! empty($item['external'])) {!! $newWindow !!} @endif>
+                        <span class="rounded-full px-3 pt-2 pb-2.5 border border-gray-500">
+                            <img class="block max-h-3.5" src="{{ asset('/brand/'.$item['logo']) }}" alt="{{ \App\Support\Locale::navLabel($item['label']) }}" loading="lazy" width="107" height="14">
+                        </span>
+                    </a>
+                @else
+                    <a href="{{ \App\Support\Locale::navUrl($item['url']) }}"
+                       title="{{ \App\Support\Locale::navLabel($item['label']) }}"
+                       class="{{ $loop->first ? 'pl-0 ' : '' }}py-2.5 px-1.5 h-full flex items-center justify-center gap-1 font-medium group-hover:bg-[#4D596A] group-hover:font-medium hover:font-medium"
+                       @if (! empty($item['external'])) {!! $newWindow !!} @endif>
+                        <span>{{ \App\Support\Locale::navLabel($item['label']) }}</span>
+                        @if ($hasChildren)
+                            <span class="bloomberght-icon-font-chevron-bottom text-[.5rem] text-white"></span>
+                        @endif
+                    </a>
+                @endif
                 @if ($hasChildren)
                     <ul class="drop-down absolute top-12 left-0 bg-[#4D596A] z-90 text-sm w-max hidden">
                         @foreach ($item['children'] as $child)

@@ -74,7 +74,7 @@ return [
         ['label' => 'ZİRVE', 'url' => '/zirve'],
         ['label' => 'VİDEO', 'url' => '/video'],
         ['label' => 'YAYIN AKIŞI', 'url' => '/yayinakisi'],
-        ['label' => 'BusinessWeek', 'url' => 'https://www.businessweek.com.tr/', 'external' => true],
+        ['label' => 'BusinessWeek', 'url' => 'https://www.businessweek.com.tr/', 'external' => true, 'logo' => 'businessweek-logo-white.svg'],
     ],
 
     /*
