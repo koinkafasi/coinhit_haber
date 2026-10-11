@@ -44,6 +44,22 @@
                     @endif
                 </figcaption>
             </figure>
+        @elseif ($type === 'type3')
+            {{-- Referans type3 (highlights/graphics): aspect-video kapak + baslik. --}}
+            <figure class="px-2">
+                <div class="w-full h-full aspect-video bg-gray-50 mb-4">
+                    <x-lazy-image :src="asset($news->image ?: '/img/og-default.png')" alt="" :contract="$contract" class="w-full h-full news-card-img" :eager="$eager" />
+                </div>
+                <figcaption class="w-full h-full flex flex-col justify-around">
+                    @if ($category)
+                        <div class="category text-xs">{{ $category }}</div>
+                    @endif
+                    <div class="font-unna font-bold text-base 2xl:text-xl text-ellipsis line-clamp-2 news-card-title">{{ $news->title }}</div>
+                    @if ($showSpot && $news->spot)
+                        <div class="news-card-spot text-base line-clamp-3">{{ \Illuminate\Support\Str::limit(strip_tags($news->spot), 170) }}</div>
+                    @endif
+                </figcaption>
+            </figure>
         @else
             <figure class="px-2">
                 <figcaption class="news-card-caption">

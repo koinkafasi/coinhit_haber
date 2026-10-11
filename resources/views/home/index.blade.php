@@ -60,35 +60,28 @@
             </div>
         </div>
 
-        {{-- Öne Çıkanlar (highlights): görsel + başlık + özet kartları --}}
+        {{-- Öne Çıkanlar (highlights): referans grid md:grid-cols-2 + iki kolon;
+             ilk kart type3 (H2 + aspect-video kapak), devami type1. --}}
         <div class="bht-grid col-span-12 md:col-span-6 row-span-1" dataType="highlights" datatype="highlights">
-            <div data-widget-type="highlights" class="highlights-wrap">
-                <div class="mb-2 border-b border-black relative w-full highlights-rule" aria-hidden="true"></div>
-                <h2 class="highlights-title-heading font-unna font-bold text-3xl py-2">{{ __('ui.featured') }}</h2>
-                <div class="highlights-list">
-                @foreach ($featuredNews->take(4) as $index => $item)
-                    <a href="{{ $item->url }}" class="highlights-item {{ $index === 0 ? 'highlights-item-lead' : 'highlights-item-row' }}">
-                        @if ($index === 0)
-                            <figure class="highlights-lead-figure">
-                                <x-lazy-image :src="asset(($item->image ?? '') ?: '/img/og-default.png')" alt="{{ $item->title }}" class="highlights-lead-img" contract="news_card" :eager="false" />
-                            </figure>
+            <div data-widget-type="highlights" class="border">
+                @php
+                    $__hl = $featuredNews->take(4)->values();
+                @endphp
+                <div class="grid md:grid-cols-2">
+                    <div class="flex flex-col justify-between">
+                        @if ($__hl->get(0))
+                            <div data-type="news-card-type3" data-news-id="" class="border-b mb-2 pb-2">
+                                <h2 class="font-unna font-bold text-3xl mb-2 p-2 pt-4">{{ __('ui.featured') }}</h2>
+                                <x-news-card :news="$__hl->get(0)" type="type3" />
+                            </div>
                         @endif
-                        <div class="highlights-caption">
-                            <span class="category text-xs text-[#bd1b2d]">{{ $item->category?->name }}</span>
-                            <span class="highlights-title font-unna font-bold line-clamp-2">{{ $item->title }}</span>
-                            @if ($index === 0 && $item->spot)
-                                <span class="highlights-spot line-clamp-2">{{ \Illuminate\Support\Str::limit(strip_tags($item->spot), 150) }}</span>
-                            @elseif ($index > 0 && $item->spot)
-                                <span class="highlights-spot highlights-spot-row line-clamp-1">{{ \Illuminate\Support\Str::limit(strip_tags($item->spot), 80) }}</span>
-                            @endif
-                        </div>
-                        @if ($index > 0)
-                            <span class="highlights-thumb">
-                                <x-lazy-image :src="asset(($item->image ?? '') ?: '/img/og-default.png')" alt="" class="highlights-thumb-img" contract="news_card_square" />
-                            </span>
-                        @endif
-                    </a>
-                @endforeach
+                    </div>
+                    <div class="flex flex-col justify-between">
+                        @foreach ($__hl->slice(1, 3) as $__item)
+                            <x-news-card :news="$__item" type="type1" />
+                        @endforeach
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -214,22 +207,24 @@
     {{-- Foto Haber + VİDEOLAR yan yana (referans photoNews + video) --}}
     <section class="home-media-row grid grid-cols-12 gap-4 mb-4 md:mb-10">
         <div class="bht-grid col-span-12 md:col-span-8" dataType="photoNews" datatype="photoNews">
-            <section class="home-gallery" id="home-gallery" data-widget-type="photoNews">
-                <x-section-head :title="__('ui.photo_news')" :href="\App\Support\Locale::url('/fotohaber')" level="h3" />
-                <div class="gallery-grid">
-                    @foreach ($galleries->take(4) as $gallery)
-                        <article class="gallery-card">
-                            <a href="{{ $gallery->url }}">
-                                <figure>
-                                    <x-lazy-image :src="asset($gallery->cover ?: '/img/og-default.png')" alt="" contract="news_card_square" class="img-contract" />
-                                    <span class="gallery-count">{{ $gallery->photo_total_count }}</span>
-                                </figure>
-                                <div class="gallery-body">
-                                    <span class="category text-xs">{{ $gallery->category?->name ?? __('ui.photo_news_upper') }}</span>
-                                    <h4 class="font-unna font-bold line-clamp-2">{{ $gallery->title }}</h4>
-                                </div>
-                            </a>
-                        </article>
+<section class="home-gallery h-full" id="home-gallery" data-widget-type="photoNews">
+                <div class="mb-4 border-b border-black relative before:absolute before:top-0 before:bottom-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black"></div>
+                @php
+                    $__photoItems = $galleries->take(4)->values();
+                    $__photoCols = [
+                        array_slice($__photoItems->all(), 0, 2),
+                        array_slice($__photoItems->all(), 2, 2),
+                    ];
+                @endphp
+                {{-- Referans photoNews: 2 kolon, ilk kart type5 (kapak+caption),
+                     kalanlar type2 (yatay). --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 md:gap-4">
+                    @foreach ($__photoCols as $__col)
+                        <div class="w-full flex flex-col justify-between">
+                            @foreach ($__col as $__j => $__gallery)
+                                <x-news-card :news="$__gallery" :type="$__j === 0 ? 'type5' : 'type2'" />
+                            @endforeach
+                        </div>
                     @endforeach
                 </div>
             </section>

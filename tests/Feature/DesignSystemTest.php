@@ -65,11 +65,29 @@ class DesignSystemTest extends TestCase
 
     public function test_css_contains_design_tokens(): void
     {
-        $css = file_get_contents(public_path('css/app.css'));
+        // Tek CSS kaynagi: resources/css/app.css -> Vite -> public/build/assets
+        $css = file_get_contents(resource_path('css/app.css'));
 
         foreach (['--bht-yellow', '--bht-black', '--breaking-red', '--live-yellow', '--up', '--down', '--flat', '.font-unna', 'bloomberght-icon-font', 'img-640x360'] as $needle) {
             $this->assertStringContainsString($needle, $css, "CSS token eksik: {$needle}");
         }
+    }
+
+    public function test_css_source_is_tailwind_and_layout_loads_vite_manifest(): void
+    {
+        // CH-32: Tailwind tek merkezi kaynak. Elle yazilmis public/css/app.css
+        // kaldirildi; layout Vite build ciktisini yuklemeli.
+        $css = file_get_contents(resource_path('css/app.css'));
+
+        $this->assertStringContainsString("@import 'tailwindcss'", $css, 'Tailwind girişi eksik');
+        $this->assertStringContainsString('@theme', $css, 'Tailwind @theme token katmanı eksik');
+        $this->assertStringContainsString('@layer components', $css, 'Bileşen katmanı eksik');
+
+        $this->assertFileDoesNotExist(public_path('css/app.css'), 'Eski elle CSS kaldırılmalı');
+
+        $manifest = json_decode((string) file_get_contents(public_path('build/manifest.json')), true);
+        $this->assertArrayHasKey('resources/css/app.css', $manifest, 'Vite manifest CSS girdisi eksik');
+        $this->assertFileExists(public_path('build/'.$manifest['resources/css/app.css']['file']));
     }
 
     public function test_front_layout_renders_with_header_footer_and_icons(): void
