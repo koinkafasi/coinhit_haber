@@ -244,6 +244,17 @@ class MarketDataService
     }
 
     /**
+     * Referans Highcharts alan grafiğini SSR basar (market widget büyük grafik).
+     * Referans DOM'uyla aynı class/renk/ölçü yapısı; JS gerektirmez.
+     */
+    public function highchartsArea(MarketInstrument|string $instrument, int $points = 64, int $width = 414, int $height = 201, string $uid = '0'): string
+    {
+        $values = $this->sparkline($instrument, $points);
+
+        return app(HighchartsRenderer::class)->areaChart($values, $width, $height, $uid);
+    }
+
+    /**
      * Güniçi seriyi satır içi SVG polyline olarak üretir (Chart.js yokluğunda
      * SSR karşılığı; renk yönü ilk/son değere göre Bölüm 17 token'larıyla).
      */

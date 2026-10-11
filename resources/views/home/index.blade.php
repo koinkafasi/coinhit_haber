@@ -310,100 +310,26 @@
     <x-ad-zone :zone="2029" :index="8" />
     <x-ad-zone :zone="2129" :index="9" />
 
-    {{-- Sektör / Emtia / Siyaset Haberleri — 3 sütun (referans emtiaNews + sectorNews + politicsNews) --}}
+    {{-- Emtia / Sektör / Siyaset Haberleri — 3 sütun (referans emtiaNews + sectorNews + politicsNews sırası) --}}
     <section class="home-sector-section grid grid-cols-12 gap-4 mb-4 md:mb-10" id="home-sector">
+        <div class="bht-grid col-span-12 md:col-span-4" dataType="emtiaNews" datatype="emtiaNews" data-widget-type="emtiaNews">
+            <x-news-module id="home-commodity-news"
+                           :title="__('ui.commodity_news')"
+                           :items="$commodityNews"
+                           :href="\App\Support\Locale::url('/emtia')"
+                           :columns="1"
+                           :level="'h3'" />
+        </div>
         <div class="bht-grid col-span-12 md:col-span-4" dataType="sectorNews" datatype="sectorNews" data-widget-type="sectorNews">
-
             <x-news-module :title="__('ui.sector_news')"
-
                            :items="$sectorNews"
-
                            :href="\App\Support\Locale::url('/haberler/sektor-haberleri')"
-
                            :columns="1" />
-
         </div>
-
-        <div class="bht-grid col-span-12 md:col-span-4" dataType="adt" datatype="adt" data-widget-type="adt">
-
-            <section class="home-emtia emtia-block" id="home-emtia" data-widget-type="emtiaNews">
-
-                <div data-type="head-type1">
-
-                    <div class="relative before:absolute before:top-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black before:bottom-0 before:h-2.5 border-b border-black mb-4"></div>
-
-                    <a href="\App\Support\Locale::url('/emtia')" title="__('ui.commodity_news')" class="inline-block mb-3">
-
-                        <h3 class="font-unna font-bold text-3xl">__('ui.commodity_news')</h3>
-
-                    </a>
-
-                </div>
-
-                <ul class="headline-list all-news-scroll">
-
-                    @foreach ($commodityNews as $item)
-
-                        <li>
-
-                            <a href="\App\Support\Locale::url('/emtia')">
-
-                                <span class="headline-cat">{{ $item->category?->name }}</span>
-
-                                <span class="headline-title font-unna font-bold">{{ $item->title }}</span>
-
-                            </a>
-
-                        </li>
-
-                    @endforeach
-
-                </ul>
-
-            </section>
-
-        </div>
-
         <div class="bht-grid col-span-12 md:col-span-4" dataType="politicsNews" datatype="politicsNews">
-
-            <section class="home-politics politics-block" id="home-politics" data-widget-type="politicsNews">
-
-                <div data-type="head-type1">
-
-                    <div class="relative before:absolute before:top-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black before:bottom-0 before:h-2.5 border-b border-black mb-4"></div>
-
-                    <a href="\App\Support\Locale::url('/haberler/sektor-haberleri')" title="__('ui.politics_news')" class="inline-block mb-3">
-
-                        <h3 class="font-unna font-bold text-3xl">__('ui.politics_news')</h3>
-
-                    </a>
-
-                </div>
-
+            <section class="politics-block" id="home-politics" data-widget-type="politicsNews">
+                <x-section-head :title="__('ui.politics_news')" :href="\App\Support\Locale::url('/haberler/sektor-haberleri')" level="h3" />
                 <ul class="headline-list all-news-scroll">
-
-                    @foreach ($politicsNews as $item)
-
-                        <li>
-
-                            <a href="\App\Support\Locale::url('/haberler/sektor-haberleri')">
-
-                                <span class="headline-cat">{{ $item->category?->name }}</span>
-
-                                <span class="headline-title font-unna font-bold">{{ $item->title }}</span>
-
-                            </a>
-
-                        </li>
-
-                    @endforeach
-
-                </ul>
-
-            </section>
-
-        </div>
-                <x-section-head :title="__('ui.politics_news')" :href="\App\Support\Locale::url('/haberler/sektor-haberleri')" level="h3" />                <ul class="headline-list all-news-scroll">
                     @foreach ($politicsNews as $item)
                         <li>
                             <a href="{{ $item->url }}">
@@ -422,7 +348,7 @@
         <div data-type="background" class="absolute -z-10 left-1/2 top-0 w-[100vw] h-96 -translate-x-1/2 -mt-4 bg-cover bg-no-repeat bg-black h-full mt-0"></div>
         <a href="{{ \App\Support\Locale::url('/kripto') }}" title="{{ __('ui.crypto') }}" class="absolute top-4 font-unna font-bold text-3xl mb-2 text-white z-10"><h2>{{ __('ui.crypto') }}</h2></a>
         <div>
-            <div data-type="swiper" data-name="" class="swiper slider-custom relative pt-10 w-full crypto"
+            <div data-type="swiper" data-name="" class="crypto-swiper swiper slider-custom relative pt-10 w-full crypto"
                  data-swiper='{"slidesPerView":"auto","loop":false,"lazy":true,"navigation":{"nextEl":".crypto .swiper-button-next","prevEl":".crypto .swiper-button-prev"}}'>
                 <div class="swiper-wrapper">
                     @foreach ($cryptoQuotes as $quote)

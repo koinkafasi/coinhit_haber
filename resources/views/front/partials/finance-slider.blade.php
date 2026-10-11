@@ -34,7 +34,7 @@
                 @foreach ($tickerQuotes as $quote)
                     @php
                         $dir = $quote->direction();
-                        $color = $dir === 'up' ? '#24A278' : ($dir === 'down' ? '#BD1B2E' : '#9D9D9D');
+                        $dcls = $dir === 'up' ? 'text-[#24A278]' : ($dir === 'down' ? 'text-[#BD1B2E]' : 'text-[#9D9D9D]');
                         $icon = $dir === 'up' ? 'bloomberght-icon-font-icon-graphic-up'
                             : ($dir === 'down' ? 'bloomberght-icon-font-icon-graphic-down' : 'bloomberght-icon-font-icon-graphic-fixed');
                         $label = $tickerLabels[$quote->code()] ?? $tickerLabels[$quote->instrument?->code] ?? $quote->instrument?->name;
@@ -45,9 +45,9 @@
                             <a href="{{ $quote->instrument->url }}" title="{{ $label }}" class="flex gap-4">
                                 <div class="flex flex-col relative">
                                     <span class="text-xs text-ellipsis overflow-hidden whitespace-nowrap">{{ $label }}</span>
-                                    <span class="lastPrice font-bold" style="color: {{ $color }}">{{ $quote->formattedLast() }}</span>
+                                    <span class="setTextColor lastPrice font-bold {{ $dcls }}">{{ $quote->formattedLast() }}</span>
                                     <span class="text-xs">
-                                        <span class="setIcon {{ $icon }}" style="color: {{ $color }}"></span>
+                                        <span class="setIcon setTextColor {{ $icon }} {{ $dcls }}"></span>
                                         <span class="percentChange">{{ $quote->formattedChangePercent() }}</span>
                                     </span>
                                 </div>
@@ -79,6 +79,40 @@
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Mobil finance-slider (referans ikinci finance-slider, md:hidden) --}}
+<div class="finance-slider-wrap flex md:hidden -mx-4 border-t">
+    <div data-widget-type="finance-slider" data-connection="true" class="bg-white border-b min-h-20 max-h-20 overflow-hidden w-full">
+        <div data-type="swiper" class="swiper slider-custom relative min-h-20 max-h-20 w-full"
+             data-swiper='{"slidesPerView":"auto","spaceBetween":0,"speed":900,"loop":true,"autoplay":{"delay":3000,"disableOnInteraction":false,"pauseOnMouseEnter":true},"breakpoints":{"0":{"slidesPerView":"auto"}}}'>
+            <div class="swiper-wrapper">
+                @foreach ($tickerQuotes as $quote)
+                    @php
+                        $mdir = $quote->direction();
+                        $mdcls = $mdir === 'up' ? 'text-[#24A278]' : ($mdir === 'down' ? 'text-[#BD1B2E]' : 'text-[#9D9D9D]');
+                        $micon = $mdir === 'up' ? 'bloomberght-icon-font-icon-graphic-up'
+                            : ($mdir === 'down' ? 'bloomberght-icon-font-icon-graphic-down' : 'bloomberght-icon-font-icon-graphic-fixed');
+                        $mlabel = $tickerLabels[$quote->code()] ?? $tickerLabels[$quote->instrument?->code] ?? $quote->instrument?->name;
+                    @endphp
+                    <div class="swiper-slide w-auto py-3 border-l px-4 security-{{ $quote->code() }}">
+                        <div data-type="stats-bar-type1">
+                            <a href="{{ $quote->instrument->url }}" title="{{ $mlabel }}" class="flex gap-4">
+                                <div class="flex flex-col relative">
+                                    <span class="text-xs text-ellipsis overflow-hidden whitespace-nowrap">{{ $mlabel }}</span>
+                                    <span class="setTextColor lastPrice font-bold {{ $mdcls }}">{{ $quote->formattedLast() }}</span>
+                                    <span class="text-xs">
+                                        <span class="setIcon setTextColor {{ $micon }} {{ $mdcls }}"></span>
+                                        <span class="percentChange">{{ $quote->formattedChangePercent() }}</span>
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>

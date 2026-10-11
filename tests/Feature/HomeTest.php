@@ -101,7 +101,6 @@ class HomeTest extends TestCase
             'zone_2015', 'zone_2026',           // REKLAM x2
             'zone_2029', 'zone_2129',           // REKLAM x2
             'zone_22801', 'zone_22802',         // REKLAM x2
-            'zone_1260',                        // footer billboard
             'zone_2280',                        // mobil sticky
         ] as $zone) {
             $this->assertStringContainsString('data-zone-id="'.$zone.'"', $html, "Eksik ad zone: {$zone}");
@@ -169,7 +168,7 @@ class HomeTest extends TestCase
             $this->assertStringContainsString('>'.$tab.'</button>', $html, "Eksik en çok okunanlar sekmesi: {$tab}");
         }
 
-        $this->assertStringContainsString('data-widget-type="most-read"', $html);
+        $this->assertStringContainsString('data-widget-type="mostRead"', $html);
         $this->assertStringContainsString('data-widget-type="finance-slider"', $html);
         $this->assertStringContainsString('crypto-swiper', $html);
     }

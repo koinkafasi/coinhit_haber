@@ -32,9 +32,11 @@ trait BuildsMarketWidget
         ];
 
         $tabs = [];
+        $tabIndex = 0;
 
         foreach ($definition as $key => $tab) {
             $items = [];
+            $i = 0;
 
             foreach ($tab['codes'] as $code) {
                 $instrument = $market->all()->firstWhere('code', $code);
@@ -46,10 +48,13 @@ trait BuildsMarketWidget
                 $items[] = [
                     'quote' => $market->quote($instrument),
                     'svg' => $market->sparklineSvg($instrument),
+                    'svg_big' => $market->highchartsArea($instrument, 64, 414, 201, $tabIndex.'-'.$i),
                 ];
+                $i++;
             }
 
             $tabs[] = ['key' => $key, 'label' => $tab['label'], 'items' => $items];
+            $tabIndex++;
         }
 
         return $tabs;

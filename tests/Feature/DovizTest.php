@@ -47,8 +47,8 @@ class DovizTest extends TestCase
         $html = $response->getContent();
 
         // Döviz (14) + Pariteler (7) + Gelişen Piyasa Kurları (6) = 27 satır
-        // + header finance-slider (referans security-* sınıfı, 7 enstrüman) = 34
-        $this->assertSame(34, substr_count($html, 'security-'));
+        // + header finance-slider desktop+mobile (referans iki instance, 7'şer enstrüman) = 41
+        $this->assertSame(41, substr_count($html, 'security-'));
         // Detay linkleri kısaltılmış slug'lara gider
         $this->assertStringContainsString('href="/doviz/dolar"', $html);
         $this->assertStringContainsString('href="/doviz/japon-yeni"', $html);

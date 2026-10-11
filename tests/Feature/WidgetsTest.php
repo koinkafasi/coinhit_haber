@@ -134,7 +134,7 @@ class WidgetsTest extends TestCase
 
         $html = $this->get('/tumhaberler')->assertOk()->getContent();
 
-        $this->assertStringContainsString('data-widget-type="most-read"', $html);
+        $this->assertStringContainsString('data-widget-type="mostRead"', $html);
         $this->assertStringContainsString('most-read-figure', $html);
         foreach (['Bugün', 'Bu Hafta', 'Bu Ay'] as $tab) {
             $this->assertStringContainsString('>'.$tab.'</button>', $html);

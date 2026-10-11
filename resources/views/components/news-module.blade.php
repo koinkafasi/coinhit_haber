@@ -21,17 +21,10 @@
     <a href="{{ $href }}" title="{{ $title }}" class="block font-unna font-bold text-3xl mb-2 z-10">{{ $title }}</a>
 
     @if ($items->isNotEmpty())
-        <div class="grid grid-cols-1 md:grid-cols-2 md:gap-4">
-            <div class="w-full flex flex-col justify-between">
-                @foreach ($items->take(2) as $item)
-                    <x-news-card :news="$item" :type="$type" :showSpot="$showSpot" />
-                @endforeach
-            </div>
-            <div class="w-full flex flex-col justify-between">
-                @foreach ($items->slice(2) as $item)
-                    <x-news-card :news="$item" :type="$type" :showSpot="$showSpot" />
-                @endforeach
-            </div>
+        <div class="news-card-grid cols-{{ $columns }}">
+            @foreach ($items as $item)
+                <x-news-card :news="$item" :type="$type" :showSpot="$showSpot" />
+            @endforeach
         </div>
         @if ($href)
             <a href="{{ $href }}" data-type="link-type1" title="{{ __('ui.all') }}" class="w-full flex gap-2 my-2 items-center text-black bg-transparent col-span-2">

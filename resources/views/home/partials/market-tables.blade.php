@@ -97,11 +97,11 @@
                                                                         @endphp
                                                                         @if (! empty($mc['color']))
                                                                             @php
-                                                                                $mcls .= $mdir === 'up' ? ' text-green-700' : ($mdir === 'down' ? ' text-red-700' : ' text-gray-400');
+                                                                                $mcls .= $mdir === 'up' ? ' setTextColor text-green-700' : ($mdir === 'down' ? ' setTextColor text-red-700' : ' setTextColor text-gray-400');
                                                                             @endphp
                                                                         @endif
                                                                         <td class="py-4 px-4 {{ trim($mcls) }}" data-market-field="{{ $mc['field'] }}">
-                                                                            <span class="text-right flex justify-end gap-2 whitespace-pre">{{ $mv }} <i class="q-arrow q-arrow-{{ $mdir }}" aria-hidden="true"></i></span>
+                                                                            <span class="text-right flex justify-end gap-2 whitespace-pre">{{ $mv }} <i class="setIcon setTextColor {{ $mdir === 'up' ? 'bloomberght-icon-font-graphic-up' : ($mdir === 'down' ? 'bloomberght-icon-font-graphic-down' : 'bloomberght-icon-font-icon-graphic-fixed') }}" aria-hidden="true"></i></span>
                                                                         </td>
                                                                     @endforeach
                                                                 </tr>

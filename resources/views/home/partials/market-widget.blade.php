@@ -27,9 +27,9 @@
                     <div class="tab-menu h-full flex flex-col justify-around market-widget-tabs" role="tablist" aria-label="{{ __('ui.markets_aria') }}">
                         <div class="tab-head cursor-pointer border rounded-3xl w-full flex justify-between bg-white mb-4 overflow-x-hidden md:overflow-x-scroll lg:overflow-x-hidden">
                             @foreach ($marketWidget as $tab)
-                                <span class="tab-button market-widget-tab inline-block 2xl:text-base text-sm px-5 py-2 rounded-3xl {{ $firstTab ? 'bg-gray-200' : '' }}"
+                                <button type="button" class="tab-button market-widget-tab inline-block 2xl:text-base text-sm px-5 py-2 rounded-3xl {{ $firstTab ? 'bg-gray-200' : '' }}"
                                       role="tab" data-tab="{{ $tab['key'] }}"
-                                      aria-selected="{{ $firstTab ? 'true' : 'false' }}">{{ $tab['label'] }}</span>
+                                      aria-selected="{{ $firstTab ? 'true' : 'false' }}">{{ $tab['label'] }}</button>
                                 @php($firstTab = false)
                             @endforeach
                         </div>
@@ -44,20 +44,20 @@
                                                 @php($quote = $item['quote'])
                                                 @php($dir = $quote->direction())
                                                 @php($dcls = $dir === 'up' ? 'text-green-700' : ($dir === 'down' ? 'text-red-700' : 'text-gray-400'))
-                                                @php($scls = 'security-' . \\Illuminate\\Support\\Str::slug($quote->instrument->name))
+                                                @php($scls = 'security-' . \Illuminate\Support\Str::slug($quote->instrument->name))
                                                 <div class="tab-content market-widget-chart {{ $i === 0 ? 'first-tab' : 'hidden' }}" data-id="tab-graph-{{ $i }}" data-subcontent="{{ $quote->code() }}">
                                                     <div class="flex justify-center 2xl:gap-4 2xl:py-8 2xl:px-4 gap-2 py-4 px-2 {{ $scls }}">
-                                                        <span class="{{ $dcls }} font-bold text-3xl 2xl:text-3xl lastPrice" data-market-field="last">{{ $quote->formattedLast() }}</span>
+                                                        <span class="setTextColor {{ $dcls }} font-bold text-3xl 2xl:text-3xl lastPrice" data-market-field="last">{{ $quote->formattedLast() }}</span>
                                                         @if ($dir === 'flat')
                                                             <span class="{{ $dcls }} q-arrow q-arrow-flat text-2xl" aria-hidden="true"></span>
                                                         @else
-                                                            <span class="{{ $dcls }} setIcon bloomberght-icon-font-icon-graphic-{{ $dir }} text-2xl" aria-hidden="true"></span>
+                                                            <span class="setTextColor {{ $dcls }} setIcon bloomberght-icon-font-icon-graphic-{{ $dir }} text-2xl" aria-hidden="true"></span>
                                                         @endif
-                                                        <span class="text-3xl 2xl:text-2xl percentChange {{ $dcls }}" data-market-field="change_percent">{{ $quote->format($quote->changePercent, 2) }}</span>
+                                                        <span class="text-3xl 2xl:text-2xl percentChange setTextColor {{ $dcls }}" data-market-field="change_percent">{{ $quote->format($quote->changePercent, 2) }}</span>
                                                     </div>
                                                     <div class="highchart-container mb-4">
                                                         <div class="wrapper border">
-                                                            <div class="chart 2xl:max-h-64 max-h-52 bg-white mw-chart-canvas">{!! $item['svg_big'] ?? $item['svg'] !!}</div>
+                                                            <div class="chart highchart-canvas bg-white mw-chart-canvas">{!! $item['svg_big'] ?? $item['svg'] !!}</div>
                                                         </div>
                                                     </div>
                                                 </div>

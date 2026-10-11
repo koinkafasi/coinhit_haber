@@ -16,11 +16,6 @@
          style="background-image:url('/img/placeholders/bg-desktop-footer.png')">
         <div class="container m-auto overflow-hidden">
 
-            {{-- Footer billboard (zone 1260) — Bölüm 2.7 / 14.6 --}}
-            <div class="w-full flex justify-center py-4">
-                <x-ad-zone :zone="1260" variant="billboard" />
-            </div>
-
             {{-- Logo üst şerit --}}
             <div class="w-full flex border-b-2 border-[#707070] py-8">
                 <a href="{{ \App\Support\Locale::route('home') }}" class="block h-16" aria-label="{{ $settings['logo_alt'] ?? 'Bloomberg HT' }}">

@@ -112,6 +112,24 @@
         <div class="ads-zone lazy-init" data-adv="bht" data-device="MOBILE" data-zone-id="zone_2280"></div>
     </div>
 
+    {{-- Arama modalı (referans search-modal — body sonunda, mega-menu öncesi) --}}
+    <div class="search-widget-overlay" data-widget-type="search-bar" data-search-overlay hidden>
+        <div class="search-widget-box">
+            <div class="flex items-center justify-between mb-4">
+                <span class="font-bold text-lg">{{ __('ui.search') }}</span>
+                <button type="button" class="search-widget-close text-2xl leading-none" data-search-close aria-label="{{ __('ui.close') }}">&times;</button>
+            </div>
+            <form action="{{ \App\Support\Locale::route('search.index') }}" method="get" role="search" data-search-form>
+                <label class="sr-only" for="header-search-input">{{ __('ui.search') }}</label>
+                <input id="header-search-input" class="w-full border border-gray-300 rounded-full px-4 py-2 text-sm" type="search" name="q" autocomplete="off" placeholder="{{ __('ui.search_placeholder') }}">
+                <button type="submit" class="mt-3 w-full bg-[#FFE400] text-black rounded-full px-4 py-2 text-sm font-bold">{{ __('ui.list') }}</button>
+            </form>
+        </div>
+    </div>
+
+    {{-- Hamburger mega menü modalı (referans widgetMegaMenu — body sonunda, bottom-nav öncesi) --}}
+    @include('front.partials.mega-menu')
+
     {{-- Mobil alt navigasyon (referans widgetBottomNavigation, md+ gizli) --}}
     <div data-widget-type="widgetBottomNavigation" class="container fixed bottom-0 z-[450] bg-white px-4 py-2 border inset-x-0 m-auto md:hidden">
         <ul class="flex justify-between items-center w-full">

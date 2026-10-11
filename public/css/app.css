@@ -969,6 +969,12 @@ img[data-src].b-lazy-loaded {
 .\!text-xxs { font-size: 0.625rem !important; letter-spacing: .05em; }
 .bg-gray-50 { background: #f9fafb; }
 .aspect-video { aspect-ratio: 16 / 9; }
+.aspect-square { aspect-ratio: 1 / 1; }
+/* Swiper sabit genişlik yardımcıları (CH-29: podcast/programs kart genişliği) */
+.w-56 { width: 14rem; }
+.w-64 { width: 16rem; }
+.w-72 { width: 18rem; }
+.w-80 { width: 20rem; }
 .grid-cols-12 { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); }
 .line-clamp-1, .line-clamp-2, .line-clamp-3 { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
 .line-clamp-1 { -webkit-line-clamp: 1; line-clamp: 1; }
@@ -998,11 +1004,13 @@ img[data-src].b-lazy-loaded {
 }
 .ad-head { text-align: center; }
 .ad-label { margin: 0; color: #9ca3af; font-weight: 600; }
-.ad-body { width: 100%; max-width: 970px; min-height: 250px; display: flex; justify-content: center; background: #fff; }
-.ad-body .ads-zone { width: 100%; min-height: 250px; }
-.ad-body-desktop .ads-zone { min-height: 250px; }
-.ad-body-mobile { display: none; max-width: 320px; min-height: 100px; }
-.ad-body-mobile .ads-zone { min-height: 100px; }
+/* Referans: .ad-body min-height YOK; yalnız iframe 250px (reklam yüklenene kadar
+   çerçeve doğal yükseklikte kalır — birebir davranış). */
+.ad-body { width: 100%; max-width: 970px; display: flex; justify-content: center; background: #fff; }
+.ad-body .ads-zone { width: 100%; }
+.ad-body .ads-zone iframe { min-height: 250px; }
+.ad-body-mobile { display: none; max-width: 320px; }
+.ad-body-mobile .ads-zone iframe { min-height: 100px; }
 .ad-zone-masthead { padding: 8px 0; }
 .ad-zone-billboard { background: transparent; }
 
@@ -2800,6 +2808,9 @@ figure { max-width: 100%; }
 .mw-chart-canvas { align-items: stretch; }
 .market-widget-chart .sparkline { width: 100%; height: 180px; background: #fff; }
 .highchart-container { background: #fff; }
+/* SSR Highcharts alan grafiği — konteyner ölçüsünü al, SVG esnesin */
+.highchart-canvas .highcharts-container { width: 100% !important; max-width: 100%; background: #fff; }
+.highchart-canvas .highcharts-root { display: block; width: 100%; height: auto; }
 
 /* ---------- 6) Hızlı Linkler ---------- */
 .quick-links-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
@@ -3067,6 +3078,12 @@ header.bg-\[\#384552\] { background-color: #384552; }
 .podcast-strip-img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .podcast-strip-desc { color: #555; }
 .podcast-strip-card figcaption a:hover { color: #bd1b2d; }
+/* Swiper slidesPerView:auto inline genişlik verir; görsel doğal genişliğine
+   esnemesi için sabit üst sınır (referans w-72 kartları). */
+.home-podcasts .swiper-slide,
+.home-programs .swiper-slide { max-width: 18rem; }
+.home-podcasts .podcast-strip-cover,
+.home-programs .program-thumb > div { width: 100%; max-width: 100%; overflow: hidden; }
 
 /* Foto Haber + Videolar yan yana */
 .home-media-row .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }

@@ -138,9 +138,11 @@ class HomeController extends Controller
         ];
 
         $tabs = [];
+        $tabIndex = 0;
 
         foreach ($definition as $key => $tab) {
             $items = [];
+            $i = 0;
 
             foreach ($tab['codes'] as $code) {
                 $instrument = $this->market->all()->firstWhere('code', $code);
@@ -152,11 +154,13 @@ class HomeController extends Controller
                 $items[] = [
                     'quote' => $this->market->quote($instrument),
                     'svg' => $this->market->sparklineSvg($instrument),
-                    'svg_big' => $this->market->sparklineSvg($instrument, 24, 520, 180),
+                    'svg_big' => $this->market->highchartsArea($instrument, 64, 520, 180, 'home-'.$tabIndex.'-'.$i),
                 ];
+                $i++;
             }
 
             $tabs[] = ['key' => $key, 'label' => $tab['label'], 'items' => $items];
+            $tabIndex++;
         }
 
         return $tabs;

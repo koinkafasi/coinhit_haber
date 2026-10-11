@@ -13,7 +13,7 @@
                     <div class="swiper-wrapper">
                         @foreach ($broadcast as $row)
                             <div class="swiper-slide w-auto w-64 md:w-72" data-slide-to-key="false">
-                                <a href="{{ $row->program?->url ?? \\App\\Support\\Locale::url('/yayinakisi') }}" title="{{ $row->program_name }}" class="block">
+                                <a href="{{ $row->program?->url ?? \App\Support\Locale::url('/yayinakisi') }}" title="{{ $row->program_name }}" class="block">
                                     <div class="flex items-center border rounded-l-full border-gray-400 rounded p-2 bg-white bcast-card">
                                         <div class="h-24 aspect-square bcast-thumb">
                                             @if ($row->program?->thumbnail)
