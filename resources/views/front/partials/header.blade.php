@@ -129,7 +129,7 @@
      MOBİL MEGA MENÜ paneli (hamburger açılır; dil değiştirici buraya
      taşındı — CH-24 kuralı)
      ============================================================ --}}
-<div class="mega-menu-panel bht-mega-menu-panel" data-mega-menu-panel hidden>
+<div class="mega-menu-panel bht-mega-menu-panel" data-widget-type="widgetMegaMenu" data-mega-menu-panel hidden>
     <div class="mega-menu-panel-inner">
         <div class="mega-menu-head flex items-center justify-between px-4 py-3 bg-[#384552] text-white">
             <span class="font-bold text-base">{{ __('ui.menu') }}</span>

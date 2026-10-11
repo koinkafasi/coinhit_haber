@@ -112,6 +112,42 @@
         <div class="ads-zone lazy-init" data-adv="bht" data-device="MOBILE" data-zone-id="zone_2280"></div>
     </div>
 
+    {{-- Mobil alt navigasyon (referans widgetBottomNavigation, md+ gizli) --}}
+    <div data-widget-type="widgetBottomNavigation" class="container fixed bottom-0 z-[450] bg-white px-4 py-2 border inset-x-0 m-auto md:hidden">
+        <ul class="flex justify-between items-center w-full">
+            <li class="flex">
+                <a href="{{ \App\Support\Locale::url('/') }}" title="ANASAYFA">
+                    <div class="bloomberght-icon-font-home text-sm mb-2 text-center"></div>
+                    <div class="text-xs">ANASAYFA</div>
+                </a>
+            </li>
+            <li class="flex">
+                <a href="{{ \App\Support\Locale::url('/piyasalar') }}" title="PİYASA">
+                    <div class="bloomberght-icon-font-stats text-sm mb-2 text-center"></div>
+                    <div class="text-xs">PİYASA</div>
+                </a>
+            </li>
+            <li class="flex">
+                <a href="{{ \App\Support\Locale::url('/tv') }}" title="CANLI">
+                    <div class="bloomberght-icon-font-play text-sm mb-2 text-center"></div>
+                    <div class="text-xs">CANLI</div>
+                </a>
+            </li>
+            <li class="flex">
+                <a href="https://www.bloomberghtradyo.com" target="_blank" rel="noopener noreferrer" title="RADYO">
+                    <div class="bloomberght-icon-font-radio text-sm mb-2 text-center"></div>
+                    <div class="text-xs">RADYO</div>
+                </a>
+            </li>
+            <li class="flex">
+                <a href="{{ \App\Support\Locale::url('/sondakika') }}" title="SON DAKİKA">
+                    <div class="bloomberght-icon-font-time text-sm mb-2 text-center"></div>
+                    <div class="text-xs">SON DAKİKA</div>
+                </a>
+            </li>
+        </ul>
+    </div>
+
     <button type="button" class="scroll-to-top" data-scroll-top aria-label="{{ __('ui.back_to_top') }}">
         <x-icon name="arrow-up" title="{{ __('ui.back_to_top') }}" />
     </button>
