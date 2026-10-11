@@ -234,6 +234,10 @@
         document.querySelectorAll('[data-widget-type="broadcast-days"]').forEach(function (container) {
             bindTabs(container, '.broadcast-day-tabs > [data-tab]', '.broadcast-day-panels > [data-id]');
         });
+
+        document.querySelectorAll('[data-widget-type="marketDataLists"]').forEach(function (container) {
+            bindTabs(container, '.mdl-tabhead > [data-tab]', '.tab-body > [data-id]');
+        });
     }
 
     /**

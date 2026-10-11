@@ -34,6 +34,7 @@ return [
     'market_strip' => 'Market strip',
     'markets_aria' => 'Markets',
     'market_data_aria' => 'Market data',
+    'market_data_title' => 'Market Data',
     'language' => 'Language',
     'switch_language' => 'Switch language',
     'can_medya_grubu' => 'CAN MEDYA GROUP',
@@ -86,6 +87,9 @@ return [
         'doviz' => 'Currencies',
         'emtia' => 'Commodities',
         'faiz' => 'Rates',
+        'faiz_bono' => 'Rates-Bonds',
+        'altin_emtia' => 'Gold-Commodities',
+        'alternatif' => 'Alternative',
     ],
     'tables' => [
         'doviz' => 'Currencies',

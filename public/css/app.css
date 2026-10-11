@@ -2830,3 +2830,65 @@ header.bg-\[\#384552\] { background-color: #384552; }
 .bg-\[\#4D596A\] { background-color: #4d596a; }
 .text-\[\#384552\] { color: #384552; }
 .highlights-item-row .highlights-spot-row { margin-top: 3px; font-size: 12.5px; color: #666; }
+
+/* ---------- CH-27: Piyasa Verileri tabbed widget (referans marketDataLists) ---------- */
+.home-piyasa-verileri .mdl-title-rule::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    left: 0;
+    width: 230px;
+    height: 10px;
+    background: #000;
+}
+.mdl-tabhead {
+    display: flex;
+    margin: 16px 0;
+    border: 1px solid #d9d9d9;
+    border-radius: 999px;
+    overflow-x: auto;
+    background: #fff;
+    width: max-content;
+    max-width: 100%;
+}
+.mdl-tabhead .mdl-tab {
+    border: 0;
+    background: #fff;
+    border-radius: 999px;
+    padding: 8px 18px;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    color: #222;
+}
+.mdl-tabhead .mdl-tab.is-active,
+.mdl-tabhead .mdl-tab.bg-gray-200,
+.mdl-tabhead .mdl-tab:first-child { background: #e5e7eb; }
+.mdl-card-table { background: #fff; height: calc(100% - 0px); }
+.mdl-table th { font-size: 13px; font-weight: 600; color: #333; background: #fff; }
+.mdl-table th:first-child { text-align: left; }
+.mdl-table td { font-size: 14px; }
+.mdl-table td.px-4.text-right span { align-items: center; }
+.mdl-table .q-arrow { margin: 0 0 0 4px; }
+.mdl-cell-name { min-width: 0; display: flex; flex-direction: column; }
+.mdl-cell-name .text-xs { color: #666; }
+.home-piyasa-verileri .swiper { padding-bottom: 8px; }
+@media (max-width: 768px) {
+    .mdl-tabhead { width: 100%; }
+    .mdl-tabhead .mdl-tab { flex: 1; text-align: center; }
+}
+/* CH-27 eksik utility fallback'leri (referans DOM'dan birebir) */
+.text-gray-500 { color: #6b7280; }
+.text-left { text-align: left; }
+.whitespace-pre { white-space: pre; }
+@media (min-width: 768px) {
+    .md:pt-16 { padding-top: 64px; }
+    .md:top-4 { top: 16px; }
+    .md:mb-12 { margin-bottom: 48px; }
+    .md:mb-10 { margin-bottom: 40px; }
+    .md:absolute { position: absolute; }
+}
+
+

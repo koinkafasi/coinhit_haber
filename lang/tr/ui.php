@@ -34,6 +34,7 @@ return [
     'market_strip' => 'Piyasa şeridi',
     'markets_aria' => 'Piyasalar',
     'market_data_aria' => 'Piyasa verileri',
+    'market_data_title' => 'Piyasa Verileri',
     'language' => 'Dil',
     'switch_language' => 'Dili değiştir',
     'can_medya_grubu' => 'CAN MEDYA GRUBU',
@@ -86,6 +87,9 @@ return [
         'doviz' => 'Döviz',
         'emtia' => 'Emtia',
         'faiz' => 'Faiz',
+        'faiz_bono' => 'Faiz-Bono',
+        'altin_emtia' => 'Altın-Emtia',
+        'alternatif' => 'Alternatif',
     ],
     'tables' => [
         'doviz' => 'Döviz',
