@@ -2361,6 +2361,7 @@ figure { max-width: 100%; }
 }
 @media (min-width: 768px) {
     .md\:relative { position: relative; }
+    .md\:absolute { position: absolute; }
     .md\:h-16 { height: 64px; }
     .md\:h-14 { height: 56px; }
     .md\:mb-10 { margin-bottom: 40px; }
