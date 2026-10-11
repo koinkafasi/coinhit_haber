@@ -5,7 +5,7 @@
 @section('masthead')
     {{-- Modül 1: Masthead ad — zone_1264 (masaüstü) / zone_1394 (mobil), header ÜSTÜNDE --}}
     <div class="masthead-ad">
-        <div class="ad-head"><h2 class="ad-label !text-xxs">{{ __('ui.ad') }}</h2></div>
+        <div class="ad-head"><span class="ad-label !text-xxs">{{ __('ui.ad') }}</span></div>
         <div class="ad-body ad-body-desktop" data-device="DESKTOP">
             <div class="ads-zone lazy-init" data-adv="bht" data-device="DESKTOP" data-zone-id="zone_1264" id="zone_1264"></div>
         </div>
@@ -61,8 +61,11 @@
         </div>
 
         {{-- Öne Çıkanlar (highlights): görsel + başlık + özet kartları --}}
-        <div class="bht-grid col-span-12 md:col-span-6 row-span-1" dataType="highlights">
-            <div class="highlights-list">
+        <div class="bht-grid col-span-12 md:col-span-6 row-span-1" dataType="highlights" datatype="highlights">
+            <div data-widget-type="highlights" class="highlights-wrap">
+                <div class="mb-2 border-b border-black relative w-full highlights-rule" aria-hidden="true"></div>
+                <h2 class="highlights-title-heading font-unna font-bold text-3xl py-2">{{ __('ui.featured') }}</h2>
+                <div class="highlights-list">
                 @foreach ($featuredNews->take(4) as $index => $item)
                     <a href="{{ $item->url }}" class="highlights-item {{ $index === 0 ? 'highlights-item-lead' : 'highlights-item-row' }}">
                         @if ($index === 0)
@@ -115,7 +118,7 @@
     @include('home.partials.market-widget')
 
     {{-- PROGRAMLAR --}}
-    <section class="home-programs">
+    <section class="home-programs" data-widget-type="programs">
         <x-section-head :title="__('ui.programs')" :href="\App\Support\Locale::url('/video')" />
         <div class="program-list">
             @foreach ($programs as $episode)
@@ -145,8 +148,8 @@
         <div class="bht-grid col-span-12 md:col-span-8 row-span-2" dataType="marketAgenda">
             @include('home.partials.featured-agenda', ['items' => $featuredCards])
         </div>
-        <div class="bht-grid col-span-12 md:col-span-4 row-span-2" dataType="allNews">
-            <section class="home-all-news" id="home-all-news">
+        <div class="bht-grid col-span-12 md:col-span-4 row-span-2" dataType="allNews" datatype="allNews">
+            <section class="home-all-news" id="home-all-news" data-widget-type="allNews">
                 <x-section-head :title="__('ui.all_news')" :href="\App\Support\Locale::url('/tumhaberler')" />
                 <ol class="headline-list all-news-scroll">
                     @foreach ($allNews as $item)
@@ -171,7 +174,7 @@
     <x-ad-zone :zone="1400" :index="5" />
 
     {{-- Businessweek kapak + SON SAYILAR --}}
-    <section class="home-businessweek">
+    <section class="home-businessweek" data-widget-type="businessWeekTurkey">
         <div class="bw-cover">
             <a href="https://www.businessweek.com.tr/" target="_blank" rel="noopener noreferrer" class="bw-cover-link">
                 <x-lazy-image src="/img/placeholders/placeholder-3.svg" alt="Businessweek" contract="magazine" class="bw-cover-img img-contract" />
@@ -194,8 +197,8 @@
 
     {{-- Foto Haber + VİDEOLAR yan yana (referans photoNews + video) --}}
     <section class="home-media-row grid grid-cols-12 gap-4 mb-4 md:mb-10">
-        <div class="bht-grid col-span-12 md:col-span-8" dataType="photoNews">
-            <section class="home-gallery" id="home-gallery">
+        <div class="bht-grid col-span-12 md:col-span-8" dataType="photoNews" datatype="photoNews">
+            <section class="home-gallery" id="home-gallery" data-widget-type="photoNews">
                 <x-section-head :title="__('ui.photo_news')" :href="\App\Support\Locale::url('/fotohaber')" level="h3" />
                 <div class="gallery-grid">
                     @foreach ($galleries->take(4) as $gallery)
@@ -215,8 +218,8 @@
                 </div>
             </section>
         </div>
-        <div class="bht-grid col-span-12 md:col-span-4" dataType="video">
-            <section class="home-videos" id="home-videos">
+        <div class="bht-grid col-span-12 md:col-span-4" dataType="video" datatype="video">
+            <section class="home-videos" id="home-videos" data-widget-type="video">
                 <x-section-head :title="__('ui.video_news')" :href="\App\Support\Locale::url('/video')" />
                 <div class="video-list">
                     @foreach ($videos as $episode)
@@ -245,9 +248,9 @@
 
     {{-- Piyasa Haberleri + KAP HABERLERİ yan yana (referans marketNews + kapNews) --}}
     <section class="home-news-row grid grid-cols-12 gap-4 mb-4 md:mb-10">
-        <div class="bht-grid col-span-12 md:col-span-6" dataType="marketNews">
-            <section class="home-market-news" id="home-market-news">
-                <x-section-head :title="__('ui.market_news')" :href="\App\Support\Locale::url('/piyasalar')" />
+        <div class="bht-grid col-span-12 md:col-span-6" dataType="marketNews" datatype="marketNews">
+            <section class="home-market-news" id="home-market-news" data-widget-type="marketNews">
+                <x-section-head :title="__('ui.market_news')" :href="\App\Support\Locale::url('/piyasalar')" level="h3" />
                 <ol class="headline-list all-news-scroll">
                     @foreach ($marketNews as $item)
                         <li>
@@ -261,8 +264,8 @@
                 </ol>
             </section>
         </div>
-        <div class="bht-grid col-span-12 md:col-span-6" dataType="kapNews">
-            <section class="home-kap" id="home-kap">
+        <div class="bht-grid col-span-12 md:col-span-6" dataType="kapNews" datatype="kapNews">
+            <section class="home-kap" id="home-kap" data-widget-type="kapNews">
                 <x-section-head :title="__('ui.kap_news')" :href="\App\Support\Locale::url('/borsa/hisseler/kap-haberleri')" />
                 <ul class="kap-list all-news-scroll">
                     @foreach ($kapDisclosures as $disclosure)
@@ -288,23 +291,23 @@
 
     {{-- Sektör / Emtia / Siyaset Haberleri — 3 sütun (referans emtiaNews + sectorNews + politicsNews) --}}
     <section class="home-sector-section grid grid-cols-12 gap-4 mb-4 md:mb-10" id="home-sector">
-        <div class="bht-grid col-span-12 md:col-span-4" dataType="sectorNews">
+        <div class="bht-grid col-span-12 md:col-span-4" dataType="sectorNews" datatype="sectorNews" data-widget-type="sectorNews">
             <x-news-module :title="__('ui.sector_news')"
                            :items="$sectorNews"
                            :href="\App\Support\Locale::url('/haberler/sektor-haberleri')"
                            :columns="1" />
         </div>
-        <div class="bht-grid col-span-12 md:col-span-4" dataType="emtiaNews">
+        <div class="bht-grid col-span-12 md:col-span-4" dataType="emtiaNews" datatype="emtiaNews" data-widget-type="emtiaNews">
             <x-news-module id="home-commodity-news"
                            :title="__('ui.commodity_news')"
                            :items="$commodityNews"
                            :href="\App\Support\Locale::url('/emtia')"
-                           :columns="1" />
+                           :columns="1"
+                           :level="'h3'" />
         </div>
-        <div class="bht-grid col-span-12 md:col-span-4" dataType="politicsNews">
-            <section class="politics-block" id="home-politics">
-                <x-section-head :title="__('ui.politics_news')" :href="\App\Support\Locale::url('/haberler/sektor-haberleri')" level="h3" />
-                <ul class="headline-list all-news-scroll">
+        <div class="bht-grid col-span-12 md:col-span-4" dataType="politicsNews" datatype="politicsNews">
+            <section class="politics-block" id="home-politics" data-widget-type="politicsNews">
+                <x-section-head :title="__('ui.politics_news')" :href="\App\Support\Locale::url('/haberler/sektor-haberleri')" level="h3" />                <ul class="headline-list all-news-scroll">
                     @foreach ($politicsNews as $item)
                         <li>
                             <a href="{{ $item->url }}">
@@ -319,7 +322,7 @@
     </section>
 
     {{-- KRİPTO PARA --}}
-    <section class="home-crypto">
+    <section class="home-crypto" data-widget-type="crypto" data-section="crypto">
         <x-section-head :title="__('ui.crypto')" :href="\App\Support\Locale::url('/kripto')" />
         <div class="crypto-swiper" data-horizontal-strip>
             @foreach ($cryptoQuotes as $quote)

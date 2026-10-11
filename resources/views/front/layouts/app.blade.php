@@ -67,7 +67,7 @@
     @include('front.partials.analytics')
     @yield('head')
 </head>
-<body class="bht-body @yield('body_class')">
+<body class="bht-body relative w-full min-w-xs text-base overflow-x-hidden @yield('body_class')">
     {{-- Google Tag Manager (noscript) --}}
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5XBP88"
                       height="0" width="0" style="display:none;visibility:hidden" title="GTM"></iframe></noscript>

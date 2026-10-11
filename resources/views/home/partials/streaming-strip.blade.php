@@ -4,7 +4,7 @@
         <div data-widget-type="streaming" class="bcast-strip-relative relative">
             <div class="mb-4 border-b border-black relative w-full bcast-rule" aria-hidden="true"></div>
             <a href="{{ \App\Support\Locale::url('/yayinakisi') }}" title="{{ __('ui.broadcast') }}"
-               class="absolute top-4 font-unna font-bold text-3xl z-10 bcast-title">{{ __('ui.broadcast') }}</a>
+               class="absolute top-4 font-unna font-bold text-3xl mb-2 z-10 bcast-title"><h2>{{ __('ui.broadcast') }}</h2></a>
 
             <div data-type="swiper" class="swiper slider-custom relative mb-4 pt-12 pb-4 w-full bcast-swiper"
                  data-swiper='{"slidesPerView":"auto","spaceBetween":20,"lazy":true,"breakpoints":{"0":{"slidesPerView":1.4,"spaceBetween":14},"768":{"slidesPerView":"auto","spaceBetween":20}}}'>

@@ -4,7 +4,7 @@
         <div data-widget-type="podcast" class="podcast-band relative">
             <div class="mb-4 border-b border-black relative w-full bcast-rule" aria-hidden="true"></div>
             <a href="{{ \App\Support\Locale::url('/podcastler/') }}" title="{{ __('ui.podcasts') }}"
-               class="absolute top-4 left-0 font-unna font-bold text-3xl z-10 bcast-title">{{ __('ui.podcasts') }}</a>
+               class="absolute top-4 left-0 font-unna font-bold text-3xl mb-2 z-10 bcast-title"><h2>{{ __('ui.podcasts') }}</h2></a>
 
             <div data-type="swiper" class="swiper slider-custom relative mb-4 pt-12 w-full podcast-swiper"
                  data-swiper='{"slidesPerView":"auto","spaceBetween":20,"lazy":true,"breakpoints":{"0":{"slidesPerView":1.6,"spaceBetween":14},"768":{"slidesPerView":2.2,"spaceBetween":20},"1200":{"slidesPerView":3.4,"spaceBetween":20}}}'>

@@ -44,43 +44,6 @@
 </header>
 
 {{-- ============================================================
-     SON DAKİKA şeridi (CH-24: referans yapısı, marquee korunur)
-     ============================================================ --}}
-<div data-widget-type="breaking-news" class="w-full bg-[#bd1b2d] relative flex items-center px-4 h-16 md:h-14">
-    <div class="flex items-center gap-4 text-white container mx-auto leading-none md:leading-normal">
-        <a href="{{ \App\Support\Locale::route('breaking.index') }}" title="SON DAKİKA"
-           class="w-auto md:whitespace-nowrap text-xl font-unna font-bold leading-none">{{ __('ui.breaking') }}</a>
-        <div class="w-4 h-4 relative flex">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-4 w-4 bg-[#a00207]"></span>
-        </div>
-        <div class="breaking-ticker bht-breaking-ticker min-w-0 flex-1 overflow-hidden" data-ticker>
-            @if ($breakingList->isNotEmpty())
-                <div class="breaking-track">
-                    @foreach ($breakingList as $breaking)
-                        <a href="{{ \App\Support\Locale::route('breaking.index') }}">
-                            <span class="ticker-time">{{ $breaking->published_at?->format('H:i') }}</span>
-                            {{ $breaking->title }}
-                        </a>
-                    @endforeach
-                    @foreach ($breakingList as $breaking)
-                        <a href="{{ \App\Support\Locale::route('breaking.index') }}" aria-hidden="true" tabindex="-1">
-                            <span class="ticker-time">{{ $breaking->published_at?->format('H:i') }}</span>
-                            {{ $breaking->title }}
-                        </a>
-                    @endforeach
-                </div>
-            @else
-                <span class="ticker-empty">{{ __('ui.no_breaking') }}</span>
-            @endif
-        </div>
-    </div>
-</div>
-
-{{-- Piyasa ticker (Borsa | Döviz | Emtia | Faiz) --}}
-@include('front.partials.finance-slider')
-
-{{-- ============================================================
      MEGA NAV (CH-24: referans nav-sub-menu, desktop lg+ görünür;
      mobilde hamurger menü içine taşınır)
      ============================================================ --}}
@@ -124,6 +87,43 @@
         @endforeach
     </div>
 </div>
+
+{{-- ============================================================
+     SON DAKİKA şeridi (CH-24: referans yapısı, marquee korunur)
+     ============================================================ --}}
+<div data-widget-type="breaking-news" class="w-full bg-[#bd1b2d] relative flex items-center px-4 h-16 md:h-14">
+    <div class="flex items-center gap-4 text-white container mx-auto leading-none md:leading-normal">
+        <a href="{{ \App\Support\Locale::route('breaking.index') }}" title="SON DAKİKA"
+           class="w-auto md:whitespace-nowrap text-xl font-unna font-bold leading-none">{{ __('ui.breaking') }}</a>
+        <div class="w-4 h-4 relative flex">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-4 w-4 bg-[#a00207]"></span>
+        </div>
+        <div class="breaking-ticker bht-breaking-ticker min-w-0 flex-1 overflow-hidden" data-ticker>
+            @if ($breakingList->isNotEmpty())
+                <div class="breaking-track">
+                    @foreach ($breakingList as $breaking)
+                        <a href="{{ \App\Support\Locale::route('breaking.index') }}">
+                            <span class="ticker-time">{{ $breaking->published_at?->format('H:i') }}</span>
+                            {{ $breaking->title }}
+                        </a>
+                    @endforeach
+                    @foreach ($breakingList as $breaking)
+                        <a href="{{ \App\Support\Locale::route('breaking.index') }}" aria-hidden="true" tabindex="-1">
+                            <span class="ticker-time">{{ $breaking->published_at?->format('H:i') }}</span>
+                            {{ $breaking->title }}
+                        </a>
+                    @endforeach
+                </div>
+            @else
+                <span class="ticker-empty">{{ __('ui.no_breaking') }}</span>
+            @endif
+        </div>
+    </div>
+</div>
+
+{{-- Piyasa ticker (Borsa | Döviz | Emtia | Faiz) --}}
+@include('front.partials.finance-slider')
 
 {{-- ============================================================
      MOBİL MEGA MENÜ paneli (hamburger açılır; dil değiştirici buraya

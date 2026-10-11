@@ -7,6 +7,7 @@
     'showSpot' => true,
     'class' => '',
     'id' => null,
+    'level' => 'h2',
 ])
 
 {{--
@@ -16,7 +17,7 @@
 --}}
 <section class="category-news-module news-module {{ $class }}"
          @if ($id) id="{{ $id }}" @endif>
-    <x-section-head :title="$title" :href="$href" />
+    <x-section-head :title="$title" :href="$href" :level="$level" />
 
     @if ($items->isNotEmpty())
         <div class="news-card-grid cols-{{ $columns }}">

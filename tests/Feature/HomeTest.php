@@ -142,7 +142,7 @@ class HomeTest extends TestCase
 
         $html = $this->get('/')->assertOk()->getContent();
 
-        $this->assertStringContainsString('data-widget-type="market-graphic-tab"', $html);
+        $this->assertStringContainsString('data-widget-type="marketGraphData"', $html);
         foreach (['Borsa', 'Döviz', 'Emtia', 'Faiz'] as $label) {
             $this->assertStringContainsString('>'.$label.'</button>', $html, "Eksik piyasa sekmesi: {$label}");
         }

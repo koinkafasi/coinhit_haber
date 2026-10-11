@@ -3,7 +3,7 @@
 @endphp
 
 {{-- PİYASALAR büyük widget (Bölüm 7 modül 7, §17.3): 4 sekme + alt-sekmeler + mini grafikler --}}
-<section class="market-widget" data-widget-type="market-graphic-tab" id="piyasalar-widget">
+<section class="market-widget" data-widget-type="marketGraphData" data-section="markethData" id="piyasalar-widget">
     <x-section-head :title="__('ui.markets')" :href="\App\Support\Locale::url('/piyasalar')" />
 
     <div class="market-widget-body">
@@ -88,7 +88,7 @@
             </div>
 
             {{-- Hızlı Linkler (rezerv/hisse/waller/fon ödemeleri vb. trendler) --}}
-            <div class="quick-links">
+            <div class="quick-links" data-widget-type="fastLinks">
                 <h3 class="mw-aside-title font-unna font-bold">{{ __('ui.quick_links') }}</h3>
                 <div class="quick-links-chips">
                     @foreach ($trends as $trend)
@@ -99,7 +99,7 @@
             </div>
 
             {{-- Grafik --}}
-            <div class="market-charts-mini">
+            <div class="market-charts-mini" data-widget-type="graphics">
                 <h3 class="mw-aside-title font-unna font-bold">{{ __('ui.charts') }}</h3>
                 <p class="mw-charts-desc">{{ __('ui.charts_desc') }}</p>
                 <div class="mw-charts-grid">

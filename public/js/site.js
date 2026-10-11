@@ -211,7 +211,7 @@
             bindTabs(container, '.finance-slider-tab', '.finance-slider-track');
         });
 
-        document.querySelectorAll('[data-widget-type="market-graphic-tab"]').forEach(function (container) {
+        document.querySelectorAll('[data-widget-type="marketGraphData"], [data-widget-type="market-graphic-tab"]').forEach(function (container) {
             bindTabs(container, '.market-widget-tabs > [data-tab]', '.market-widget-panels > [data-id]');
 
             container.querySelectorAll('.market-widget-panel').forEach(function (panel) {
