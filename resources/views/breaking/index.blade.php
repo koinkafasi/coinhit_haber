@@ -5,7 +5,7 @@
 @section('canonical', url(\App\Support\Locale::url('/sondakika')))
 
 @section('content')
-    <div class="section-title bht-page-band">
+    <div class="section-title bht-page-band breaking-page-title">
         <h1 class="font-unna font-bold">{{ __('ui.breaking_link') }}</h1>
         <span class="breaking-live"><span class="live-dot" aria-hidden="true"></span>{{ __('ui.live') }}</span>
     </div>

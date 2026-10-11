@@ -12,7 +12,7 @@
     <div class="trendler-layout">
         <div class="trendler-main">
             <div class="section-title bht-page-band">
-                <h1 class="font-unna font-bold"># {{ __('ui.quick_links') }}</h1>
+                <h1 class="font-unna font-bold">{{ __('ui.quick_links') }}</h1>
             </div>
 
             {{-- Trend etiket çipleri: Tümü | Rezerv | Hisse | Waller | ... (dinamik) --}}

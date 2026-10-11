@@ -5,7 +5,7 @@
 @section('canonical', url(\App\Support\Locale::url('/gorus')))
 
 @section('content')
-    <div class="section-title bht-page-band">
+    <div class="section-title bht-page-band gorus-page-title">
         <h1 class="font-unna font-bold">{{ __('ui.opinions_title') }}</h1>
     </div>
 

@@ -31,7 +31,7 @@
     --special-maroon: #61082a;    /* En Çok Okunanlar (rgb 97,8,42) */
 
     /* --- Layout ölçüleri --- */
-    --container-max: 1200px;      /* referans ölçek turu (CH-22): geniş tuval ~1200px */
+    --container-max: 1010px;      /* referans ölçüm (CH-23): bloomberght .container >=1024px'te 1010px */
     --container-gutter: 16px;
     --sidebar-width: 400px;       /* makale detay sağ sidebar */
     --header-bar-height: 64px;
@@ -66,14 +66,17 @@ a { color: inherit; text-decoration: none; }
 .container {
     width: 100%;
     min-width: 320px;
-    max-width: var(--container-max);
+    max-width: 100%;
     margin: 0 auto;
     padding: 0 var(--container-gutter);
 }
 
-/* Referans (CH-22): masaüstünde geniş tuval; çok geniş ekranda 1440px */
+/* Referans ölçüm (CH-23): bloomberght.com .container — >=1024px'te 1010px, >=1615px'te 1280px */
+@media (min-width: 1024px) {
+    .container { max-width: var(--container-max); }
+}
 @media (min-width: 1615px) {
-    .container { max-width: 1440px; }
+    .container { max-width: 1280px; }
 }
 
 /* ----- Tipografi (Bölüm 1.1) ----- */
@@ -218,11 +221,34 @@ a { color: inherit; text-decoration: none; }
     padding-bottom: 6px;
 }
 
-.section-title h1, .section-title h2 {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 24px;
+.section-title h1 {
+    font-family: Unna, Georgia, 'Times New Roman', serif;
+    font-size: 36px;
     font-weight: 700;
+    line-height: 1.1;
     margin: 0;
+}
+
+.section-title h2 {
+    font-family: Unna, Georgia, 'Times New Roman', serif;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 0;
+}
+
+/* Genel bölüm sayfası başlığı (H1): bloomberght H1 ölçümü 36px Unna (CH-23) */
+.page-title {
+    font-family: Unna, Georgia, 'Times New Roman', serif;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0 0 12px;
+}
+
+@media (max-width: 767px) {
+    .section-title h1, .page-title { font-size: 28px; }
+    .section-title h2 { font-size: 26px; }
 }
 
 .section-title a { font-size: 13px; font-weight: 600; }
@@ -1142,7 +1168,7 @@ img[data-src].b-lazy-loaded {
 .market-table { border-collapse: collapse; }
 .market-table th { font-size: 14px; color: #fff; background: #000; padding: 14px 12px; text-align: left; }
 .market-table th:not(.sticky) { text-align: center; }
-.market-table td { padding: 14px 12px; border-bottom: 1px solid var(--gray-border); font-size: 15px; }
+.market-table td { padding: 14px 12px; border-bottom: 1px solid var(--gray-border); font-size: 14px; }
 .market-table td.sticky { text-align: left; font-weight: 600; }
 .market-table tbody tr:hover { background: #fafafa; }
 
@@ -1206,7 +1232,7 @@ img[data-src].b-lazy-loaded {
    ============================================================ */
 
 .borsa-page { margin-bottom: 32px; }
-.borsa-page .page-title { font-size: 2rem; margin: 0 0 12px; }
+.borsa-page .page-title { font-size: 36px; margin: 0 0 12px; }
 
 /* ---------- Alt-hızlı bağlantılar ---------- */
 .borsa-quick-links {
@@ -1324,7 +1350,7 @@ img[data-src].b-lazy-loaded {
 }
 
 @media (max-width: 767px) {
-    .borsa-page .page-title { font-size: 1.5rem; }
+    .borsa-page .page-title { font-size: 28px; }
     .quote-hero-price .lastPrice { font-size: 1.5rem; }
     .intraday-chart svg.sparkline { height: 200px; }
 }
@@ -1430,7 +1456,13 @@ img[data-src].b-lazy-loaded {
    ============================================================ */
 
 /* ---------- Sayfa başlık bandı (head-type1/2) ---------- */
-.bht-page-band h1 { font-size: 2rem; margin: 0; }
+.bht-page-band h1 { font-size: 36px; margin: 0; }
+
+/* CH-23: bloomberght ölçümü — kripto/sondakika/trendler/gorus başlıkları 30px (36 yerine) */
+.kripto-page .page-title,
+.breaking-page-title h1,
+.trendler-layout .section-title h1,
+.gorus-page-title h1 { font-size: 30px; }
 .bht-page-band .section-head-bar,
 .section-title.bht-page-band::after {
     content: ""; position: absolute; left: 0; top: 0; bottom: 0; margin: auto 0;
@@ -1593,7 +1625,7 @@ img[data-src].b-lazy-loaded {
     .tumhaberler-layout, .search-layout { grid-template-columns: 1fr; }
 }
 @media (max-width: 767px) {
-    .bht-page-band h1 { font-size: 1.5rem; }
+    .bht-page-band h1 { font-size: 28px; }
     .news-list-link { flex-direction: column; }
     .news-list-figure, .news-list-item.is-lead .news-list-figure { flex: 0 0 auto; }
     .news-list-img, .news-list-item.is-lead .news-list-img { width: 100%; height: auto; aspect-ratio: 1 / 1; }
@@ -1743,7 +1775,7 @@ img[data-src].b-lazy-loaded {
 
 /* ---------- YATIRIM FONLARI BÖLÜMÜ (spec §8, §15.8) ---------- */
 .fund-page { padding-bottom: 24px; }
-.fund-page .page-title { font-size: 2rem; margin: 0 0 12px; }
+.fund-page .page-title { font-size: 36px; margin: 0 0 12px; }
 
 /* Fon haberleri grid — 9 kart, 640x360 */
 .fund-news { margin-bottom: 28px; }
@@ -1810,7 +1842,7 @@ img[data-src].b-lazy-loaded {
 .fund-portfolio-text a { color: var(--red); font-weight: 600; text-decoration: underline; }
 
 /* Araç sayfaları: Fon Karşılaştır / Fon Portföy Dağılımı */
-.fund-tool-page .page-title { font-size: 2rem; margin: 0 0 12px; }
+.fund-tool-page .page-title { font-size: 36px; margin: 0 0 12px; }
 .fund-compare-form, .fund-portfolio-form {
     display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px;
     border: 1px solid var(--gray-border); border-radius: 6px; background: #fff; padding: 16px; margin-bottom: 24px;
@@ -1841,7 +1873,7 @@ img[data-src].b-lazy-loaded {
 @media (max-width: 767px) {
     .fund-news-grid { grid-template-columns: 1fr; }
     .fund-kpi-grid { grid-template-columns: 1fr; }
-    .fund-page .page-title, .fund-detail-head h1, .fund-tool-page .page-title { font-size: 1.5rem; }
+    .fund-page .page-title, .fund-detail-head h1, .fund-tool-page .page-title { font-size: 28px; }
     .fund-distribution-row { grid-template-columns: 120px minmax(0, 1fr) 60px; gap: 8px; }
 }
 
@@ -1850,7 +1882,7 @@ img[data-src].b-lazy-loaded {
    ============================================================ */
 .tv-page, .video-page, .podcast-page { padding-bottom: 24px; }
 .tv-page .page-title, .video-page .page-title, .podcast-page .page-title {
-    font-size: 2rem; margin: 0 0 16px; padding-bottom: 10px; border-bottom: 2px solid #000;
+    font-size: 36px; margin: 0 0 16px; padding-bottom: 10px; border-bottom: 2px solid #000;
 }
 .tv-group-title { font-size: 1.25rem; margin: 26px 0 12px; }
 .tv-empty { color: #666; font-size: 14px; padding: 12px 0; }
