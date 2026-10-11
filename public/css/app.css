@@ -3087,3 +3087,118 @@ header.bg-\[\#384552\] { background-color: #384552; }
 
 
 
+
+/* =======================================================================
+   CH-28: REFERANS CUSTOM BİLEŞENLER (docs/referans/app-style.css'ten birebir;
+   Tailwind --tw-* değişkenleri çözülerek plain CSS'e çevrildi — değerler korundu)
+   ======================================================================= */
+
+/* --- news-link renkleri (article .article-wrapper, referans) --- */
+article .article-wrapper { --news-link: #1C64A8; --news-link-hover: #134B80; }
+article .article-wrapper.video-news-content { --news-link: #6FB6EA; --news-link-hover: #A5D3F2; }
+article .article-wrapper p { font-size: 1rem; line-height: 1.5rem; }
+article .article-wrapper p:not(:last-child) { margin-bottom: 1rem; }
+article .article-wrapper a[href^="/haberleri/"],
+article .article-wrapper a[href^="https://www.bloomberght.com/haberleri/"] { color: var(--news-link); }
+article .article-wrapper a.newDetailTextWrapLink { color: var(--news-link); text-decoration: underline; text-underline-offset: 2px; }
+article .article-wrapper a.text-link-underline { text-decoration: underline; text-underline-offset: 2px; }
+article .article-wrapper a[href^="/haberleri/"]:hover,
+article .article-wrapper a[href^="/haberleri/"]:focus-visible,
+article .article-wrapper a[href^="https://www.bloomberght.com/haberleri/"]:hover,
+article .article-wrapper a[href^="https://www.bloomberght.com/haberleri/"]:focus-visible,
+article .article-wrapper a.text-link-underline:hover,
+article .article-wrapper a.text-link-underline:focus-visible,
+article .article-wrapper a.newDetailTextWrapLink:hover,
+article .article-wrapper a.newDetailTextWrapLink:focus-visible { color: var(--news-link-hover); text-decoration: underline; text-underline-offset: 2px; }
+
+/* --- @media print (referans): header/footer/aside/widget gizleme --- */
+@media print {
+    body footer, header, aside,
+    div[data-widget-type="headlinesOfTheDay"],
+    div[data-widget-type="widgetBottomNavigation"],
+    div[data-widget-type="finance-slider"],
+    div[data-widget-type="nav-sub-menu"],
+    div[data-widget-type="most-read-slider"],
+    div[data-widget-type="video"],
+    div[data-widget-type="breaking-news"],
+    div[data-widget-type="newsLinkForNews"],
+    .news-wrapper article .widget-video,
+    .adv-news, .masthead-wrap, .masthead-main-page,
+    .scroll-to-top, .inf-line, .masthead-top, .pageskin,
+    body .masthead-top, .news-wrapper article .adv-news, .share-popup,
+    .search-widget-overlay, .menu-modal { display: none !important; }
+    .news-wrapper article { page-break-inside: avoid; margin: 0; padding: 0; display: block; width: 100%; }
+}
+
+/* --- masthead (referans) --- */
+@media (min-width: 768px) {
+    .masthead-top { min-height: 260px !important; }
+}
+.masthead_fixed_scroll > div { position: fixed; left: 0; top: 0; z-index: 999999; display: flex; width: 100%; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, .5); }
+
+/* --- nav-sub-menu (referans) --- */
+[data-widget-type="nav-sub-menu"] { position: relative; z-index: 600; }
+
+/* --- ets-banner (referans aspect) --- */
+.ets-banner picture { position: relative; display: block; padding-bottom: calc(150 / 735 * 100%); }
+.ets-banner picture > * { position: absolute; height: 100%; width: 100%; top: 0; right: 0; bottom: 0; left: 0; }
+@media (min-width: 768px) {
+    .ets-banner picture { padding-bottom: calc(90 / 1280 * 100%); }
+}
+.ets-banner.passive { display: none !important; }
+
+/* --- count-down-timer (referans; money-time widget) --- */
+.count-down-timer { position: absolute; top: 70%; display: flex; width: 2.5rem; transform: translate(50%, -50%); align-items: center; justify-content: center; text-align: center; font-weight: 700; color: #fb068f; font-size: clamp(1rem, 3vw, 2rem); }
+.count-down-timer.day { right: 35.5%; }
+.count-down-timer.hour { right: 27%; }
+.count-down-timer.minute { right: 16.5%; }
+.count-down-timer.second { right: 5.5%; }
+@media (min-width: 768px) {
+    .count-down-timer { top: 58%; color: #fff; }
+    .count-down-timer.day { right: 21.5%; }
+    .count-down-timer.hour { right: 16.5%; }
+    .count-down-timer.minute { right: 10.7%; }
+    .count-down-timer.second { right: 4.5%; }
+}
+
+/* --- finance-slider arama otomatik tamamlama (referans) --- */
+.finance-slider-search .autocomplete-popup { left: auto; right: 0; width: 20rem; max-width: 20rem; }
+
+/* --- uzun şerit efektleri (referans: finance-slider / breaking streak) --- */
+.long-finance-slider:before { content: ""; position: absolute; left: -100%; height: 100%; width: 300%; border-bottom-width: 1px; background-color: #fff; }
+.long-bg-breaking-news:before { content: ""; position: absolute; left: -100%; height: 100%; width: 300%; background-color: #BD1B2D; }
+
+/* --- adv-news (referans) --- */
+.adv-news .body, .adv-news .body .ads-zone, .adv-news .body .ads-zone iframe { display: flex; align-items: center; justify-content: center; }
+.adv-news .body .ads-zone iframe { min-height: 250px; }
+article .adv-news .body, article .adv-news .body .ads-zone, article .adv-news .body .ads-zone iframe { display: flex; width: 100%; align-items: center; justify-content: center; }
+.video-news-sidebar .adv-news { background-color: transparent !important; }
+
+/* --- sticky-brand-logo (referans; sağ alt sabit logo) --- */
+.sticky-brand-logo { position: sticky; bottom: 240px; z-index: 50; height: 0; }
+@media (min-width: 768px) { .sticky-brand-logo { bottom: 160px; } }
+.sticky-brand-logo #brand-logo-fixed { margin-left: auto; display: flex; height: 4rem; width: 4rem; align-items: center; justify-content: center; border-radius: 9999px; background-color: #000; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1), 0 2px 4px -2px rgba(0, 0, 0, .1); }
+@media (max-width: 767px) { .sticky-brand-logo #brand-logo-fixed { height: 3rem; width: 3rem; } }
+@media (min-width: 768px) { .sticky-brand-logo #brand-logo-fixed { margin-right: .75rem; } }
+.sticky-brand-logo #brand-logo-fixed img { position: relative; left: 2px; width: 30px; }
+@media (max-width: 767px) { .sticky-brand-logo #brand-logo-fixed img { width: 24px; } }
+@media (min-width: 768px) { .sticky-brand-logo #brand-logo-fixed img { left: 4px; } }
+
+/* --- pageskin (referans; erişim kuralları — görünürlük eşiği bizim CH-24/27 ayarı: ≥1440px) --- */
+.pageskin-left > a, .pageskin-right > a { position: absolute; top: 0; width: max-content; }
+.pageskin-center { position: sticky; top: 15px; z-index: 48; margin-left: -1.25rem; margin-right: -1.25rem; display: flex; align-items: center; justify-content: center; text-align: center; }
+.top-pageskin-center { margin-left: -5px; margin-right: -5px; display: flex; width: auto; align-items: center; justify-content: center; text-align: center; }
+@media (min-width: 768px) { .top-pageskin-center { display: none; } }
+.top-pageskin-center img { position: relative; height: auto; width: 100%; }
+.top-pageskin-center:before,
+.top-pageskin-center:after { position: fixed; top: 0; height: 100%; width: .75rem; content: ""; background-color: var(--pageskin-color, transparent); }
+.top-pageskin-center:before { left: 0; }
+.top-pageskin-center:after { right: 0; }
+
+/* --- CH-28: finance-band ok düğmeleri (referans swiper nav) --- */
+.finance-band { pointer-events: auto; }
+.finance-band .swiper-button-prev,
+.finance-band .swiper-button-next { position: static; margin: 0; top: auto; transform: none; display: inline-flex; align-items: center; justify-content: center; color: #000; font-size: 1.1rem; }
+.finance-band .swiper-button-prev:hover,
+.finance-band .swiper-button-next:hover { color: #384552; }
+.finance-band .swiper-button-disabled { opacity: .3; cursor: default; }

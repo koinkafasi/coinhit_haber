@@ -29,7 +29,7 @@
 <div class="finance-slider-wrap hidden md:block relative">
     <div data-widget-type="finance-slider" data-connection="true" class="bg-white border-b min-h-20 max-h-20 overflow-hidden">
         <div data-type="swiper" class="container swiper slider-custom relative min-h-20 max-h-20 mx-auto pr-12 z-10"
-             data-swiper='{"slidesPerView":"auto","spaceBetween":0,"speed":900,"loop":true,"autoplay":{"delay":3000,"disableOnInteraction":false,"pauseOnMouseEnter":true},"breakpoints":{"0":{"slidesPerView":"auto"}}}'>
+             data-swiper='{"slidesPerView":"auto","spaceBetween":0,"speed":900,"loop":true,"autoplay":{"delay":3000,"disableOnInteraction":false,"pauseOnMouseEnter":true},"navigation":{"nextEl":".finance-band .bloomberght-icon-font-chevron-right","prevEl":".finance-band .bloomberght-icon-font-chevron-left"},"breakpoints":{"0":{"slidesPerView":"auto"}}}'>
             <div class="swiper-wrapper">
                 @foreach ($tickerQuotes as $quote)
                     @php
@@ -64,6 +64,11 @@
 
     <div class="absolute inset-0 z-20 pointer-events-none">
         <div class="container mx-auto h-full relative">
+            {{-- Referans finance-band ok düğmeleri (CH-28; arama kutusunun solunda) --}}
+            <div class="finance-band text-black bg-white absolute right-[184px] top-0 bottom-0 my-auto w-20 pl-4 z-90 hidden md:flex items-center justify-between gap-1">
+                <button aria-label="prev" class="swiper-button-prev w-9 h-9 bloomberght-icon-font-chevron-left cursor-pointer text-inherit"></button>
+                <button aria-label="next" class="swiper-button-next w-9 h-9 bloomberght-icon-font-chevron-right cursor-pointer text-inherit"></button>
+            </div>
             <div class="finance-slider-search absolute right-0 top-1/2 -translate-y-1/2 w-full pointer-events-auto bg-gradient-to-l from-white pl-10 from-80% to-transparent h-20 max-w-[173px] flex items-center justify-end border-b">
                 <div data-widget-type="search-alphabet" class="text-sm font-bold">
                     <form data-widget-type="search-bar" class="w-full h-11" action="{{ \App\Support\Locale::url('/arama') }}" method="get" role="search">

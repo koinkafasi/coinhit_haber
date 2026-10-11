@@ -56,12 +56,14 @@
             panel.classList.add('hidden');
             panel.setAttribute('hidden', '');
             document.body.classList.remove('bht-nav-open');
+            document.body.classList.remove('overflow-hidden');
         }
 
         button.addEventListener('click', function () {
             panel.classList.remove('hidden');
             panel.removeAttribute('hidden');
             document.body.classList.add('bht-nav-open');
+            document.body.classList.add('overflow-hidden');
         });
 
         var closeBtn = panel.querySelector('[data-menu-close]');
