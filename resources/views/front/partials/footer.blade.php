@@ -87,6 +87,11 @@
                 <div class="w-full flex items-center justify-center">
                     <span class="text-base font-bold tracking-[.2em] text-white">{{ __('ui.can_medya_grubu') }}</span>
                 </div>
+                {{-- Dil degistirici: referans mega-menu'da yok (tek dilli); /en
+                     rotasini korumak icin footer'a tasindi (I18N_SPEC §FR-DL1). --}}
+                <div class="w-full flex items-center justify-center mt-4">
+                    @include('front.partials.language-switcher')
+                </div>
             </div>
 
             {{-- Yasal uyarı / telif --}}

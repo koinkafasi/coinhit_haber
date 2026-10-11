@@ -25,7 +25,7 @@
         @foreach ($megaMenu ?? config('navigation.mega_menu', []) as $column)
             <div class="menu-list md:border-r border-gray-600 pr-4">
                 <a href="{{ \App\Support\Locale::navUrl($column['url']) }}" class="inline-block mb-4 font-unna font-bold text-2xl">{{ \App\Support\Locale::navLabel($column['title']) }}</a>
-                <ul class="text-base md:text-sm flex flex-col gap-2 md:flex-wrap lg:max-h-72">
+                <ul class="text-base md:text-sm flex md:flex-wrap gap-2 lg:max-h-72">
                     @foreach ($column['links'] as $link)
                         <li class="flex items-center w-full lg:w-1/2">
                             <a href="{{ \App\Support\Locale::navUrl($link['url']) }}"
@@ -35,9 +35,5 @@
                 </ul>
             </div>
         @endforeach
-        <div class="menu-list md:border-r border-gray-600 pr-4">
-            <span class="inline-block mb-4 font-unna font-bold text-2xl">{{ __('ui.language') }}</span>
-            @include('front.partials.language-switcher')
-        </div>
     </div>
 </div>

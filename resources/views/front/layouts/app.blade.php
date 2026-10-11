@@ -58,8 +58,20 @@
     @endif
     <meta name="twitter:image" content="@yield('og_image', url($siteSettings['default_og_image'] ?? '/img/og-default.png'))">
 
-    @php($__cssVersion = @filemtime(public_path('css/app.css')) ?: 1)
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ $__cssVersion }}">
+    @php
+        // Cloudflare 4 saat cache tutuyor; ?v=filemtime cache'i delmiyor.
+        // Build sonrasi uretilen surumlu dosya adini oku (yoksa app.css).
+        $__verFile = public_path('css/.version');
+        $__cssName = 'css/app.css';
+        if (is_file($__verFile)) {
+            $__ver = json_decode((string) @file_get_contents($__verFile), true);
+            if (! empty($__ver['css']) && is_file(public_path('css/'.$__ver['css']))) {
+                $__cssName = 'css/'.$__ver['css'];
+            }
+        }
+        $__cssVersion = @filemtime(public_path($__cssName)) ?: 1;
+    @endphp
+    <link rel="stylesheet" href="{{ asset($__cssName) }}?v={{ $__cssVersion }}">
     @php($__swiperCss = @filemtime(public_path('css/swiper-bundle.min.css')) ?: 1)
     <link rel="stylesheet" href="{{ asset('css/swiper-bundle.min.css') }}?v={{ $__swiperCss }}">
     @include('front.partials.jsonld')
