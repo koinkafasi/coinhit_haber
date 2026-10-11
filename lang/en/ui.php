@@ -35,6 +35,7 @@ return [
     'markets_aria' => 'Markets',
     'market_data_aria' => 'Market data',
     'market_data_title' => 'Market Data',
+    'search_stock' => 'Search stocks...',
     'language' => 'Language',
     'switch_language' => 'Switch language',
     'can_medya_grubu' => 'CAN MEDYA GROUP',

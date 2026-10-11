@@ -216,15 +216,15 @@
         });
 
         document.querySelectorAll('[data-widget-type="marketGraphData"], [data-widget-type="market-graphic-tab"]').forEach(function (container) {
-            bindTabs(container, '.market-widget-tabs > [data-tab]', '.market-widget-panels > [data-id]');
+            bindTabs(container, '.market-widget-tabs > .tab-head > [data-tab]', '.market-widget-panels > [data-id]');
 
             container.querySelectorAll('.market-widget-panel').forEach(function (panel) {
                 bindTabs(panel, '.market-subtab', '.market-widget-chart');
             });
         });
 
-        document.querySelectorAll('[data-widget-type="most-read"]').forEach(function (container) {
-            bindTabs(container, '.most-read-tabs > [data-tab]', '[data-id]');
+        document.querySelectorAll('[data-widget-type="mostRead"]').forEach(function (container) {
+            bindTabs(container, '.most-read-tabhead > [data-tab]', '.most-read-panels > [data-id]');
         });
 
         document.querySelectorAll('[data-widget-type="trend-tabs"]').forEach(function (container) {

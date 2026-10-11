@@ -1,0 +1,51 @@
+{
+  "name": "coinhit",
+  "description": "Bloomberg HT klonu - Laravel 12 + Blade + PostgreSQL",
+  "providers": {
+    "openai": {
+      "apiKey": "sk-omniroute-openai-placeholder",
+      "defaultModel": "gpt-4o-mini"
+    },
+    "anthropic": {
+      "apiKey": "sk-omniroute-anthropic-placeholder",
+      "defaultModel": "claude-3-haiku-20240307"
+    },
+    "gemini": {
+      "apiKey": "sk-omniroute-gemini-placeholder",
+      "defaultModel": "gemini-1.5-flash"
+    }
+  },
+  "combos": {
+    "best-effort": {
+      "strategy": "auto",
+      "providers": ["openai", "anthropic", "gemini"],
+      "fallback": true,
+      "cache": true
+    },
+    "cost-effective": {
+      "strategy": "auto",
+      "providers": ["gemini", "openai", "anthropic"],
+      "fallback": true,
+      "cache": true,
+      "budget": {
+        "maxCost": 0.05,
+        "currency": "USD"
+      }
+    },
+    "fast-response": {
+      "strategy": "auto",
+      "providers": ["gemini", "openai"],
+      "fallback": false,
+      "cache": true
+    }
+  },
+  "models": {
+    "chat": {
+      "default": "auto/best-effort",
+      "fallback": "auto/cost-effective"
+    },
+    "completion": {
+      "default": "auto/fast-response"
+    }
+  }
+}

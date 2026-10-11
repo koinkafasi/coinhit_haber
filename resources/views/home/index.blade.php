@@ -117,25 +117,41 @@
     {{-- PİYASALAR büyük widget --}}
     @include('home.partials.market-widget')
 
-    {{-- PROGRAMLAR --}}
-    <section class="home-programs" data-widget-type="programs">
-        <x-section-head :title="__('ui.programs')" :href="\App\Support\Locale::url('/video')" />
-        <div class="program-list">
-            @foreach ($programs as $episode)
-                <article class="program-card">
-                    <a href="{{ $episode->program?->url ?? \App\Support\Locale::url('/video') }}">
-                        <figure class="program-thumb">
-                            <x-lazy-image :src="asset($episode->thumbnail ?: $episode->program?->thumbnail ?: '/img/og-default.png')" alt="" contract="video_thumb" class="img-contract" />
-                            <span class="program-play bloomberght-icon-font-play" aria-hidden="true"></span>
-                            <span class="program-duration">{{ $episode->duration }}</span>
-                        </figure>
-                        <div class="program-body">
-                            <h3 class="program-title font-unna font-bold line-clamp-2">{{ $episode->display_title }}</h3>
-                            <time class="program-date">{{ $episode->air_at?->format('d.m.Y H:i') }}</time>
+    {{-- PROGRAMLAR (referans programs: arka-plan + cetvel + swiper + figure kart) --}}
+    <section class="home-programs" data-widget-type="programs" class="relative">
+        <div data-type="background" class="absolute -z-10 left-1/2 top-0 w-[100vw] h-96 -translate-x-1/2 -mt-4 overflow-hidden bg-gray-100 h-full mt-0" aria-hidden="true">
+            <picture>
+                <img src="https://im.bloomberght.com/assets/bht/bg/desktop/2x/bg-image-1.png?v=1004" alt="" role="presentation" loading="eager" fetchpriority="high" decoding="async" class="absolute inset-0 w-full h-full object-cover object-[center_top] max-md:object-contain max-md:object-[center_top]">
+            </picture>
+        </div>
+        <div class="mb-4 border-b border-black relative w-full before:absolute before:top-0 before:bottom-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black"></div>
+        <a href="{{ \App\Support\Locale::url('/video') }}" title="{{ __('ui.programs') }}" class="absolute top-4 left-0 font-unna font-bold text-3xl mb-2 z-10"><h2>{{ __('ui.programs') }}</h2></a>
+        <div>
+            <div data-type="swiper" data-name="" class="swiper slider-custom relative mb-4 pt-12 w-full programs"
+                 data-swiper='{"slidesPerView":"auto","spaceBetween":20,"loop":false,"autoplay":{"delay":4000,"disableOnInteraction":true,"pauseOnMouseEnter":true},"lazy":true,"navigation":{"nextEl":".programs .swiper-button-next","prevEl":".programs .swiper-button-prev"}}'>
+                <div class="swiper-wrapper">
+                    @foreach ($programs as $episode)
+                        <div class="swiper-slide w-72">
+                            <a href="{{ $episode->program?->url ?? \App\Support\Locale::url('/video') }}" title="{{ $episode->display_title }}">
+                                <figure class="mb-4 program-card">
+                                    <div class="mb-4 relative program-thumb">
+                                        <div class="w-full h-auto aspect-video bg-gray-50">
+                                            <x-lazy-image :src="asset($episode->thumbnail ?: $episode->program?->thumbnail ?: '/img/og-default.png')" alt="{{ $episode->display_title }}" contract="video_thumb" class="swiper-lazy w-full h-full img-contract" />
+                                        </div>
+                                        <div class="absolute right-0 bottom-0">
+                                            <div class="bloomberght-icon-font-play bg-white text-black rounded-tl-lg flex justify-center items-center w-14 h-14 mb-[1px] program-play"></div>
+                                            <div class="flex justify-center items-center bg-white text-black w-14 h-7 text-xs program-duration">{{ $episode->duration }}</div>
+                                        </div>
+                                    </div>
+                                    <figcaption>
+                                        <div class="font-unna font-bold text-xl text-ellipsis line-clamp-3 mb-1 program-title">{{ $episode->display_title }}</div>
+                                    </figcaption>
+                                </figure>
+                            </a>
                         </div>
-                    </a>
-                </article>
-            @endforeach
+                    @endforeach
+                </div>
+            </div>
         </div>
     </section>
 
@@ -266,7 +282,12 @@
         </div>
         <div class="bht-grid col-span-12 md:col-span-6" dataType="kapNews" datatype="kapNews">
             <section class="home-kap" id="home-kap" data-widget-type="kapNews">
-                <x-section-head :title="__('ui.kap_news')" :href="\App\Support\Locale::url('/borsa/hisseler/kap-haberleri')" />
+                <div data-type="head-type1">
+                    <div class="relative before:absolute before:top-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black before:bottom-0 before:h-2.5 border-b border-black mb-4"></div>
+                    <a href="{{ \App\Support\Locale::url('/borsa/hisseler/kap-haberleri') }}" title="{{ __('ui.kap_news') }}" class="inline-block mb-3">
+                        <h2 class="font-unna font-bold text-3xl">{{ __('ui.kap_news') }}</h2>
+                    </a>
+                </div>
                 <ul class="kap-list all-news-scroll">
                     @foreach ($kapDisclosures as $disclosure)
                         <li>
@@ -292,21 +313,96 @@
     {{-- Sektör / Emtia / Siyaset Haberleri — 3 sütun (referans emtiaNews + sectorNews + politicsNews) --}}
     <section class="home-sector-section grid grid-cols-12 gap-4 mb-4 md:mb-10" id="home-sector">
         <div class="bht-grid col-span-12 md:col-span-4" dataType="sectorNews" datatype="sectorNews" data-widget-type="sectorNews">
+
             <x-news-module :title="__('ui.sector_news')"
+
                            :items="$sectorNews"
+
                            :href="\App\Support\Locale::url('/haberler/sektor-haberleri')"
+
                            :columns="1" />
+
         </div>
-        <div class="bht-grid col-span-12 md:col-span-4" dataType="emtiaNews" datatype="emtiaNews" data-widget-type="emtiaNews">
-            <x-news-module id="home-commodity-news"
-                           :title="__('ui.commodity_news')"
-                           :items="$commodityNews"
-                           :href="\App\Support\Locale::url('/emtia')"
-                           :columns="1"
-                           :level="'h3'" />
+
+        <div class="bht-grid col-span-12 md:col-span-4" dataType="adt" datatype="adt" data-widget-type="adt">
+
+            <section class="home-emtia emtia-block" id="home-emtia" data-widget-type="emtiaNews">
+
+                <div data-type="head-type1">
+
+                    <div class="relative before:absolute before:top-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black before:bottom-0 before:h-2.5 border-b border-black mb-4"></div>
+
+                    <a href="\App\Support\Locale::url('/emtia')" title="__('ui.commodity_news')" class="inline-block mb-3">
+
+                        <h3 class="font-unna font-bold text-3xl">__('ui.commodity_news')</h3>
+
+                    </a>
+
+                </div>
+
+                <ul class="headline-list all-news-scroll">
+
+                    @foreach ($commodityNews as $item)
+
+                        <li>
+
+                            <a href="\App\Support\Locale::url('/emtia')">
+
+                                <span class="headline-cat">{{ $item->category?->name }}</span>
+
+                                <span class="headline-title font-unna font-bold">{{ $item->title }}</span>
+
+                            </a>
+
+                        </li>
+
+                    @endforeach
+
+                </ul>
+
+            </section>
+
         </div>
+
         <div class="bht-grid col-span-12 md:col-span-4" dataType="politicsNews" datatype="politicsNews">
-            <section class="politics-block" id="home-politics" data-widget-type="politicsNews">
+
+            <section class="home-politics politics-block" id="home-politics" data-widget-type="politicsNews">
+
+                <div data-type="head-type1">
+
+                    <div class="relative before:absolute before:top-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black before:bottom-0 before:h-2.5 border-b border-black mb-4"></div>
+
+                    <a href="\App\Support\Locale::url('/haberler/sektor-haberleri')" title="__('ui.politics_news')" class="inline-block mb-3">
+
+                        <h3 class="font-unna font-bold text-3xl">__('ui.politics_news')</h3>
+
+                    </a>
+
+                </div>
+
+                <ul class="headline-list all-news-scroll">
+
+                    @foreach ($politicsNews as $item)
+
+                        <li>
+
+                            <a href="\App\Support\Locale::url('/haberler/sektor-haberleri')">
+
+                                <span class="headline-cat">{{ $item->category?->name }}</span>
+
+                                <span class="headline-title font-unna font-bold">{{ $item->title }}</span>
+
+                            </a>
+
+                        </li>
+
+                    @endforeach
+
+                </ul>
+
+            </section>
+
+        </div>
                 <x-section-head :title="__('ui.politics_news')" :href="\App\Support\Locale::url('/haberler/sektor-haberleri')" level="h3" />                <ul class="headline-list all-news-scroll">
                     @foreach ($politicsNews as $item)
                         <li>
@@ -321,21 +417,33 @@
         </div>
     </section>
 
-    {{-- KRİPTO PARA --}}
-    <section class="home-crypto" data-widget-type="crypto" data-section="crypto">
-        <x-section-head :title="__('ui.crypto')" :href="\App\Support\Locale::url('/kripto')" />
-        <div class="crypto-swiper" data-horizontal-strip>
-            @foreach ($cryptoQuotes as $quote)
-                @php
-                    $dir = $quote->direction();
-                @endphp
-                <a class="crypto-card" href="{{ $quote->instrument->url }}" data-market-code="{{ $quote->code() }}">
-                    <span class="crypto-code">{{ $quote->code() }}</span>
-                    <span class="crypto-name text-xs">{{ $quote->instrument->name }}</span>
-                    <span class="lastPrice font-bold {{ $dir === 'up' ? 'text-green-700' : ($dir === 'down' ? 'text-red-700' : 'text-gray-400') }}" data-market-field="last">{{ $quote->formattedUsdPrice() }}</span>
-                    <span class="percentChange text-xs {{ $dir === 'up' ? 'text-green-700' : ($dir === 'down' ? 'text-red-700' : 'text-gray-400') }}" data-market-field="change_percent"><i class="q-arrow q-arrow-{{ $dir }}" aria-hidden="true"></i>{{ $quote->formattedChangePercent() }}</span>
-                </a>
-            @endforeach
+    {{-- KRİPTO PARA (referans crypto: siyah zemin + swiper + stats-bar kart) --}}
+    <section class="home-crypto relative py-8" data-widget-type="crypto" data-section="crypto">
+        <div data-type="background" class="absolute -z-10 left-1/2 top-0 w-[100vw] h-96 -translate-x-1/2 -mt-4 bg-cover bg-no-repeat bg-black h-full mt-0"></div>
+        <a href="{{ \App\Support\Locale::url('/kripto') }}" title="{{ __('ui.crypto') }}" class="absolute top-4 font-unna font-bold text-3xl mb-2 text-white z-10"><h2>{{ __('ui.crypto') }}</h2></a>
+        <div>
+            <div data-type="swiper" data-name="" class="swiper slider-custom relative pt-10 w-full crypto"
+                 data-swiper='{"slidesPerView":"auto","loop":false,"lazy":true,"navigation":{"nextEl":".crypto .swiper-button-next","prevEl":".crypto .swiper-button-prev"}}'>
+                <div class="swiper-wrapper">
+                    @foreach ($cryptoQuotes as $quote)
+                        @php
+                            $dir = $quote->direction();
+                            $bar = $dir === 'up' ? 'before:bg-green-700' : ($dir === 'down' ? 'before:bg-red-500' : 'before:bg-gray-400');
+                        @endphp
+                        <div class="swiper-slide w-auto pr-4">
+                            <div data-type="stats-bar-type1">
+                                <a href="{{ $quote->instrument->url }}" title="{{ $quote->instrument->name }}" class="security-{{ \Illuminate\Support\Str::slug($quote->code()) }} block cursor-pointer" data-type="crypto">
+                                    <div class="flex flex-col relative before:absolute before:top-0 before:left-0 before:w-1 before:h-full setColor {{ $bar }} text-white pl-2 crypto-card" data-market-code="{{ $quote->code() }}">
+                                        <span class="text-xs text-ellipsis overflow-hidden whitespace-nowrap crypto-name">{{ $quote->instrument->name }}</span>
+                                        <span class="lastPrice font-bold" data-market-field="last">{{ $quote->formattedUsdPrice() }}</span>
+                                        <span class="percentChange text-xs" data-market-field="change_percent">{{ $quote->formattedChangePercent() }}</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
         </div>
     </section>
 

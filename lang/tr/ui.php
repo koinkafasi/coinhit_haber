@@ -35,6 +35,7 @@ return [
     'markets_aria' => 'Piyasalar',
     'market_data_aria' => 'Piyasa verileri',
     'market_data_title' => 'Piyasa Verileri',
+    'search_stock' => 'Hisse Ara...',
     'language' => 'Dil',
     'switch_language' => 'Dili değiştir',
     'can_medya_grubu' => 'CAN MEDYA GRUBU',

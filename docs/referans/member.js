@@ -1,0 +1,17 @@
+(()=>{const a="https://bff.bloomberght.com",i={login:`${a}/login`,account:`https://sso.domer.tr/realms/Bitem/account?referrer=bloomberght&referrer_uri=${encodeURIComponent("https://www.bloomberght.com")}`},n={previewFlag:"login_preview",memberHint:"member_hint"},s="block w-full px-4 py-3 text-left text-sm font-bold text-black",o=(e,t={})=>fetch(`${a}${e}`,{...t,credentials:"include",headers:{"X-Requested-With":"fetch",...t.headers||{}}}),c=e=>String(e).replace(/[&<>"']/g,t=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[t]),m=e=>e.name||[e.given_name,e.family_name].filter(Boolean).join(" ")||e.preferred_username||e.username||"",u=e=>{const t=e.split(/\s+/).filter(Boolean);if(!t.length)return"";const r=t[0][0],l=t.length>1?t[t.length-1][0]:"";return(r+l).toLocaleUpperCase("tr-TR")},d=()=>`
+        <a href="${i.login}" target="_self" rel="nofollow" title="Giriş Yap"
+            class="member-login h-full flex items-center gap-1.5 text-white cursor-pointer">
+            <i class="bloomberght-icon-font-user text-lg"></i>
+            <span class="text-xs font-bold whitespace-nowrap max-sm:hidden">Giriş Yap</span>
+        </a>`,b=({name:e,email:t,initials:r})=>`
+        <button type="button" data-member-trigger title="${c([e,t].filter(Boolean).join(" · "))}"
+            class="member-trigger h-full flex justify-center items-center outline-none cursor-pointer">
+            <span data-member-avatar
+                class="w-8 h-8 rounded-full flex justify-center items-center text-xs font-bold text-[#384552] bg-white border border-gray-200">${c(r)}</span>
+        </button>
+        <div data-member-panel
+            class="member-panel absolute top-full right-0 z-50 hidden w-48 mt-2 bg-white shadow-md border border-gray-100">
+            <a href="${i.account}" target="_blank" rel="nofollow"
+                class="${s} border-b border-gray-200">Hesabım</a>
+            <button type="button" data-member-logout class="${s} cursor-pointer">Çıkış Yap</button>
+        </div>`,g=()=>{const e=new URLSearchParams(location.search);return e.has("login_preview")&&(e.get("login_preview")==="0"?localStorage.removeItem(n.previewFlag):localStorage.setItem(n.previewFlag,"1")),!!localStorage.getItem(n.previewFlag)},f=()=>{const e=document.querySelector("header .menu-button");if(!e)return null;const t=document.createElement("div");return t.className="member-area relative h-full flex items-center",t.innerHTML=d(),e.insertAdjacentElement("beforebegin",t),t},h=()=>{document.querySelectorAll("[data-member-slot]").forEach(e=>{o(`/api/content?slot=${encodeURIComponent(e.dataset.memberSlot)}`).then(t=>t.ok?t.json():null).then(t=>{t&&(e.innerHTML=t.html)}).catch(()=>{})})},p=e=>{const t=e.querySelector("[data-member-trigger]"),r=e.querySelector("[data-member-panel]");!t||!r||(t.addEventListener("click",()=>r.classList.toggle("hidden")),document.addEventListener("click",l=>{e.contains(l.target)||r.classList.add("hidden")}))},w=e=>{const t=e.querySelector("[data-member-logout]");t&&t.addEventListener("click",()=>{o("/logout",{method:"POST"}).finally(()=>{localStorage.removeItem(n.memberHint),location.reload()})})},v=e=>{o("/api/me").then(t=>{if(!t.ok)throw new Error("oturum yok");return t.json()}).then(t=>{const r=m(t);document.body.classList.add("is-member"),e.innerHTML=b({name:r,email:t.email||"",initials:u(r)}),h(),p(e),w(e)}).catch(()=>{localStorage.removeItem(n.memberHint)})};(()=>{if(!g())return;const e=f();e&&localStorage.getItem(n.memberHint)&&v(e)})()})();

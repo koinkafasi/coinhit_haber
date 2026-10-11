@@ -15,9 +15,14 @@
 <section data-section="marketDataLists" class="grid grid-cols-12 gap-4 mb-4 md:mb-10 home-piyasa-verileri market-data-widget">
     <div class="bht-grid col-span-12 md:col-span-12 row-span-1" dataType="marketDataLists">
         <div data-widget-type="marketDataLists" class="mdl-root relative">
-            <div class="mb-4 border-b border-black relative mdl-title-rule" aria-hidden="true"></div>
+            <div data-type="background" class="absolute -z-10 left-1/2 top-0 w-[100vw] h-96 -translate-x-1/2 -mt-4 overflow-hidden bg-gray-100 h-full mt-0" aria-hidden="true">
+                <picture>
+                    <img src="https://im.bloomberght.com/assets/bht/bg/desktop/2x/bg-image-3.png?v=1004" alt="" role="presentation" loading="eager" fetchpriority="high" decoding="async" class="absolute inset-0 w-full h-full object-cover object-[center_top] max-md:object-contain max-md:object-[center_top]">
+                </picture>
+            </div>
+            <div class="mb-4 border-b border-black relative before:absolute before:top-0 before:bottom-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black" aria-hidden="true"></div>
             <a href="{{ \App\Support\Locale::url('/piyasalar') }}" title="{{ __('ui.market_data_title') }}"
-               class="md:absolute md:top-4 font-unna font-bold text-3xl mb-2 z-10 mdl-title">{{ __('ui.market_data_title') }}</a>
+               class="md:absolute md:top-4 font-unna font-bold text-3xl mb-2 z-10">{{ __('ui.market_data_title') }}</a>
 
             <div class="tab-menu md:pt-16">
                 <div class="tab-head mdl-tabhead">
@@ -40,13 +45,14 @@
                                         @endphp
                                         @if ($t)
                                             <div class="swiper-slide">
-                                                <div class="mb-4 md:mb-12 relative overflow-hidden mdl-card">
-                                                    <div class="hidden mdl-card-head">
+                                                <div data-widget-type="marketDataLists" class="mb-4 md:mb-12 relative overflow-hidden">
+                                                    <div data-type="head-type1" class="hidden">
+                                                        <div class="relative before:absolute before:top-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black before:bottom-0 before:h-2.5 border-b border-black mb-4"></div>
                                                         <a href="{{ $t['href'] }}" title="{{ $t['title'] }}" class="inline-block mb-3">
                                                             <h2 class="font-unna font-bold text-3xl">{{ $t['title'] }}</h2>
                                                         </a>
                                                     </div>
-                                                    <div class="border mdl-card-table">
+                                                    <div class="border h-[calc(100%-75px)]">
                                                         @php
                                                             $mcols = $t['columns'] ?? [
                                                                 ['label' => __('market.last'), 'field' => 'last', 'class' => 'lastPrice'],
