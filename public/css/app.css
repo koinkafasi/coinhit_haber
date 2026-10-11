@@ -105,9 +105,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ----- Grid / 12 kolon (fluid) ----- */
 .bht-grid {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 24px;
+    display: block;
 }
 
 .bht-col-8 { grid-column: span 8; }
@@ -2617,3 +2615,206 @@ figure { max-width: 100%; }
    `.main-slider` artık hero düğme şerididir (absolute, overflow görünür). */
 .main-slider { position: absolute; left: 0; top: 128px; width: 100%; overflow: visible; }
 
+
+/* ============================================================
+   CH-25 — Kalan kozmetik hatalar (vision 25 madde)
+   Hero/fidelity, highlight kartları, finansal veri kartları,
+   renk kuralı, grafikler, hızlı linkler, program kartları,
+   reklam alanları, genel hizalama/spacing.
+   ============================================================ */
+
+/* ---------- 4) Renk kuralı: artan ▲ yeşil, azalan ▼ kırmızı ---------- */
+.q-arrow { display: inline-block; font-style: normal; margin-right: 3px; }
+.q-arrow-up::before   { content: "▲"; font-size: .72em; }
+.q-arrow-down::before { content: "▼"; font-size: .72em; }
+.q-arrow-flat::before { content: "•"; font-size: .72em; }
+.q-arrow-right { display: inline-block; font-style: normal; margin-right: 4px; }
+.q-arrow-right::before { content: "›"; font-weight: 700; }
+.percentChange .q-arrow, .mw-card-change .q-arrow { font-size: .85em; }
+.market-table .q-arrow { margin-right: 4px; }
+
+/* ---------- 2) Öne Çıkanlar (highlights) kartları ---------- */
+.highlights-list { display: flex; flex-direction: column; gap: 14px; }
+.highlights-item { color: #1a1a1a; display: block; }
+.highlights-item:hover .highlights-title { color: #bd1b2d; }
+.highlights-item .category { display: block; margin-bottom: 3px; }
+.highlights-item-row { display: flex; align-items: center; gap: 14px; padding-top: 14px; border-top: 1px solid var(--gray-border); }
+.highlights-item-row .highlights-caption { flex: 1; min-width: 0; }
+.highlights-item-row .highlights-thumb { flex: 0 0 128px; }
+.highlights-thumb { display: block; overflow: hidden; border-radius: 4px; background: var(--gray-bg); }
+.highlights-thumb-img { width: 128px; height: 78px; object-fit: cover; }
+.highlights-title { display: block; font-size: 19px; line-height: 1.25; }
+.highlights-item-lead .highlights-lead-figure { margin: 0 0 10px; }
+.highlights-lead-img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 4px; background: var(--gray-bg); }
+.highlights-item-lead .highlights-title { font-size: 24px; line-height: 1.2; }
+.highlights-spot { display: block; margin-top: 6px; color: #555; font-size: 14px; }
+
+/* ---------- Haber kartı spot (kart dizisi) ---------- */
+.news-card-caption .category { display: block; }
+.news-card-spot { color: #555; font-size: 14px; margin-top: 6px; line-height: 1.4; }
+
+/* ---------- 2b) ÖNE ÇIKANLAR yatay kart dizisi ---------- */
+.featured-strip { gap: 18px; padding-bottom: 14px; }
+.featured-strip-item {
+    flex: 0 0 250px;
+    display: flex; flex-direction: column;
+    border-left: 0; padding: 0;
+    background: #fff; border: 1px solid var(--gray-border);
+    border-radius: 6px; overflow: hidden;
+    scroll-snap-align: start;
+    transition: box-shadow .15s ease, transform .15s ease;
+}
+.featured-strip-item:hover { box-shadow: 0 6px 20px rgba(0,0,0,.12); transform: translateY(-2px); }
+.featured-strip-thumb { display: block; overflow: hidden; background: var(--gray-bg); }
+.featured-strip-img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.featured-strip-body { display: block; padding: 10px 12px 12px; }
+.featured-strip-body .category { display: block; color: var(--red); font-weight: 600; margin-bottom: 4px; text-transform: uppercase; }
+.featured-strip-title { font-size: 17px; line-height: 1.25; }
+.featured-strip-spot { display: block; margin-top: 6px; color: #666; font-size: 12.5px; line-height: 1.4; }
+
+/* ---------- 3+5) Finansal veri kartları (Piyasalar) + büyük grafik ---------- */
+.mw-card-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+}
+.mw-card {
+    display: flex; flex-direction: column; align-items: stretch; gap: 6px;
+    border: 1px solid var(--gray-border);
+    background: #fff;
+    border-radius: 8px;
+    padding: 12px 12px 8px;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+.mw-card:hover { border-color: var(--bht-navy); box-shadow: 0 4px 14px rgba(0,0,0,.08); }
+.mw-card.is-active { border: 2px solid var(--bht-navy); box-shadow: 0 4px 14px rgba(0,0,0,.10); padding: 11px 11px 7px; }
+.mw-card-name { font-size: 12px; font-weight: 600; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mw-card-price { font-size: 17px; font-variant-numeric: tabular-nums; }
+.mw-card-change { font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; }
+.mw-card-spark { display: block; margin-top: auto; }
+.mw-card-spark .sparkline { width: 100%; height: 30px; }
+.market-widget-charts { border: 1px solid var(--gray-border); border-radius: 8px; padding: 18px; background: #fff; }
+.mw-chart-name { font-size: 16px; font-weight: 700; }
+.mw-chart-price { font-size: 28px; font-variant-numeric: tabular-nums; }
+.mw-chart-change { font-size: 16px; font-weight: 600; display: inline-flex; align-items: center; gap: 1px; }
+.mw-chart-head { align-items: baseline; gap: 12px; margin-bottom: 14px; border-bottom: 1px solid var(--gray-border); padding-bottom: 12px; }
+.mw-chart-canvas { align-items: stretch; }
+.market-widget-chart .sparkline { width: 100%; height: 180px; background: #fff; }
+.highchart-container { background: #fff; }
+
+/* ---------- 6) Hızlı Linkler ---------- */
+.quick-links-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.chip {
+    background: var(--gray-bg); border: 1px solid #e0e0e0; border-radius: 999px;
+    padding: 6px 13px; font-size: 12.5px; font-weight: 600; color: #1a1a1a;
+    display: inline-flex; align-items: center;
+    transition: background .15s ease, color .15s ease;
+}
+.chip:hover { background: var(--bht-yellow); border-color: var(--bht-yellow); color: #000; }
+
+/* ---------- 7) Grafik bölümü (başlık + açıklama + görünüm) ---------- */
+.mw-charts-desc { font-size: 12.5px; color: #666; margin: 0 0 10px; line-height: 1.45; }
+.mw-charts-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 8px; }
+.mw-chart-thumb img { border-radius: 4px; }
+.mw-chart-thumb-title { font-size: 11.5px; display: block; margin-top: 5px; line-height: 1.35; }
+
+/* ---------- 8) Programlar / Videolar — yatay kart dizisi + süre + oynat ikonu ---------- */
+.program-list, .video-list {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 14px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+.program-card, .video-card { flex: 0 0 260px; scroll-snap-align: start; }
+.program-thumb, .video-thumb { position: relative; margin: 0; overflow: hidden; border-radius: 6px; }
+.program-thumb img, .video-thumb img { width: 100%; aspect-ratio: 360 / 203; object-fit: cover; background: var(--gray-bg); }
+.program-duration {
+    position: absolute; right: 8px; bottom: 8px;
+    background: #fff; color: #000; font-weight: 700;
+    font-size: 11.5px; padding: 3px 7px; border-radius: 2px;
+}
+.program-play {
+    position: absolute; left: 8px; bottom: 8px;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: rgba(0,0,0,.55); display: flex; align-items: center; justify-content: center;
+}
+.program-play::before { width: 16px; height: 16px; }
+.program-title, .video-title { font-size: 16px; line-height: 1.3; margin: 10px 0 3px; }
+.program-date { font-size: 12px; color: #888; display: block; }
+@media (max-width: 640px) {
+    .program-card, .video-card { flex: 0 0 70%; }
+}
+
+/* ---------- 9) Reklam alanları — boş kalmayacak şekilde REKLAM etiketi ---------- */
+.ad-zone-block { padding: 14px 0; gap: 6px; }
+.ad-body { position: relative; }
+.ad-body .ads-zone:empty { position: relative; }
+.ad-body .ads-zone:empty::before {
+    content: "REKLAM";
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 700; letter-spacing: 6px; color: #b6bcc3;
+    background:
+        repeating-linear-gradient(45deg, #f3f4f6, #f3f4f6 12px, #e9ebee 12px, #e9ebee 24px);
+    border: 1px dashed #c4cad1;
+}
+.ad-body .ads-zone:empty::after {
+    content: "970×250";
+    position: absolute; inset: 0;
+    display: flex; align-items: flex-end; justify-content: center;
+    padding-bottom: 8px;
+    font-size: 10px; color: #a6adb4; letter-spacing: 2px;
+}
+.ad-body-mobile .ads-zone:empty::after { content: "320×100"; }
+.masthead-ad .ad-body .ads-zone:empty::before { letter-spacing: 8px; }
+.ad-zone-billboard .ad-body .ads-zone:empty::before { letter-spacing: 8px; }
+
+/* ---------- 10) Genel hizalama / spacing ---------- */
+.home-page > section,
+.home-page > .market-data-widget,
+.home-page > .featured-widget,
+.home-page > .ad-zone-block {
+    margin-bottom: 40px;
+}
+.home-page > .market-widget { margin-bottom: 40px; }
+.section-head { margin-bottom: 18px; }
+.section-head-title { font-size: 30px; }
+.home-featured-strip, .home-programs, .home-videos { margin-bottom: 40px; }
+.headline-list .headline-title { font-size: 17px; }
+.home-all-news .headline-list a, .politics-block .headline-list a { gap: 10px; }
+.home-all-news .headline-list li { border-bottom: 1px solid var(--gray-border); }
+.home-page .news-card-grid { row-gap: 22px; column-gap: 22px; }
+
+/* Hero: kategori etiketi + daha geniş manşet (CH-25) */
+.hero-main-slider .hero-slide-caption { display: none; }
+.hero-main-slider figcaption { position: static; padding: 0; }
+.hero-main-slider .hero-slide-title { font-size: 30px; }
+.hero-main-slider .swiper-slide figure > div { border-radius: 0; }
+.hero-main-slider .swiper-pagination { position: absolute; bottom: 0; }
+
+/* Foto haber / podcast / kap kart görseli düzeni */
+.gallery-body h4, .podcast-body h3 { font-size: 15px; line-height: 1.3; }
+.home-kap .kap-list a { gap: 12px; }
+
+/* Piyaasa veri tablo hücre sıkılığı */
+.market-table td, .market-table th { padding-top: 12px; padding-bottom: 12px; }
+
+/* ---------- CH-25: arbitrary-value sınıflar için güvenilir fallback ---------- */
+header.sticky,
+header.bg-\[\#384552\] { background-color: #384552; }
+.highlights-item .category { color: #bd1b2d; }
+.featured-strip-item .featured-strip-body .category { color: #bd1b2d; }
+.masthead-ad, .ad-head { color: #9ca3af; }
+.text-\[\#bd1b2d\] { color: #bd1b2d; }
+.bg-\[\#bd1b2d\] { background-color: #bd1b2d; }
+.bg-\[\#a00207\] { background-color: #a00207; }
+.bg-\[\#FFE400\] { background-color: #ffe400; }
+.bg-\[\#121212\] { background-color: #121212; }
+.bg-\[\#4D596A\] { background-color: #4d596a; }
+.text-\[\#384552\] { color: #384552; }
+.highlights-item-row .highlights-spot-row { margin-top: 3px; font-size: 12.5px; color: #666; }

@@ -227,7 +227,7 @@ class MarketDataService
         $color = ['up' => '#24A278', 'down' => '#BD1B2E', 'flat' => '#9D9D9D'][$direction];
 
         return '<svg class="sparkline sparkline-'.$direction.'" width="'.$width.'" height="'.$height
-            .'" viewBox="0 0 '.$width.' '.$height.'" fill="none" aria-hidden="true">'
+            .'" viewBox="0 0 '.$width.' '.$height.'" preserveAspectRatio="none" fill="none" aria-hidden="true">'
             .'<polyline points="'.implode(' ', $coords).'" stroke="'.$color.'" stroke-width="1.5" '
             .'fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg>';
     }

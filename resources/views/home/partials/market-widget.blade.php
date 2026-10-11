@@ -22,24 +22,38 @@
                 @php($firstTab = true)
                 @foreach ($marketWidget as $tab)
                     <div class="tab-content market-widget-panel {{ $firstTab ? '' : 'hidden' }}" data-id="{{ $tab['key'] }}">
-                        <div class="market-widget-subtabs">
+                        {{-- CH-25: her enstrüman için ayrı kart — ad + değer + renkli değişim + mini grafik --}}
+                        <div class="mw-card-grid">
                             @foreach ($tab['items'] as $i => $item)
+                                @php($quote = $item['quote'])
+                                @php($dir = $quote->direction())
                                 <button type="button"
-                                        class="tab-button market-subtab {{ $i === 0 ? 'is-active' : '' }}"
-                                        data-subtab="{{ $item['quote']->code() }}">{{ $item['quote']->instrument->name }}</button>
+                                        class="tab-button market-subtab mw-card mw-card-{{ $dir }} {{ $i === 0 ? 'is-active' : '' }}"
+                                        data-subtab="{{ $quote->code() }}"
+                                        aria-label="{{ $quote->instrument->name }}">
+                                    <span class="mw-card-name">{{ $quote->instrument->name }}</span>
+                                    <span class="mw-card-price lastPrice font-bold {{ $dir === 'up' ? 'text-green-700' : ($dir === 'down' ? 'text-red-700' : 'text-gray-400') }}" data-market-field="last">{{ $quote->formattedLast() }}</span>
+                                    <span class="mw-card-change percentChange {{ $dir === 'up' ? 'text-green-700' : ($dir === 'down' ? 'text-red-700' : 'text-gray-400') }}" data-market-field="change_percent">
+                                        <i class="q-arrow q-arrow-{{ $dir }}" aria-hidden="true"></i>{{ $quote->formattedChangePercent() }}
+                                    </span>
+                                    <span class="mw-card-spark">{!! $item['svg'] !!}</span>
+                                </button>
                             @endforeach
                         </div>
 
                         <div class="market-widget-charts">
                             @foreach ($tab['items'] as $i => $item)
                                 @php($quote = $item['quote'])
+                                @php($dir = $quote->direction())
                                 <div class="market-widget-chart {{ $i === 0 ? '' : 'hidden' }}" data-subcontent="{{ $quote->code() }}">
                                     <div class="mw-chart-head">
                                         <span class="mw-chart-name">{{ $quote->instrument->name }}</span>
-                                        <span class="mw-chart-price lastPrice font-bold {{ $quote->direction() === 'up' ? 'text-green-700' : ($quote->direction() === 'down' ? 'text-red-700' : 'text-gray-400') }}">{{ $quote->formattedLast() }}</span>
-                                        <span class="mw-chart-change percentChange {{ $quote->direction() === 'up' ? 'text-green-700' : ($quote->direction() === 'down' ? 'text-red-700' : 'text-gray-400') }}">{{ $quote->formattedChangePercent() }}</span>
+                                        <span class="mw-chart-price lastPrice font-bold {{ $dir === 'up' ? 'text-green-700' : ($dir === 'down' ? 'text-red-700' : 'text-gray-400') }}">{{ $quote->formattedLast() }}</span>
+                                        <span class="mw-chart-change percentChange {{ $dir === 'up' ? 'text-green-700' : ($dir === 'down' ? 'text-red-700' : 'text-gray-400') }}">
+                                            <i class="q-arrow q-arrow-{{ $dir }}" aria-hidden="true"></i>{{ $quote->formattedChangePercent() }}
+                                        </span>
                                     </div>
-                                    <div class="mw-chart-canvas highchart-container">{!! $item['svg'] !!}</div>
+                                    <div class="mw-chart-canvas highchart-container">{!! $item['svg_big'] ?? $item['svg'] !!}</div>
                                 </div>
                             @endforeach
                         </div>
@@ -65,12 +79,12 @@
                 <a class="mw-aside-all" href="{{ \App\Support\Locale::url('/piyasalar') }}">{{ __('ui.all') }} &raquo;</a>
             </div>
 
-            {{-- Hızlı Linkler (trend cipsleri) --}}
+            {{-- Hızlı Linkler (rezerv/hisse/waller/fon ödemeleri vb. trendler) --}}
             <div class="quick-links">
                 <h3 class="mw-aside-title font-unna font-bold">{{ __('ui.quick_links') }}</h3>
                 <div class="quick-links-chips">
                     @foreach ($trends as $trend)
-                        <a class="chip" href="{{ \App\Support\Locale::url('/trendler') }}">{{ $trend->label }}</a>
+                        <a class="chip" href="{{ $trend->url }}"><i class="q-arrow-right" aria-hidden="true"></i>{{ $trend->label }}</a>
                     @endforeach
                 </div>
                 <a class="mw-aside-all" href="{{ \App\Support\Locale::url('/trendler') }}">{{ __('ui.all') }} &raquo;</a>
@@ -79,6 +93,7 @@
             {{-- Grafik --}}
             <div class="market-charts-mini">
                 <h3 class="mw-aside-title font-unna font-bold">{{ __('ui.charts') }}</h3>
+                <p class="mw-charts-desc">{{ __('ui.charts_desc') }}</p>
                 <div class="mw-charts-grid">
                     @foreach ($charts as $chart)
                         <a class="mw-chart-thumb" href="{{ $chart->url }}">

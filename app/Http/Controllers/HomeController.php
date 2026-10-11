@@ -152,6 +152,7 @@ class HomeController extends Controller
                 $items[] = [
                     'quote' => $this->market->quote($instrument),
                     'svg' => $this->market->sparklineSvg($instrument),
+                    'svg_big' => $this->market->sparklineSvg($instrument, 24, 520, 180),
                 ];
             }
 

@@ -60,18 +60,30 @@
             </div>
         </div>
 
-        {{-- Sağ kolon: Öne Çıkanlar (highlights) — CH-24 referans grid eşi --}}
+        {{-- Sağ kolon: Öne Çıkanlar (highlights) — görsel + başlık + özet kartları (CH-25) --}}
         <div class="bht-grid col-span-12 md:col-span-6 row-span-1" dataType="highlights">
             <div class="highlights-list">
                 @foreach ($featuredNews as $index => $item)
-                    <a href="{{ $item->url }}" class="highlights-item flex items-center gap-4 py-4 {{ $index > 0 ? 'border-t border-gray-200' : '' }}">
-                        <span class="flex-1 min-w-0">
+                    <a href="{{ $item->url }}" class="highlights-item {{ $index === 0 ? 'highlights-item-lead' : 'highlights-item-row' }}">
+                        @if ($index === 0)
+                            <figure class="highlights-lead-figure">
+                                <x-lazy-image :src="asset(($item->image ?? '') ?: '/img/og-default.png')" alt="{{ $item->title }}" class="highlights-lead-img" contract="news_card" :eager="false" />
+                            </figure>
+                        @endif
+                        <div class="highlights-caption">
                             <span class="category text-xs text-[#bd1b2d]">{{ $item->category?->name }}</span>
-                            <span class="block font-unna font-bold text-lg text-ellipsis line-clamp-2">{{ $item->title }}</span>
-                        </span>
-                        <span class="flex-shrink-0 w-24 h-16 overflow-hidden bg-gray-50">
-                            <x-lazy-image :src="asset(($item->image ?? '') ?: '/img/og-default.png')" alt="" class="w-full h-full object-cover" contract="news_card_square" />
-                        </span>
+                            <span class="highlights-title font-unna font-bold line-clamp-2">{{ $item->title }}</span>
+                            @if ($index === 0 && $item->spot)
+                                <span class="highlights-spot line-clamp-2">{{ \Illuminate\Support\Str::limit(strip_tags($item->spot), 150) }}</span>
+                            @elseif ($index > 0 && $item->spot)
+                                <span class="highlights-spot highlights-spot-row line-clamp-1">{{ \Illuminate\Support\Str::limit(strip_tags($item->spot), 80) }}</span>
+                            @endif
+                        </div>
+                        @if ($index > 0)
+                            <span class="highlights-thumb">
+                                <x-lazy-image :src="asset(($item->image ?? '') ?: '/img/og-default.png')" alt="" class="highlights-thumb-img" contract="news_card_square" />
+                            </span>
+                        @endif
                     </a>
                 @endforeach
             </div>
@@ -83,23 +95,33 @@
         <div class="finance-strip-track">
             @foreach ($financeGroups as $group)
                 @foreach ($group['quotes'] as $quote)
+                    @php($dir = $quote->direction())
                     <a class="finance-strip-item" href="{{ $quote->instrument->url }}" data-market-code="{{ $quote->code() }}">
                         <span class="fs-name text-xs">{{ $quote->instrument->name }}</span>
-                        <span class="lastPrice font-bold {{ $quote->direction() === 'up' ? 'text-green-700' : ($quote->direction() === 'down' ? 'text-red-700' : 'text-gray-400') }}" data-market-field="last">{{ $quote->formattedLast() }}</span>
+                        <span class="lastPrice font-bold {{ $dir === 'up' ? 'text-green-700' : ($dir === 'down' ? 'text-red-700' : 'text-gray-400') }}" data-market-field="last">{{ $quote->formattedLast() }}</span>
+                        <span class="percentChange text-xs {{ $dir === 'up' ? 'text-green-700' : ($dir === 'down' ? 'text-red-700' : 'text-gray-400') }}" data-market-field="change_percent"><i class="q-arrow q-arrow-{{ $dir }}" aria-hidden="true"></i>{{ $quote->formattedChangePercent() }}</span>
                     </a>
                 @endforeach
             @endforeach
         </div>
     </div>
 
-    {{-- Modül 5: ÖNE ÇIKANLAR — yatay haber başlık şeridi --}}
+    {{-- Modül 5: ÖNE ÇIKANLAR — yatay haber kart dizisi (görsel + başlık + özet) --}}
     <section class="home-featured-strip" id="one-cikanlar">
-        <x-section-head :title="__('ui.featured')" :href="null" />
+        <x-section-head :title="__('ui.featured')" :href="\App\Support\Locale::url('/haberler')" />
         <div class="featured-strip" data-horizontal-strip>
             @foreach ($featuredStrip as $item)
                 <a class="featured-strip-item" href="{{ $item->url }}">
-                    <span class="category text-xs">{{ $item->category?->name }}</span>
-                    <span class="featured-strip-title font-unna font-bold line-clamp-2">{{ $item->title }}</span>
+                    <span class="featured-strip-thumb">
+                        <x-lazy-image :src="asset(($item->image ?? '') ?: '/img/og-default.png')" alt="" contract="news_card" class="featured-strip-img img-contract" />
+                    </span>
+                    <span class="featured-strip-body">
+                        <span class="category text-xs">{{ $item->category?->name }}</span>
+                        <span class="featured-strip-title font-unna font-bold line-clamp-2">{{ $item->title }}</span>
+                        @if ($item->spot)
+                            <span class="featured-strip-spot line-clamp-2">{{ \Illuminate\Support\Str::limit(strip_tags($item->spot), 110) }}</span>
+                        @endif
+                    </span>
                 </a>
             @endforeach
         </div>
@@ -120,6 +142,7 @@
                     <a href="{{ $episode->program?->url ?? \App\Support\Locale::url('/video') }}">
                         <figure class="program-thumb">
                             <x-lazy-image :src="asset($episode->thumbnail ?: $episode->program?->thumbnail ?: '/img/og-default.png')" alt="" contract="video_thumb" class="img-contract" />
+                            <span class="program-play bloomberght-icon-font-play" aria-hidden="true"></span>
                             <span class="program-duration">{{ $episode->duration }}</span>
                         </figure>
                         <div class="program-body">
@@ -230,6 +253,7 @@
                     <a href="{{ $episode->program?->url ?? \App\Support\Locale::url('/video') }}">
                         <figure class="video-thumb">
                             <x-lazy-image :src="asset($episode->thumbnail ?: '/img/og-default.png')" alt="" contract="video_thumb" class="img-contract" />
+                            <span class="program-play bloomberght-icon-font-play" aria-hidden="true"></span>
                             <span class="program-duration">{{ $episode->duration }}</span>
                         </figure>
                         <h3 class="video-title font-unna font-bold line-clamp-2">{{ $episode->display_title }}</h3>
@@ -321,11 +345,12 @@
         <x-section-head :title="__('ui.crypto')" :href="\App\Support\Locale::url('/kripto')" />
         <div class="crypto-swiper" data-horizontal-strip>
             @foreach ($cryptoQuotes as $quote)
+                @php($dir = $quote->direction())
                 <a class="crypto-card" href="{{ $quote->instrument->url }}" data-market-code="{{ $quote->code() }}">
                     <span class="crypto-code">{{ $quote->code() }}</span>
                     <span class="crypto-name text-xs">{{ $quote->instrument->name }}</span>
-                    <span class="lastPrice font-bold {{ $quote->direction() === 'up' ? 'text-green-700' : ($quote->direction() === 'down' ? 'text-red-700' : 'text-gray-400') }}" data-market-field="last">{{ $quote->formattedUsdPrice() }}</span>
-                    <span class="percentChange text-xs {{ $quote->direction() === 'up' ? 'text-green-700' : ($quote->direction() === 'down' ? 'text-red-700' : 'text-gray-400') }}" data-market-field="change_percent">{{ $quote->formattedChangePercent() }}</span>
+                    <span class="lastPrice font-bold {{ $dir === 'up' ? 'text-green-700' : ($dir === 'down' ? 'text-red-700' : 'text-gray-400') }}" data-market-field="last">{{ $quote->formattedUsdPrice() }}</span>
+                    <span class="percentChange text-xs {{ $dir === 'up' ? 'text-green-700' : ($dir === 'down' ? 'text-red-700' : 'text-gray-400') }}" data-market-field="change_percent"><i class="q-arrow q-arrow-{{ $dir }}" aria-hidden="true"></i>{{ $quote->formattedChangePercent() }}</span>
                 </a>
             @endforeach
         </div>

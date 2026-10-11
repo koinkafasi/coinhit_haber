@@ -64,6 +64,7 @@ return [
     'market_news' => 'Piyasa Haberleri',
     'quick_links' => 'Hızlı Linkler',
     'charts' => 'Grafik',
+    'charts_desc' => 'Güniçi ve arşiv grafiklerini inceleyin.',
     'photo_news_upper' => 'FOTO HABER',
 
     // Grafik arşivi / trendler / modüller (Bölüm 8)

@@ -71,11 +71,16 @@
                                     default => $quote->format($quote->last),
                                 };
                                 $cls = $column['class'] ?? '';
+                                $arrow = '';
                                 if (! empty($column['color'])) {
-                                    $cls .= $quote->direction() === 'up' ? ' text-green-700' : ($quote->direction() === 'down' ? ' text-red-700' : ' text-gray-400');
+                                    $dir = $quote->direction();
+                                    if (in_array($column['field'], ['change_percent', 'change', 'monthly_percent', 'yearly_percent', 'change_7d'], true)) {
+                                        $arrow = '<i class="q-arrow q-arrow-'.$dir.'" aria-hidden="true"></i>';
+                                    }
+                                    $cls .= $dir === 'up' ? ' text-green-700' : ($dir === 'down' ? ' text-red-700' : ' text-gray-400');
                                 }
                             @endphp
-                            <td class="py-4 px-4 {{ trim($cls) }}" data-market-field="{{ $column['field'] }}">{{ $value }}</td>
+                            <td class="py-4 px-4 {{ trim($cls) }}" data-market-field="{{ $column['field'] }}">{!! $arrow !!}{{ $value }}</td>
                         @endforeach
                     </tr>
                 @empty

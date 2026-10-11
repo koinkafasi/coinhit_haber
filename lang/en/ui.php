@@ -64,6 +64,7 @@ return [
     'market_news' => 'Market News',
     'quick_links' => 'Quick Links',
     'charts' => 'Charts',
+    'charts_desc' => 'Browse intraday and archive charts.',
     'photo_news_upper' => 'PHOTO NEWS',
 
     // Chart archive / trends / modules (Section 8)

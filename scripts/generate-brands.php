@@ -28,33 +28,49 @@ file_put_contents("$root/brand/favicon.svg", <<<'SVG'
 </svg>
 SVG);
 
-/* ---------- Placeholder görseller (haber kartları / grafikler) ---------- */
+/* ---------- Placeholder görseller (haber kartları / grafikler) ----------
+   CH-25: editoryal/foto hissi veren zengin görseller — düz renk kutu
+   yerine degrade zemin + kod/kategori + haber manşeti taslağı. */
 
-$placeholders = [
-    1 => ['#1f6feb', '#e8f1ff', 'Borsa'],
-    2 => ['#24A278', '#e6f7f0', 'Döviz'],
-    3 => ['#BD1B2E', '#fdeaea', 'Enerji'],
-    4 => ['#384552', '#eef1f4', 'Makro'],
-    5 => ['#9b59b6', '#f3eafb', 'Fintech'],
-    6 => ['#d9822b', '#fdf1e3', 'Tarım'],
-    7 => ['#0e8a8a', '#e2f6f6', 'Kripto'],
-    8 => ['#5a5d63', '#eef0f2', 'Gündem'],
+$phThemes = [
+    1 => ['#06121e', '#0d2a45', '#1f6feb', '#FFE400', 'BORSA', 'BIST 100 günü yükselişle tamamladı'],
+    2 => ['#071b14', '#0f3c2c', '#24A278', '#FFE400', 'DÖVİZ', 'Dolar/TL haftaya yatay başladı'],
+    3 => ['#21090d', '#4b141c', '#BD1B2E', '#FFE400', 'ENERJİ', 'Petrol fiyatlarında sert hareket'],
+    4 => ['#101826', '#26344a', '#384552', '#FFE400', 'MAKRO', 'Küresel piyasalar Fed mesajlarını izliyor'],
+    5 => ['#150a24', '#332052', '#9b59b6', '#FFE400', 'FINTECH', 'Finans teknolojilerinde yeni dönem'],
+    6 => ['#231104', '#4b2a12', '#d9822b', '#FFE400', 'TARIM', 'Emtia fiyatlarında güncel görünüm'],
+    7 => ['#031b1b', '#0a3838', '#0e8a8a', '#FFE400', 'KRİPTO', 'Bitcoin kritik eşiği test ediyor'],
+    8 => ['#17181c', '#2e3036', '#5a5d63', '#FFE400', 'GÜNDEM', "Türkiye'nin ekonomi gündemi dolu dolu"],
 ];
 
-foreach ($placeholders as $i => [$bg, $fg, $label]) {
-    $line = match (true) {
-        $i % 2 === 0 => 'M0,290 C140,220 240,330 380,230 C460,180 520,210 640,150',
-        default => 'M0,240 C150,180 260,290 400,210 C480,160 560,190 640,120',
-    };
+foreach ($phThemes as $i => [$d1, $d2, $accent, $brand, $label, $headline]) {
     $svg = <<<SVG
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
-  <rect width="640" height="360" fill="$bg"/>
-  <path d="$line" fill="none" stroke="$fg" stroke-width="8" opacity="0.55"/>
-  <circle cx="120" cy="236" r="6" fill="$fg"/>
-  <circle cx="316" cy="210" r="6" fill="$fg"/>
-  <circle cx="520" cy="150" r="6" fill="$fg"/>
-  <text x="28" y="330" font-family="Georgia, serif" font-size="34" font-weight="bold" fill="$fg" opacity="0.9">$label</text>
-  <text x="28" y="52" font-family="Arial, sans-serif" font-size="16" fill="$fg" opacity="0.7">BLOOMBERG HT · DEMO</text>
+  <defs>
+    <linearGradient id="bg$i" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="$d1"/>
+      <stop offset="1" stop-color="$d2"/>
+    </linearGradient>
+    <radialGradient id="glow$i" cx="0.75" cy="0.25" r="0.9">
+      <stop offset="0" stop-color="$accent" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="$accent" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#bg$i)"/>
+  <rect width="640" height="360" fill="url(#glow$i)"/>
+  <circle cx="520" cy="90" r="34" fill="none" stroke="$accent" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="560" cy="70" r="5" fill="$accent" opacity="0.6"/>
+  <path d="M0,300 C120,255 200,340 320,290 S520,250 640,285" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.16"/>
+  <g fill="#030a07">
+    <rect x="28" y="34" width="8" height="64" fill="$brand"/>
+    <text x="48" y="80" font-family="Waterfall, Georgia, serif" font-size="42" font-weight="bold" letter-spacing="2" fill="#ffffff" opacity="0.95">$label</text>
+  </g>
+  <text x="28" y="52" font-family="Arial, sans-serif" font-size="15" letter-spacing="3" fill="#ffffff" opacity="0.55">BLOOMBERG HT</text>
+  <g opacity="0.92">
+    <rect x="28" y="274" width="28" height="3" fill="$brand"/>
+    <text x="28" y="308" font-family="Georgia, serif" font-size="27" font-weight="bold" fill="#ffffff">$headline</text>
+    <rect x="28" y="324" width="340" height="4" fill="#ffffff" opacity="0.35"/>
+  </g>
 </svg>
 SVG;
     file_put_contents("$root/img/placeholders/placeholder-$i.svg", $svg);

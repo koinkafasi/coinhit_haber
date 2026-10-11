@@ -1,9 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
-  <rect width="640" height="360" fill="#9b59b6"/>
-  <path d="M0,240 C150,180 260,290 400,210 C480,160 560,190 640,120" fill="none" stroke="#f3eafb" stroke-width="8" opacity="0.55"/>
-  <circle cx="120" cy="236" r="6" fill="#f3eafb"/>
-  <circle cx="316" cy="210" r="6" fill="#f3eafb"/>
-  <circle cx="520" cy="150" r="6" fill="#f3eafb"/>
-  <text x="28" y="330" font-family="Georgia, serif" font-size="34" font-weight="bold" fill="#f3eafb" opacity="0.9">Fintech</text>
-  <text x="28" y="52" font-family="Arial, sans-serif" font-size="16" fill="#f3eafb" opacity="0.7">BLOOMBERG HT · DEMO</text>
+  <defs>
+    <linearGradient id="bg5" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#150a24"/>
+      <stop offset="1" stop-color="#332052"/>
+    </linearGradient>
+    <radialGradient id="glow5" cx="0.75" cy="0.25" r="0.9">
+      <stop offset="0" stop-color="#9b59b6" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#9b59b6" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#bg5)"/>
+  <rect width="640" height="360" fill="url(#glow5)"/>
+  <circle cx="520" cy="90" r="34" fill="none" stroke="#9b59b6" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="560" cy="70" r="5" fill="#9b59b6" opacity="0.6"/>
+  <path d="M0,300 C120,255 200,340 320,290 S520,250 640,285" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.16"/>
+  <g fill="#030a07">
+    <rect x="28" y="34" width="8" height="64" fill="#FFE400"/>
+    <text x="48" y="80" font-family="Waterfall, Georgia, serif" font-size="42" font-weight="bold" letter-spacing="2" fill="#ffffff" opacity="0.95">FINTECH</text>
+  </g>
+  <text x="28" y="52" font-family="Arial, sans-serif" font-size="15" letter-spacing="3" fill="#ffffff" opacity="0.55">BLOOMBERG HT</text>
+  <g opacity="0.92">
+    <rect x="28" y="274" width="28" height="3" fill="#FFE400"/>
+    <text x="28" y="308" font-family="Georgia, serif" font-size="27" font-weight="bold" fill="#ffffff">Finans teknolojilerinde yeni dönem</text>
+    <rect x="28" y="324" width="340" height="4" fill="#ffffff" opacity="0.35"/>
+  </g>
 </svg>
