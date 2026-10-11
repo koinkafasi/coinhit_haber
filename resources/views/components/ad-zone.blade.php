@@ -13,7 +13,10 @@
 @endphp
 
 {{-- Genel REKLAM alanı (Bölüm 2.5 / 14.6 / 17.3): masaüstü + mobil kopya. --}}
-<div class="wrapper adv-news ad-zone-block ad-zone-{{ $variant }} {{ $adName }}" data-type="advertisement" data-adv="bht" data-zone="{{ $zoneId }}">
+<div class="wrapper adv-news ad-zone-block ad-zone-{{ $variant }} {{ $adName }}"
+     data-type="advertisement"
+     data-widget-type="{{ ($index == 1 ? 'advertisement18' : 'advertisement2') }}"
+     data-adv="bht" data-zone="{{ $zoneId }}">
     <div class="ad-head">
         <h2 class="ad-label !text-xxs">{{ $label }}</h2>
     </div>
