@@ -9,13 +9,27 @@
     <div class="topbar bht-topbar">
         <div class="container bht-topbar-inner nav-sub-menu">
             <a class="logo bht-logo" href="{{ \App\Support\Locale::route('home') }}" aria-label="{{ $settings['logo_alt'] ?? 'Bloomberg HT' }}">
-                <img src="{{ asset($settings['logo_path'] ?? '/brand/logo.svg') }}" alt="{{ $settings['logo_alt'] ?? 'Bloomberg HT' }}" width="200" height="58">
+                <img src="{{ asset($settings['logo_path'] ?? '/brand/logo.svg') }}" alt="{{ $settings['logo_alt'] ?? 'Bloomberg HT' }}" width="250" height="64">
             </a>
 
-            <button type="button" class="bht-mobile-toggle" data-menu-toggle aria-controls="bht-main-nav" aria-expanded="false" aria-label="{{ __('ui.menu') }}">
-                <x-icon name="menu" title="{{ __('ui.menu') }}" />
-            </button>
+            <div class="top-actions bht-top-actions">
+                @include('front.partials.language-switcher')
+                <a class="bht-action bht-action-live live-link" href="{{ \App\Support\Locale::url('/tv') }}">
+                    <x-icon name="live" class="bht-action-icon" /> <span>{{ __('ui.live') }}</span>
+                </a>
+                <a class="bht-action bht-action-radio" href="https://www.bloomberghtradyo.com" {!! $newWindow !!}>
+                    <x-icon name="radio" class="bht-action-icon" /> <span>{{ __('ui.radio') }}</span>
+                </a>
+                <a class="bht-icon-btn search-toggle" href="{{ \App\Support\Locale::route('search.index') }}" aria-label="{{ __('ui.search') }}"><x-icon name="search" title="{{ __('ui.search') }}" /></a>
+                <button type="button" class="bht-icon-btn bht-mobile-toggle" data-menu-toggle aria-controls="bht-main-nav" aria-expanded="false" aria-label="{{ __('ui.menu') }}">
+                    <x-icon name="menu" title="{{ __('ui.menu') }}" />
+                </button>
+            </div>
+        </div>
+    </div>
 
+    <div class="bht-navbar" data-widget-type="nav-sub-menu">
+        <div class="container bht-navbar-inner">
             <nav id="bht-main-nav" class="main-nav bht-mega-nav bht-nav" aria-label="{{ __('ui.main_nav') }}" data-type="nav-sub-menu">
                 <ul class="bht-nav-list">
                     @foreach ($mega as $item)
@@ -41,13 +55,6 @@
                     @endforeach
                 </ul>
             </nav>
-
-            <div class="top-actions bht-top-actions">
-                @include('front.partials.language-switcher')
-                <a class="live-link" href="{{ \App\Support\Locale::url('/tv') }}"><x-icon name="live" /> <span>{{ __('ui.live') }}</span></a>
-                <a href="https://www.bloomberghtradyo.com" {!! $newWindow !!}><x-icon name="radio" /> <span>{{ __('ui.radio') }}</span></a>
-                <a class="search-toggle" href="{{ \App\Support\Locale::route('search.index') }}" aria-label="{{ __('ui.search') }}"><x-icon name="search" title="{{ __('ui.search') }}" /></a>
-            </div>
         </div>
     </div>
 

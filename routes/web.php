@@ -25,6 +25,7 @@ use App\Http\Controllers\KriptoController;
 use App\Http\Controllers\LegalController;
 use App\Http\Controllers\ManifestController;
 use App\Http\Controllers\MarketDataController;
+use App\Http\Controllers\MenuWidgetController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PhotoGalleryController;
 use App\Http\Controllers\PiyasalarController;
@@ -50,6 +51,8 @@ use Illuminate\Support\Facades\Route;
 */
 $frontRoutes = function (): void {
     Route::get('/', [HomeController::class, 'index'])->name('home');
+
+    Route::get('/menu-widget', [MenuWidgetController::class, 'index'])->name('menu.widget');
 
     Route::get('/piyasalar', [PiyasalarController::class, 'index'])->name('markets.index');
     Route::get('/yuzde-hesaplama', [ToolController::class, 'percentage'])->name('tools.percentage');

@@ -58,6 +58,43 @@ class GlobalFrameTest extends TestCase
         $this->assertStringContainsString('breaking-track', $html);
     }
 
+    public function test_menu_widget_endpoint_returns_locale_aware_json(): void
+    {
+        $response = $this->getJson('/menu-widget');
+
+        $response->assertOk();
+        $response->assertJsonPath('locale', 'tr');
+        $response->assertJsonPath('data.0.label', 'PİYASALAR');
+        $response->assertJsonPath('data.1.label', 'BORSA');
+        $response->assertJsonPath('data.1.children.0.label', 'Hisse Senetleri');
+        $response->assertJsonPath('data.1.children.0.url', '/borsa/hisseler');
+        $response->assertJsonPath('data.10.label', 'BusinessWeek');
+        $response->assertJsonPath('data.10.external', true);
+
+        $this->getJson('/en/menu-widget')
+            ->assertOk()
+            ->assertJsonPath('locale', 'en')
+            ->assertJsonPath('data.0.label', 'MARKETS')
+            ->assertJsonPath('data.1.label', 'EQUITIES')
+            ->assertJsonPath('data.1.children.0.url', '/en/borsa/hisseler');
+    }
+
+    public function test_header_has_action_buttons_navbar_and_dropdowns(): void
+    {
+        $this->boot();
+
+        $html = $this->get('/')->assertOk()->getContent();
+
+        $this->assertStringContainsString('class="bht-navbar"', $html, 'Mega nav ikinci barı eksik.');
+        $this->assertStringContainsString('bht-top-actions', $html);
+        $this->assertStringContainsString('bht-action-live', $html);
+        $this->assertStringContainsString('bht-action-radio', $html);
+        $this->assertStringContainsString('search-toggle', $html);
+        $this->assertStringContainsString('data-menu-toggle', $html);
+        $this->assertSame(4, substr_count($html, 'class="drop-down bht-dropdown"'), 'Mega nav dropdown sayısı 4 olmalı.');
+        $this->assertStringContainsString('bloomberght-icon-font-icon-radio', $html);
+    }
+
     public function test_footer_has_five_exact_columns_and_extras(): void
     {
         $this->boot();
