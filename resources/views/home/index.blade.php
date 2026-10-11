@@ -63,7 +63,7 @@
         {{-- Öne Çıkanlar (highlights): görsel + başlık + özet kartları --}}
         <div class="bht-grid col-span-12 md:col-span-6 row-span-1" dataType="highlights">
             <div class="highlights-list">
-                @foreach ($featuredNews as $index => $item)
+                @foreach ($featuredNews->take(4) as $index => $item)
                     <a href="{{ $item->url }}" class="highlights-item {{ $index === 0 ? 'highlights-item-lead' : 'highlights-item-row' }}">
                         @if ($index === 0)
                             <figure class="highlights-lead-figure">
