@@ -3,9 +3,11 @@
 namespace App\Services\Market;
 
 use App\Models\MarketInstrument;
+use App\Models\MarketSnapshot;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Foreks benzeri piyasa veri simülatörü (Bölüm 5).
@@ -14,6 +16,11 @@ use Illuminate\Support\Collection;
  * deterministik bir salınım + mikro-gürültü ile üretilir. Aynı zaman damgası
  * için aynı sonucu verir (test edilebilirlik), birkaç saniye sonra ise küçük
  * oynamalarla "canlı pano" hissi sağlar.
+ *
+ * CH-2: kripto grubunda `market_snapshots` tablosunda taze (config
+ * `market.coingecko.max_age_minutes` içinde) CoinGecko satırı varsa quote o
+ * satırdan üretilir; tazelik geçerse simülatöre düşülür. Ağ/anahtar yoksa
+ * tablo boş kalır ve davranış CH-2 öncesiyle birebir aynıdır.
  */
 class MarketDataService
 {
@@ -23,6 +30,16 @@ class MarketDataService
      * @var Collection<int, MarketInstrument>|null
      */
     private ?Collection $catalog = null;
+
+    /**
+     * Kripto snapshot önbelleği (market_instrument_id => MarketSnapshot).
+     *
+     * @var Collection<int, MarketSnapshot>|null
+     */
+    private ?Collection $cryptoSnapshots = null;
+
+    /** Snapshot önbelleğinin yüklenip yüklenmediği (boş tabloda tekrar sorma). */
+    private bool $cryptoSnapshotsLoaded = false;
 
     /**
      * @return Collection<int, MarketInstrument>
@@ -58,6 +75,8 @@ class MarketDataService
 
     /**
      * Tek enstrümanın güncel anlık görüntüsü.
+     *
+     * Kripto grubunda taze CoinGecko snapshot'ı varsa ondan üretilir (CH-2).
      */
     public function quote(MarketInstrument|string $instrument, ?CarbonInterface $at = null): Quote
     {
@@ -67,6 +86,14 @@ class MarketDataService
         }
 
         $at = $at ? CarbonImmutable::instance($at) : CarbonImmutable::now();
+
+        if ($instrument->group === MarketInstrument::GROUP_CRYPTO) {
+            $live = $this->liveQuote($instrument, $at);
+
+            if ($live !== null) {
+                return $live;
+            }
+        }
 
         $t = (float) $at->timestamp;
         $phase = crc32($instrument->code.':'.$instrument->group);
@@ -185,6 +212,9 @@ class MarketDataService
     /**
      * Bir enstrüman için deterministik güniçi seri (mini grafik/sparkline).
      *
+     * Kripto grubunda taze CoinGecko snapshot'ının sparkline_7d serisi
+     * varsa ondan örneklenir (CH-2); yoksa simülatör seri kullanılır.
+     *
      * @return array<int, float>
      */
     public function sparkline(MarketInstrument|string $instrument, int $points = 24, int $intervalSeconds = 900, ?CarbonInterface $at = null): array
@@ -195,6 +225,15 @@ class MarketDataService
         }
 
         $at = $at ? CarbonImmutable::instance($at) : CarbonImmutable::now();
+
+        if ($instrument->group === MarketInstrument::GROUP_CRYPTO) {
+            $series = $this->liveSparkline($instrument, $at, $points);
+
+            if ($series !== null) {
+                return $series;
+            }
+        }
+
         $values = [];
 
         for ($i = $points - 1; $i >= 0; $i--) {
@@ -230,6 +269,115 @@ class MarketDataService
             .'" viewBox="0 0 '.$width.' '.$height.'" preserveAspectRatio="none" fill="none" aria-hidden="true">'
             .'<polyline points="'.implode(' ', $coords).'" stroke="'.$color.'" stroke-width="1.5" '
             .'fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+    }
+
+    /**
+     * Taze CoinGecko snapshot'ından kripto quote (CH-2).
+     *
+     * Snapshot yoksa / tazeliği geçtiyse null döner; çağıran simülatöre düşer.
+     */
+    private function liveQuote(MarketInstrument $instrument, CarbonImmutable $at): ?Quote
+    {
+        $snapshot = $this->freshSnapshot($instrument, $at);
+
+        if ($snapshot === null) {
+            return null;
+        }
+
+        $decimals = (int) ($instrument->decimals ?? 2);
+        $last = (float) $snapshot->price;
+        $change24h = (float) ($snapshot->change_24h ?? 0.0);
+        $previousClose = $last / (1 + $change24h / 100);
+        $change = $last - $previousClose;
+
+        $spread = 0.0008;
+        $volume24h = (float) ($snapshot->volume_24h ?? 0.0);
+        $marketCap = (float) ($snapshot->market_cap ?? 0.0);
+        $change7d = (float) ($snapshot->change_7d ?? 0.0);
+
+        return new Quote(
+            instrument: $instrument,
+            last: round($last, $decimals),
+            previousClose: round($previousClose, $decimals),
+            change: round($change, $decimals),
+            changePercent: round($change24h, 2),
+            monthlyPercent: round($change7d * 4, 2), // yaklaşımlık 30g (CoinGecko 7g veriyor)
+            yearlyPercent: 0.0, // yıllık serisi API'de yok; 0 yerine "—" template'i bağlı değil
+            high: round((float) ($snapshot->high_24h ?? $last), $decimals),
+            low: round((float) ($snapshot->low_24h ?? $last), $decimals),
+            open: round($previousClose, $decimals),
+            bid: round($last * (1 - $spread), $decimals),
+            ask: round($last * (1 + $spread), $decimals),
+            volumeLot: $last > 0 ? (int) round($volume24h / $last) : 0,
+            volumeTl: round($volume24h, 2),
+            volume24h: round($volume24h, 2),
+            marketCap: round($marketCap, 2),
+            change7d: round($change7d, 2),
+            updatedAt: $snapshot->captured_at ?? $at,
+        );
+    }
+
+    /**
+     * Taze CoinGecko sparkline_7d serisinden istenen nokta sayısına
+     * örneklenmiş dizi (CH-2). Taze seri yoksa null.
+     *
+     * @return array<int, float>|null
+     */
+    private function liveSparkline(MarketInstrument $instrument, CarbonImmutable $at, int $points): ?array
+    {
+        $snapshot = $this->freshSnapshot($instrument, $at);
+        $series = $snapshot?->sparkline_7d;
+
+        if (! is_array($series) || count($series) < 2 || $points < 2) {
+            return null;
+        }
+
+        $count = count($series);
+        $out = [];
+
+        for ($i = 0; $i < $points; $i++) {
+            $idx = (int) round($i * ($count - 1) / ($points - 1));
+            $out[] = (float) $series[$idx];
+        }
+
+        return $out;
+    }
+
+    /**
+     * Enstrümanın taze snapshot'ı (config `market.coingecko.max_age_minutes`
+     * içinde yakalanmış olmalı); istek boyunca önbelleklenir.
+     */
+    private function freshSnapshot(MarketInstrument $instrument, CarbonImmutable $at): ?MarketSnapshot
+    {
+        if (! $this->cryptoSnapshotsLoaded) {
+            $this->cryptoSnapshots = $this->tableExists()
+                ? MarketSnapshot::latestForGroup(MarketInstrument::GROUP_CRYPTO)
+                : collect();
+            $this->cryptoSnapshotsLoaded = true;
+        }
+
+        $snapshot = $this->cryptoSnapshots?->get($instrument->id);
+
+        if ($snapshot === null) {
+            return null;
+        }
+
+        $maxAge = (int) config('market.coingecko.max_age_minutes', 15);
+        $capturedAt = $snapshot->captured_at;
+
+        if ($capturedAt === null || $capturedAt->lt($at->subMinutes($maxAge)) || $capturedAt->gt($at->addMinute())) {
+            return null;
+        }
+
+        return $snapshot;
+    }
+
+    /**
+     * migration henüz koşulmamış ortamlarda (eski kopyalar) query'yi kırma.
+     */
+    private function tableExists(): bool
+    {
+        return Schema::hasTable('market_snapshots');
     }
 
     /**

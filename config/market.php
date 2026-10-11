@@ -77,4 +77,26 @@ return [
         'EUR' => 2,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | CoinGecko (CH-2 — kripto piyasa veri motoru)
+    |--------------------------------------------------------------------------
+    |
+    | `market:snapshot` komutu CoinGecko /coins/markets ucundan kripto
+    | fiyatlarını çeker ve market_snapshots tablosuna yazar. Taze snapshot
+    | (max_age dakika içinde) varsa MarketDataService kripto quote'larını
+    | bundan üretir; yoksa deterministik simülatöre düşer — site hiçbir
+    | koşulda kırılmaz. Anahtar .env'dedir (COINGECKO_API_KEY) ve repoya girmez.
+    |
+    */
+
+    'coingecko' => [
+        'api_key' => env('COINGECKO_API_KEY', ''),
+        'vs_currency' => 'usd',
+        // Snapshot bu dakika sayısından eskiyse "taze" sayılmaz (simülatöre dön).
+        'max_age_minutes' => (int) env('COINGECKO_MAX_AGE_MINUTES', 15),
+        // sparkline_7d dizisindeki yaklaşık nokta sayısı (saatlik, 7 gün).
+        'sparkline_points' => 168,
+    ],
+
 ];
