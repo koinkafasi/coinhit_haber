@@ -47,7 +47,7 @@
      MEGA NAV (CH-24: referans nav-sub-menu, desktop lg+ görünür;
      mobilde hamurger menü içine taşınır)
      ============================================================ --}}
-<div data-widget-type="nav-sub-menu" class="bg-[#384552] h-12 px-4 !hidden lg:!block">
+<div data-widget-type="nav-sub-menu" class="bg-[#384552] h-12 px-4 hidden lg:block">
     <div class="nav-sub-menu container h-full mx-auto flex items-center justify-between z-90 whitespace-nowrap">
         @foreach ($mega as $item)
             @php($hasChildren = ! empty($item['children']))

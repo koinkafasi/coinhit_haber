@@ -3,6 +3,17 @@
    Renk, tipografi, ikon, görsel boyut, grid token'ları.
    Spec: Bölüm 1 (Tasarım sistemi) + Bölüm 17 (CSS envanteri).
    ============================================================ */
+
+/* --- Tipografi: Poppins (gövde) + Unna (başlık) — referansla birebir self-host (CH-27) --- */
+@font-face { font-family: 'Poppins'; font-style: normal; font-weight: 400; src: url('/fonts/poppins/poppins-v15-latin-ext_latin-regular.woff') format('woff'); }
+@font-face { font-family: 'Poppins'; font-style: normal; font-weight: 300; src: url('/fonts/poppins/poppins-v15-latin-ext_latin-300.woff') format('woff'); }
+@font-face { font-family: 'Poppins'; font-style: normal; font-weight: 500; src: url('/fonts/poppins/poppins-v15-latin-ext_latin-500.woff') format('woff'); }
+@font-face { font-family: 'Poppins'; font-style: normal; font-weight: 700; src: url('/fonts/poppins/poppins-v15-latin-ext_latin-700.woff') format('woff'); }
+@font-face { font-family: 'Poppins'; font-style: normal; font-weight: 900; src: url('/fonts/poppins/poppins-v15-latin-ext_latin-900.woff') format('woff'); }
+@font-face { font-family: 'Unna'; font-style: normal; font-weight: 400; src: url('/fonts/unna/Unna-Regular.woff') format('woff'); }
+@font-face { font-family: 'Unna'; font-style: normal; font-weight: 700; src: url('/fonts/unna/Unna-Bold.woff') format('woff'); }
+@font-face { font-family: 'Unna'; font-style: italic; font-weight: 400; src: url('/fonts/unna/Unna-Italic.woff') format('woff'); }
+
 :root {
     /* --- Marka kimliği (sarı/siyah) --- */
     --bht-black: #101418;
@@ -2339,8 +2350,8 @@ figure { max-width: 100%; }
     .sm\:h-12 { height: 48px; }
     .sm\:w-auto { width: auto; }
     .sm\:px-4 { padding-left: 16px; padding-right: 16px; }
-    .sm\:flex { display: flex; }
-    .sm\:block { display: block; }
+    .sm\:flex { display: flex !important; }
+    .sm\:block { display: block !important; }
     .sm\:hidden { display: none; }
     .sm\:grid-cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
     .sm\:gap-5 { gap: 20px; }
@@ -2357,13 +2368,16 @@ figure { max-width: 100%; }
     .md\:whitespace-nowrap { white-space: nowrap; }
     .md\:leading-normal { line-height: 1.5; }
     .md\:min-h-16 { min-height: 64px; }
-    .md\:flex { display: flex; }
+    .md\:flex { display: flex !important; }
+    .md\:block { display: block !important; }
+    .md\:grid { display: grid !important; }
     .md\:hidden { display: none; }
     .md\:justify-between { justify-content: space-between; }
     .md\:gap-8 { gap: 32px; }
 }
 @media (min-width: 1024px) {
-    .lg\:!block { display: block !important; }
+    .lg\:block { display: block !important; }
+    .lg\:flex { display: flex !important; }
     .lg\:text-base { font-size: 16px; }
     .lg\:pt-8 { padding-top: 32px; }
 }
