@@ -19,8 +19,8 @@ class I18nTest extends TestCase
         $response = $this->get('/')->assertOk();
 
         $response->assertSee('lang="tr"', false);
-        $response->assertSee('ÖNE ÇIKANLAR');
-        $response->assertSee('EN ÇOK OKUNANLAR');
+        $response->assertSee('Öne Çıkanlar');
+        $response->assertSee('En Çok Okunanlar');
         $response->assertSee("Fed'in para politikası mesajlarını bekliyor");
     }
 
@@ -31,9 +31,9 @@ class I18nTest extends TestCase
         $response = $this->get('/en')->assertOk();
 
         $response->assertSee('lang="en"', false);
-        $response->assertSee('FEATURED');
-        $response->assertSee('MOST READ');
-        $response->assertSee('MARKETS');
+        $response->assertSee('Featured');
+        $response->assertSee('Most Read');
+        $response->assertSee('Markets');
         $response->assertSee('Global markets await the Fed');
         $response->assertSee('og:locale" content="en_US"', false);
     }

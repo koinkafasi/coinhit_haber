@@ -42,9 +42,9 @@ class HomeTest extends TestCase
         $html = $this->get('/')->assertOk()->getContent();
 
         foreach ([
-            'ÖNE ÇIKANLAR', 'PİYASALAR', 'PROGRAMLAR', 'TÜM HABERLER', 'YAYIN AKIŞI',
-            'SON SAYILAR', 'Foto Haber', 'VİDEOLAR', 'PODCAST SERİLERİ', 'KAP HABERLERİ',
-            'SEKTÖR HABERLERİ', 'Siyaset Haberleri', 'KRİPTO PARA', 'EN ÇOK OKUNANLAR',
+            'Öne Çıkanlar', 'Piyasalar', 'Programlar', 'Tüm Haberler', 'Yayın Akışı',
+            'Son Sayılar', 'Foto Haber', 'Videolar', 'Podcast Serileri', 'Kap Haberleri',
+            'Sektör Haberleri', 'Siyaset Haberleri', 'Kripto Para', 'En Çok Okunanlar',
             'Piyasa Haberleri', 'Hızlı Linkler', 'Grafik', 'REKLAM',
         ] as $title) {
             $this->assertStringContainsString($title, $html, "Eksik modül başlığı: {$title}");

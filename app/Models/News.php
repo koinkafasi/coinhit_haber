@@ -283,15 +283,17 @@ class News extends Model
     public function titleSuffix(): string
     {
         $name = (string) ($this->category?->name ?? '');
+        $suffix = (string) __('ui.news_suffix');
+        $isEnglish = app()->getLocale() === 'en';
 
         if ($name === '') {
-            return 'haberleri';
+            return $suffix;
         }
 
         if (Str::contains(Str::lower($name), ['son dakika', 'gündem'])) {
-            return 'Son dakika ekonomi haberleri';
+            return $isEnglish ? 'Breaking economy news' : 'Son dakika ekonomi haberleri';
         }
 
-        return $name.' haberleri';
+        return $name.' '.$suffix;
     }
 }

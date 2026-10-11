@@ -31,7 +31,7 @@
     --special-maroon: #61082a;    /* En Çok Okunanlar (rgb 97,8,42) */
 
     /* --- Layout ölçüleri --- */
-    --container-max: 1440px;      /* fluid 12-col, max ~1440px */
+    --container-max: 1280px;      /* referans: <1024 1280px, ≥1024 1010px, ≥1615 1280px */
     --container-gutter: 16px;
     --sidebar-width: 400px;       /* makale detay sağ sidebar */
     --header-bar-height: 64px;
@@ -65,9 +65,19 @@ a { color: inherit; text-decoration: none; }
 
 .container {
     width: 100%;
+    min-width: 320px;
     max-width: var(--container-max);
     margin: 0 auto;
     padding: 0 var(--container-gutter);
+}
+
+/* Referans (.container): masaüstünde 1010px, çok geniş ekranda 1280px */
+@media (min-width: 1024px) {
+    .container { max-width: 1010px; }
+}
+
+@media (min-width: 1615px) {
+    .container { max-width: 1280px; }
 }
 
 /* ----- Tipografi (Bölüm 1.1) ----- */
@@ -827,8 +837,8 @@ img[data-src].b-lazy-loaded {
 .search-summary { font-size: 14px; color: #444; margin-bottom: 18px; }
 .search-empty { color: #666; }
 
-/* ---------- Mobil (≤767) ---------- */
-@media (max-width: 767px) {
+/* ---------- Mobil/tablet (≤1023): referansta mega nav lg altında gizli ---------- */
+@media (max-width: 1023px) {
     .bht-mobile-toggle { display: inline-flex; order: 2; margin-left: auto; }
     .bht-nav {
         order: 4;
@@ -880,13 +890,13 @@ img[data-src].b-lazy-loaded {
 
 /* ---------- Bölüm başlığı bandı (head-type1, §17.3) ---------- */
 .section-head { position: relative; border-bottom: 1px solid #000; margin-bottom: 16px; padding-bottom: 8px; }
-.section-head-inner { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.section-head-title { margin: 0; color: #000; }
+.section-head-inner { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.section-head-title { margin: 0; color: #000; min-width: 0; }
 .section-head-all { font-size: 13px; font-weight: 600; white-space: nowrap; }
 .section-head-all:hover { text-decoration: underline; }
 .section-head-bar {
-    position: absolute; top: 0; bottom: 0; margin: auto 0; left: 0;
-    width: 230px; height: 10px; background: #000; z-index: -1; opacity: .08;
+    position: absolute; left: 0; bottom: -5px;
+    width: 230px; height: 10px; background: #000; z-index: 0;
 }
 
 /* ---------- REKLAM kutusu (Bölüm 17.3) ---------- */
@@ -941,7 +951,7 @@ img[data-src].b-lazy-loaded {
 /* ---------- Finance slider (header) + mobil şerit ---------- */
 .finance-slider { border-bottom: 1px solid var(--gray-border); }
 .finance-slider-inner { display: flex; align-items: stretch; gap: 12px; min-height: 60px; }
-.finance-slider-tabs { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+.finance-slider-tabs { display: flex; align-items: center; gap: 2px; flex-shrink: 1; min-width: 0; overflow-x: auto; }
 .finance-slider-tab {
     border: 0; background: none; cursor: pointer; padding: 8px 10px;
     font-size: 13px; font-weight: 600; color: #444; border-bottom: 2px solid transparent;
@@ -1755,9 +1765,9 @@ img[data-src].b-lazy-loaded {
     display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px;
     border: 1px solid var(--gray-border); border-radius: 6px; background: #fff; padding: 16px; margin-bottom: 24px;
 }
-.fund-compare-field { display: flex; flex-direction: column; gap: 6px; flex: 1 1 280px; }
+.fund-compare-field { display: flex; flex-direction: column; gap: 6px; flex: 1 1 280px; min-width: 0; }
 .fund-compare-field label { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #777; }
-.fund-compare-field select { border: 1px solid var(--gray-border); border-radius: 4px; padding: 10px; font-size: 14px; background: #fff; }
+.fund-compare-field select { border: 1px solid var(--gray-border); border-radius: 4px; padding: 10px; font-size: 14px; background: #fff; width: 100%; max-width: 100%; min-width: 0; }
 .fund-compare-submit {
     background: var(--red); color: #fff; border: 0; border-radius: 4px; padding: 11px 26px;
     font-size: 14px; font-weight: 700; cursor: pointer;

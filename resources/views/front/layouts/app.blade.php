@@ -58,7 +58,8 @@
     @endif
     <meta name="twitter:image" content="@yield('og_image', url($siteSettings['default_og_image'] ?? '/img/og-default.png'))">
 
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    @php($__cssVersion = @filemtime(public_path('css/app.css')) ?: 1)
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ $__cssVersion }}">
     @include('front.partials.jsonld')
     @stack('jsonld')
     @include('front.partials.analytics')

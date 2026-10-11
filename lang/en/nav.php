@@ -39,11 +39,11 @@ return [
 
     // Mega — ALTIN
     'Ons Altın' => 'Gold Ounce',
-    'Gram' => 'Gram',
-    'Çeyrek' => 'Quarter',
-    'Cumhuriyet' => 'Republic',
-    'Ziynet' => 'Jewellery',
-    'Yarım' => 'Half',
+    'Gram Altın' => 'Gram Gold',
+    'Çeyrek Altın' => 'Quarter Gold',
+    'Cumhuriyet Altını' => 'Republic Gold',
+    'Ziynet Altını' => 'Jewellery Gold',
+    'Yarım Altın' => 'Half Gold',
     '14 Ayar Bilezik' => '14K Bracelet',
     '22 Ayar Bilezik' => '22K Bracelet',
     'Diğer Emtia' => 'Other Commodities',
