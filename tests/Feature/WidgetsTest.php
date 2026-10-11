@@ -152,7 +152,12 @@ class WidgetsTest extends TestCase
         $this->assertStringContainsString('Emtia Haberleri', $html);
         // Bolumler artik x-news-card ile kuruluyor (news-module kaldirildi).
         $this->assertStringContainsString('data-widget-type="emtiaNews"', $html);
-        $this->assertStringContainsString('news-card-item', $html);
+        // Kartlar referansla birebir: dis siniflar saf Tailwind
+        // (type5 -> "", diger -> "border-b mb-2 pb-2"); "news-card-item"
+        // hook sinifi artik yalnizca charts/partials/card.blade.php icindir.
+        $this->assertStringContainsString('data-type="news-card-type5"', $html);
+        $this->assertStringContainsString('data-type="news-card-type2"', $html);
+        $this->assertStringNotContainsString('class="news-card-item', $html);
     }
 
     public function test_article_sidebar_featured_widget_variants(): void

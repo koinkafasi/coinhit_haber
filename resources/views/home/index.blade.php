@@ -20,7 +20,7 @@
 
     {{-- Modül 2: Hero / manşet slider + sağda Öne Çıkanlar (headline + highlights) --}}
     <section data-section="headline" class="grid grid-cols-12 gap-4 mb-4 md:mb-4 home-hero-row">
-        <div class="col-span-12 md:col-span-6 row-span-1" dataType="headline">
+        <div class="bht-grid col-span-12 md:col-span-6 row-span-1" dataType="headline">
             <div data-widget-type="headline">
                 <div data-type="swiper" data-name="" class="swiper slider-custom relative hero-main-slider"
                      data-swiper='{"loop":true,"pagination":{"el":".swiper-pagination","clickable":true},"navigation":{"nextEl":".main-slider .bloomberght-icon-font-chevron-right","prevEl":".main-slider .bloomberght-icon-font-chevron-left"}}'>
@@ -62,24 +62,38 @@
 
         {{-- Öne Çıkanlar (highlights): referans grid md:grid-cols-2 + iki kolon;
              ilk kart type3 (H2 + aspect-video kapak), devami type1. --}}
-        <div class="col-span-12 md:col-span-6 row-span-1" dataType="highlights" datatype="highlights">
+        <div class="bht-grid col-span-12 md:col-span-6 row-span-1" dataType="highlights" datatype="highlights">
             <div data-widget-type="highlights" class="border">
                 @php
-                    $__hl = $featuredNews->take(4)->values();
+                    $__hl = $featuredNews->take(7)->values();
                 @endphp
+                {{-- Referans: sol sütun type3 (bolum başlıklı) + 2 type1;
+                     sağ sütun 2 type1 + type3 (başlıksız) + type1. Toplam 7. --}}
                 <div class="grid md:grid-cols-2">
                     <div class="flex flex-col justify-between">
                         @if ($__hl->get(0))
-                            <div data-type="news-card-type3" data-news-id="" class="border-b mb-2 pb-2">
-                                <h2 class="font-unna font-bold text-3xl mb-2 p-2 pt-4">{{ __('ui.featured') }}</h2>
-                                <x-news-card :news="$__hl->get(0)" type="type3" />
-                            </div>
+                            <x-news-card :news="$__hl->get(0)" type="type3" :title="__('ui.featured')" />
+                        @endif
+                        @if ($__hl->get(1))
+                            <x-news-card :news="$__hl->get(1)" type="type1" />
+                        @endif
+                        @if ($__hl->get(2))
+                            <x-news-card :news="$__hl->get(2)" type="type1" />
                         @endif
                     </div>
                     <div class="flex flex-col justify-between">
-                        @foreach ($__hl->slice(1, 3) as $__item)
-                            <x-news-card :news="$__item" type="type1" />
-                        @endforeach
+                        @if ($__hl->get(3))
+                            <x-news-card :news="$__hl->get(3)" type="type1" />
+                        @endif
+                        @if ($__hl->get(4))
+                            <x-news-card :news="$__hl->get(4)" type="type1" />
+                        @endif
+                        @if ($__hl->get(5))
+                            <x-news-card :news="$__hl->get(5)" type="type3" />
+                        @endif
+                        @if ($__hl->get(6))
+                            <x-news-card :news="$__hl->get(6)" type="type1" />
+                        @endif
                     </div>
                 </div>
             </div>
@@ -110,24 +124,24 @@
     {{-- PİYASALAR büyük widget --}}
     @include('home.partials.market-widget')
 
-    {-- HIZLI LINKLER (col-span-8) + GRAFİK (col-span-4) yan yana —
-         referans fastLinks(8) | graphics(4) ayni satirda --}
     {{-- HIZLI LINKLER (col-span-8) + GRAFİK (col-span-4) yan yana --
          referans fastLinks(8) | graphics(4) ayni satirda --}}
     <section class="home-links-row grid grid-cols-12 gap-4 mb-4 md:mb-10">
-        <div class="col-span-12 md:col-span-8" dataType="fastLinks" datatype="fastLinks">
+{{-- Referans fastLinks ölçümü: başlık düz metin (<h2> yok),
+         swiper pt-12 (48px), slide `w-auto`, link <button class="tab-button ...">`. --}}
+        <div class="bht-grid col-span-12 md:col-span-4 row-span-1" dataType="fastLinks" datatype="fastLinks">
             <section class="relative" data-widget-type="fastLinks">
                 <div class="mb-4 border-b border-black relative before:absolute before:top-0 before:bottom-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black"></div>
-                <a href="{{ \App\Support\Locale::url('/trendler') }}" title="{{ __('ui.quick_links') }}"
-                   class="absolute top-4 left-0 font-unna font-bold text-3xl mb-2 z-10"><h2>{{ __('ui.quick_links') }}</h2></a>
+                <a href="{{ \App\Support\Locale::url('/trendler') }}" title=""
+                   class="absolute top-4 left-0 font-unna font-bold text-3xl mb-2 z-10">{{ __('ui.quick_links') }}</a>
                 <div class="tab-menu">
                     <div class="tab-head my-4">
-                        <div data-type="swiper" data-name="" class="swiper slider-custom relative mb-4 pt-12 w-full text-sm md:text-base fast-link"
+                        <div data-type="swiper" data-name="" class="swiper slider-custom relative mb-4 pt-12 w-full text-sm md:text-base"
                              data-swiper='{"slidesPerView":"auto","spaceBetween":10,"loop":false,"lazy":true,"navigation":{"nextEl":".fast-link .swiper-button-next","prevEl":".fast-link .swiper-button-prev"}}'>
                             <div class="swiper-wrapper">
-                                @foreach ($trends as $trend)
+                                @foreach ($trends as $__i => $trend)
                                     <div class="swiper-slide w-auto">
-                                        <a href="{{ $trend->url }}" class="chip font-unna font-bold text-base px-4 py-2 rounded-3xl bg-gray-100 hover:bg-gray-200 inline-block">{{ $trend->label }}</a>
+                                        <button type="button" class="tab-button inline-block px-4 py-2 rounded-3xl border font-bold {{ $__i === 0 ? 'bg-gray-200' : '' }}" data-tab="tab-fast-{{ $__i }}">{{ $trend->label }}</button>
                                     </div>
                                 @endforeach
                             </div>
@@ -138,7 +152,7 @@
                 </div>
             </section>
         </div>
-        <div class="col-span-12 md:col-span-4" dataType="graphics" datatype="graphics">
+        <div class="bht-grid col-span-12 md:col-span-4" dataType="graphics" datatype="graphics">
             <section class="home-graphics relative w-full" data-widget-type="graphics">
                 <div class="mb-4 border-b border-black relative w-full before:absolute before:top-0 before:bottom-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black"></div>
                 <a href="{{ \App\Support\Locale::url('/grafik-arsivi') }}" title="{{ __('ui.charts') }}"
@@ -160,7 +174,7 @@
     </section>
 
     {{-- PROGRAMLAR (referans programs: arka-plan + cetvel + swiper + figure kart) --}}
-    <section class="home-programs" data-widget-type="programs" class="relative">
+    <section class="home-programs relative" data-widget-type="programs">
         <div data-type="background" class="absolute -z-10 left-1/2 top-0 w-[100vw] h-96 -translate-x-1/2 -mt-4 overflow-hidden bg-gray-100 h-full mt-0" aria-hidden="true">
             <picture>
                 <img src="https://im.bloomberght.com/assets/bht/bg/desktop/2x/bg-image-1.png?v=1004" alt="" role="presentation" loading="eager" fetchpriority="high" decoding="async" class="absolute inset-0 w-full h-full object-cover object-[center_top] max-md:object-contain max-md:object-[center_top]">
@@ -203,10 +217,10 @@
 
     {{-- ÖNE ÇIKANLAR (#2) + TÜM HABERLER yan yana (referans marketAgenda + allNews) --}}
     <section class="home-agenda-row grid grid-cols-12 gap-4 mb-4 md:mb-10">
-        <div class="col-span-12 md:col-span-8 row-span-2" dataType="marketAgenda">
+        <div class="bht-grid col-span-12 md:col-span-8 row-span-2" dataType="marketAgenda">
             @include('home.partials.featured-agenda', ['items' => $featuredCards])
         </div>
-        <div class="col-span-12 md:col-span-4" dataType="allNews" datatype="allNews">
+        <div class="bht-grid col-span-12 md:col-span-4" dataType="allNews" datatype="allNews">
             <section class="relative w-full" id="home-all-news" data-widget-type="allNews">
                 <div data-type="head-type1" class=" ">
                     <div class="relative before:absolute before:top-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black before:bottom-0 before:h-2.5 border-b border-black mb-4"></div>
@@ -215,12 +229,12 @@
                     </a>
                 </div>
                 <div class="md:2xl:max-h-[630px] md:max-h-[510px] overflow-y-auto">
-                    @foreach ($allNews->take(5) as $__an)
+                    {{-- Referans ölçümü: başlık + 9 kart, overflow-y-auto kapsayıcı. --}}
+                    @foreach ($allNews->take(9) as $__an)
                         <x-news-card :news="$__an" type="type1" />
                     @endforeach
                 </div>
             </section>
-        </div>
         </div>
     </section>
 
@@ -255,9 +269,11 @@
 
     {{-- Foto Haber + VİDEOLAR yan yana (referans photoNews + video) --}}
     <section class="home-media-row grid grid-cols-12 gap-4 mb-4 md:mb-10">
-        <div class="col-span-12 md:col-span-8" dataType="photoNews" datatype="photoNews">
+        <div class="bht-grid col-span-12 md:col-span-8" dataType="photoNews" datatype="photoNews">
 <section class="home-gallery h-full" id="home-gallery" data-widget-type="photoNews">
                 <div class="mb-4 border-b border-black relative before:absolute before:top-0 before:bottom-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black"></div>
+{{-- Referans photoNews ölçümü: 2 kolon x (type5 + type1) + link-type1.
+                 Sol: type5(başlıksız) + type1, sağ: type5 + type1. --}}
                 @php
                     $__photoItems = $galleries->take(4)->values();
                     $__photoCols = [
@@ -265,20 +281,27 @@
                         array_slice($__photoItems->all(), 2, 2),
                     ];
                 @endphp
-                {{-- Referans photoNews: 2 kolon, ilk kart type5 (kapak+caption),
-                     kalanlar type2 (yatay). --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 md:gap-4">
                     @foreach ($__photoCols as $__col)
                         <div class="w-full flex flex-col justify-between">
                             @foreach ($__col as $__j => $__gallery)
-                                <x-news-card :news="$__gallery" :type="$__j === 0 ? 'type5' : 'type2'" />
+                                <x-news-card :news="$__gallery" :type="$__j === 0 ? 'type5' : 'type1'" />
                             @endforeach
                         </div>
                     @endforeach
                 </div>
+                <a href="{{ \App\Support\Locale::url('/fotohaber') }}" data-type="link-type1" title="{{ __('ui.all') }}" class="w-full flex gap-2 my-2 items-center text-black bg-white">
+                    <div class="flex-grow border-t border-gray-300 relative before:content-[''] before:absolute before:bottom-0 before:flex before:h-4 before:w-[1px] before:bg-gray-300"></div>
+                    <span class="ml-2">
+                        <span class="text-base mr-2">{{ __('ui.all') }}</span>
+                        <span class="bloomberght-icon-font-chevron-right text-sm"></span>
+                        <span class="bloomberght-icon-font-chevron-right text-sm"></span>
+                        <span class="bloomberght-icon-font-chevron-right text-sm"></span>
+                    </span>
+                </a>
             </section>
         </div>
-        <div class="col-span-12 md:col-span-4" dataType="video" datatype="video">
+        <div class="bht-grid col-span-12 md:col-span-4" dataType="video" datatype="video">
             <section class="relative" id="home-videos" data-widget-type="video">
                 <div data-type="head-type1" class=" ">
                     <div class="relative before:absolute before:top-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black before:bottom-0 before:h-2.5 border-b border-black mb-4"></div>
@@ -289,7 +312,7 @@
                 @php
                     $__vid = $videos->values();
                     $__vidLead = $__vid->get(0);
-                    $__vidRest = $__vid->slice(1, 3)->values();
+                    $__vidRest = $__vid->slice(1, 2)->values();
                 @endphp
                 @if ($__vidLead)
                     {{-- Referans video-card-type1 --}}
@@ -335,9 +358,16 @@
                         </a>
                     </div>
                 @endforeach
+                <a href="{{ \App\Support\Locale::url('/video') }}" data-type="link-type1" title="{{ __('ui.all') }}" class="w-full flex gap-2 my-2 items-center text-black bg-white">
+                    <div class="flex-grow border-t border-gray-300 relative before:content-[''] before:absolute before:bottom-0 before:flex before:h-4 before:w-[1px] before:bg-gray-300"></div>
+                    <span class="ml-2">
+                        <span class="text-base mr-2">{{ __('ui.all') }}</span>
+                        <span class="bloomberght-icon-font-chevron-right text-sm"></span>
+                        <span class="bloomberght-icon-font-chevron-right text-sm"></span>
+                        <span class="bloomberght-icon-font-chevron-right text-sm"></span>
+                    </span>
+                </a>
             </section>
-        </div>
-    </section>
         </div>
     </section>
 
@@ -349,27 +379,35 @@
     @include('home.partials.podcast-strip')
 
     {{-- Piyasa Haberleri + KAP HABERLERİ yan yana (referans marketNews + kapNews)
-         marketNews: grid-cols-2, type5 (baslik+kapak) + type2 + type1
-         kapNews:   head-type1 baslik + type1 kartlar, kaydirilabilir --}}
+         Referans ölçümü: marketNews col-span-8 (848px), kapNews col-span-4 (416px).
+         marketNews sol sütun: type5 (bölüm başlıklı) + type2
+                      sağ sütun: type1 + type1 + type5
+         kapNews: 9 adet type1, overflow-y-auto kapsayıcı. --}}
     <section class="home-news-row grid grid-cols-12 gap-4 mb-4 md:mb-10">
-        <div class="col-span-12 md:col-span-6" dataType="marketNews" datatype="marketNews">
+        <div class="bht-grid col-span-12 md:col-span-8" dataType="marketNews" datatype="marketNews">
             <section class="h-full" id="home-market-news" data-widget-type="marketNews">
                 <div class="mb-4 border-b border-black relative before:absolute before:top-0 before:bottom-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black"></div>
                 @php
-                    $__mn = $marketNews->take(3)->values();
+                    $__mn = $marketNews->take(5)->values();
                 @endphp
                 <div class="grid grid-cols-1 md:grid-cols-2 md:gap-4">
                     <div class="w-full flex flex-col justify-between">
                         @if ($__mn->get(0))
                             <x-news-card :news="$__mn->get(0)" type="type5" :title="__('ui.market_news')" :href="\App\Support\Locale::url('/piyasalar')" />
                         @endif
+                        @if ($__mn->get(1))
+                            <x-news-card :news="$__mn->get(1)" type="type2" wrap-class="mb-4" />
+                        @endif
                     </div>
                     <div class="w-full flex flex-col justify-between">
-                        @if ($__mn->get(1))
-                            <x-news-card :news="$__mn->get(1)" type="type2" />
-                        @endif
                         @if ($__mn->get(2))
                             <x-news-card :news="$__mn->get(2)" type="type1" />
+                        @endif
+                        @if ($__mn->get(3))
+                            <x-news-card :news="$__mn->get(3)" type="type1" />
+                        @endif
+                        @if ($__mn->get(4))
+                            <x-news-card :news="$__mn->get(4)" type="type5" />
                         @endif
                     </div>
                 </div>
@@ -384,7 +422,7 @@
                 </a>
             </section>
         </div>
-        <div class="col-span-12 md:col-span-6" dataType="kapNews" datatype="kapNews">
+        <div class="bht-grid col-span-12 md:col-span-4" dataType="kapNews" datatype="kapNews">
             <section class="relative w-full" id="home-kap" data-widget-type="kapNews">
                 <div data-type="head-type1" class=" ">
                     <div class="relative before:absolute before:top-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black before:bottom-0 before:h-2.5 border-b border-black mb-4"></div>
@@ -393,7 +431,8 @@
                     </a>
                 </div>
                 <div class="md:2xl:max-h-[630px] md:max-h-[510px] overflow-y-auto">
-                    @foreach ($kapDisclosures->take(5) as $disclosure)
+                    {{-- Referans ölçümü: 9 kart, kapsayıcı 628px (scrollHeight == height). --}}
+                    @foreach ($kapDisclosures->take(9) as $disclosure)
                         <x-news-card :news="$disclosure" type="type1" />
                     @endforeach
                 </div>
@@ -410,7 +449,7 @@
 
     {{-- Emtia / Sektör / Siyaset Haberleri — 3 sütun (referans emtiaNews + sectorNews + politicsNews sırası) --}}
     <section class="home-sector-section grid grid-cols-12 gap-4 mb-4 md:mb-10" id="home-sector">
-        <div class="col-span-12 md:col-span-4" dataType="emtiaNews" datatype="emtiaNews">
+        <div class="bht-grid col-span-12 md:col-span-4" dataType="emtiaNews" datatype="emtiaNews">
             <section class="h-full" id="home-emtia" data-widget-type="emtiaNews">
                 <div class="mb-4 border-b border-black relative before:absolute before:top-0 before:bottom-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black"></div>
                 @php
@@ -426,7 +465,7 @@
                 </div>
             </section>
         </div>
-        <div class="col-span-12 md:col-span-4" dataType="sectorNews" datatype="sectorNews">
+        <div class="bht-grid col-span-12 md:col-span-4" dataType="sectorNews" datatype="sectorNews">
             <section class="h-full" id="home-sector-news" data-widget-type="sectorNews">
                 <div class="mb-4 border-b border-black relative before:absolute before:top-0 before:bottom-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black"></div>
                 @php
@@ -445,7 +484,7 @@
                 </div>
             </section>
         </div>
-        <div class="col-span-12 md:col-span-4" dataType="politicsNews" datatype="politicsNews">
+        <div class="bht-grid col-span-12 md:col-span-4" dataType="politicsNews" datatype="politicsNews">
             <section class="h-full" id="home-politics" data-widget-type="politicsNews">
                 <div class="mb-4 border-b border-black relative before:absolute before:top-0 before:bottom-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black"></div>
                 @php
@@ -472,8 +511,6 @@
                     </span>
                 </a>
             </section>
-        </div>
-    </section>
         </div>
     </section>
 

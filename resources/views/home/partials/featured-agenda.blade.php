@@ -1,70 +1,43 @@
-{{-- Ana sayfa "Öne Çıkanlar" ajandası (referans marketAgenda, CH-27).
-     2 kolon: sol büyük görsel kart + satır; sağ liste kartları + görsel. --}}
+{{-- Referans marketAgenda (ölçüldü): başlık + grid-cols-2.
+         Sol sütun: type5 (başlıklı, <h2>Öne Çıkanlar</h2>) + type2 (mb-4)
+         Sağ sütun: type1 + type1 + type5 (başlıksız)
+         Ardından link-type1. --}}
 @php
     $lead = $items[0] ?? null;
     $rows = collect($items)->slice(1, 5)->values();
 @endphp
 <section class="featured-agenda" data-widget-type="marketAgenda" id="home-featured-office">
-    <x-section-head :title="__('ui.featured')" :href="\App\Support\Locale::url('/haberler')" />
+    <div class="mb-4 border-b border-black relative before:absolute before:top-0 before:bottom-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black"></div>
 
-    @if ($lead)
-        <div class="grid grid-cols-1 md:grid-cols-2 md:gap-4">
-            <div class="fa-col-left">
-                <article class="fa-lead" data-type="news-card-type5">
-                    <a href="{{ $lead->url }}" title="{{ $lead->title }}" class="fa-lead-link">
-                        <figure class="fa-lead-figure">
-                            <div class="fa-lead-img-wrap">
-                                <x-lazy-image :src="asset(($lead->image ?? '') ?: '/img/og-default.png')" alt="{{ $lead->title }}" contract="news_card_square" class="fa-lead-img" :eager="false" />
-                            </div>
-                            <figcaption class="fa-lead-caption">
-                                <span class="category text-xs">{{ $lead->category?->name }}</span>
-                                <span class="fa-lead-title font-unna font-bold line-clamp-2">{{ $lead->title }}</span>
-                            </figcaption>
-                        </figure>
-                    </a>
-                </article>
-                @if ($rows->get(0))
-                    @php($r0 = $rows->get(0))
-                    <article class="fa-row" data-type="news-card-type2">
-                        <a href="{{ $r0->url }}" title="{{ $r0->title }}" class="fa-row-link">
-                            <span class="fa-row-thumb">
-                                <x-lazy-image :src="asset(($r0->image ?? '') ?: '/img/og-default.png')" alt="" contract="news_card_square" class="fa-row-img" />
-                            </span>
-                            <span class="fa-row-body">
-                                <span class="category text-xs">{{ $r0->category?->name }}</span>
-                                <span class="fa-row-title font-unna font-bold line-clamp-3">{{ $r0->title }}</span>
-                            </span>
-                        </a>
-                    </article>
-                @endif
-            </div>
-
-            <div class="fa-col-right">
-                @foreach ($rows->slice(1, 2) as $r)
-                    <article class="fa-list-item" data-type="news-card-type1">
-                        <a href="{{ $r->url }}" title="{{ $r->title }}">
-                            <span class="category text-xs">{{ $r->category?->name }}</span>
-                            <span class="fa-list-title font-unna font-bold line-clamp-2">{{ $r->title }}</span>
-                        </a>
-                    </article>
-                @endforeach
-                @if ($rows->get(3))
-                    @php($r3 = $rows->get(3))
-                    <article class="fa-lead fa-lead-small" data-type="news-card-type5">
-                        <a href="{{ $r3->url }}" title="{{ $r3->title }}" class="fa-lead-link">
-                            <figure class="fa-lead-figure">
-                                <div class="fa-lead-img-wrap">
-                                    <x-lazy-image :src="asset(($r3->image ?? '') ?: '/img/og-default.png')" alt="" contract="news_card_square" class="fa-lead-img" />
-                                </div>
-                                <figcaption class="fa-lead-caption">
-                                    <span class="category text-xs">{{ $r3->category?->name }}</span>
-                                    <span class="fa-lead-title fa-lead-title-sm font-unna font-bold line-clamp-2">{{ $r3->title }}</span>
-                                </figcaption>
-                            </figure>
-                        </a>
-                    </article>
-                @endif
-            </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 md:gap-4">
+        <div class="w-full flex flex-col justify-between">
+            @if ($lead)
+                <x-news-card :news="$lead" type="type5" :title="__('ui.featured')" :href="\App\Support\Locale::url('/haberler')" />
+            @endif
+            @if ($rows->get(0))
+                <x-news-card :news="$rows->get(0)" type="type2" wrap-class="mb-4" />
+            @endif
         </div>
-    @endif
+        <div class="w-full flex flex-col justify-between">
+            @if ($rows->get(1))
+                <x-news-card :news="$rows->get(1)" type="type1" />
+            @endif
+            @if ($rows->get(2))
+                <x-news-card :news="$rows->get(2)" type="type1" />
+            @endif
+            @if ($rows->get(3))
+                <x-news-card :news="$rows->get(3)" type="type5" />
+            @endif
+        </div>
+    </div>
+
+    <a href="{{ \App\Support\Locale::url('/haberler') }}" data-type="link-type1" title="{{ __('ui.all') }}" class="w-full flex gap-2 my-2 items-center text-black bg-white">
+        <div class="flex-grow border-t border-gray-300 relative before:content-[''] before:absolute before:bottom-0 before:flex before:h-4 before:w-[1px] before:bg-gray-300"></div>
+        <span class="ml-2">
+            <span class="text-base mr-2">{{ __('ui.all') }}</span>
+            <span class="bloomberght-icon-font-chevron-right text-sm"></span>
+            <span class="bloomberght-icon-font-chevron-right text-sm"></span>
+            <span class="bloomberght-icon-font-chevron-right text-sm"></span>
+        </span>
+    </a>
 </section>

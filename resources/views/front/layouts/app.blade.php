@@ -96,15 +96,21 @@
 
     @include('front.partials.header')
 
-    {{-- CH-24: referans main yapısı — p-4 + master + pageskin sol/sağ --}}
+    {{-- Referans main yapısı (ölçüldü): p-4 + master(1280px) + pageskin sol/sağ.
+         Referans `container mx-auto` kullanıyor (v3: 2xl=1280px). Tailwind v4
+         `container` 2xl'de 1536px verdiği için ölçülen 1280px `max-w-[1280px]`
+         ile birebir karşılanır. İçerik sarmalayıcı `w-full min-w-full` → 1280px;
+         pageskin'ler -ml/-mr-[160px] ile dışarı taşar, master'ı genişletmez. --}}
     <main class="p-4">
-        <div class="master w-full flex justify-center items-start container mx-auto">
+        <div class="master w-full flex justify-center items-start mx-auto max-w-[1280px]">
             {{-- Pageskin sol reklam (zone_1252) --}}
             <div data-adv="bht" data-device="DESKTOP" id="page-skin-left-sticky"
                  class="pageskin page-skin-left pageskin-left hidden -ml-[160px] mr-4 justify-end sticky top-[212px] min-w-[160px] h-auto min-h-[600px] text-gray-400 z-[50]">
                 <div id="zone_1252" data-zone-id="1252" class="no-init" data-zone-viewtype="banner"></div>
             </div>
 
+            {{-- Referans: <div class="w-full min-w-full"> — içerik master genişliğinde
+                 (1280px) kalır; pageskin'ler negative margin ile dışarıda. --}}
             <div class="w-full min-w-full">
                 <div class="mainpage-content">
                     @yield('content')
