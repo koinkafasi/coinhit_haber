@@ -83,12 +83,13 @@ class DesignSystemTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee('bloomberght-icon-font-icon-search', false);
-        $response->assertSee('bloomberght-icon-font-icon-live', false);
-        $response->assertSee('bloomberght-icon-font-icon-radio', false);
-        $response->assertSee('bht-footer-grid', false);
-        $response->assertSee('footer-menu', false);
+        $response->assertSee('bloomberght-icon-font-search', false);
+        $response->assertSee('bloomberght-icon-font-play', false);
+        $response->assertSee('bloomberght-icon-font-radio', false);
+        $response->assertSee('bloomberght-icon-font-menu', false);
+        $response->assertSee('id="footer-menu"', false);
         $response->assertSee('js/lazy.js', false);
+        $response->assertSee('js/swiper-bundle.min.js', false);
         $response->assertSee('SON DAKİKA', false);
         $response->assertSee('data-src=', false);
         $response->assertSee('/img/transparent.gif', false);

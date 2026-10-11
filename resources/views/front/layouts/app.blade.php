@@ -60,6 +60,8 @@
 
     @php($__cssVersion = @filemtime(public_path('css/app.css')) ?: 1)
     <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ $__cssVersion }}">
+    @php($__swiperCss = @filemtime(public_path('css/swiper-bundle.min.css')) ?: 1)
+    <link rel="stylesheet" href="{{ asset('css/swiper-bundle.min.css') }}?v={{ $__swiperCss }}">
     @include('front.partials.jsonld')
     @stack('jsonld')
     @include('front.partials.analytics')
@@ -78,8 +80,27 @@
 
     @include('front.partials.header')
 
-    <main class="container page bht-main" id="main-content">
-        @yield('content')
+    {{-- CH-24: referans main yapısı — p-4 + master + pageskin sol/sağ --}}
+    <main class="p-4">
+        <div class="master w-full flex justify-center items-start container mx-auto">
+            {{-- Pageskin sol reklam (zone_1252) --}}
+            <div data-adv="bht" data-device="DESKTOP" id="page-skin-left-sticky"
+                 class="pageskin page-skin-left pageskin-left hidden -ml-[160px] mr-4 justify-end sticky top-[212px] min-w-[160px] h-auto min-h-[600px] text-gray-400 z-[50]">
+                <div id="zone_1252" data-zone-id="1252" class="no-init" data-zone-viewtype="banner"></div>
+            </div>
+
+            <div class="w-full min-w-full">
+                <div class="mainpage-content">
+                    @yield('content')
+                </div>
+            </div>
+
+            {{-- Pageskin sağ reklam (zone_1251) --}}
+            <div data-adv="bht" data-device="DESKTOP" id="page-skin-right-sticky"
+                 class="pageskin page-skin-right pageskin-right -mr-[160px] ml-4 hidden justify-start sticky top-[212px] min-w-[160px] h-auto min-h-[600px] text-gray-400 z-[50]">
+                <div id="zone_1251" data-zone-id="1251" class="no-init" data-zone-viewtype="banner"></div>
+            </div>
+        </div>
     </main>
 
     @include('front.partials.footer')
@@ -110,6 +131,7 @@
         });
     </script>
     <script src="{{ asset('js/lazy.js') }}" defer></script>
+    <script src="{{ asset('js/swiper-bundle.min.js') }}" defer></script>
     <script src="{{ asset('js/site.js') }}" defer></script>
     <script src="{{ asset('js/market-live.js') }}" defer></script>
     @stack('scripts')

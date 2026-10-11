@@ -23,6 +23,8 @@ return [
 
     // Header / ticker
     'live' => 'Canlı Yayın',
+    'live_word' => 'Canlı',
+    'broadcast_word' => 'Yayın',
     'radio' => 'Radyo',
     'menu' => 'Menü',
     'main_nav' => 'Ana navigasyon',
@@ -34,6 +36,7 @@ return [
     'market_data_aria' => 'Piyasa verileri',
     'language' => 'Dil',
     'switch_language' => 'Dili değiştir',
+    'can_medya_grubu' => 'CAN MEDYA GRUBU',
 
     // Footer
     'footer_nav' => 'Alt navigasyon',

@@ -85,14 +85,15 @@ class GlobalFrameTest extends TestCase
 
         $html = $this->get('/')->assertOk()->getContent();
 
-        $this->assertStringContainsString('class="bht-navbar"', $html, 'Mega nav ikinci barı eksik.');
-        $this->assertStringContainsString('bht-top-actions', $html);
-        $this->assertStringContainsString('bht-action-live', $html);
-        $this->assertStringContainsString('bht-action-radio', $html);
-        $this->assertStringContainsString('search-toggle', $html);
-        $this->assertStringContainsString('data-menu-toggle', $html);
-        $this->assertSame(4, substr_count($html, 'class="drop-down bht-dropdown"'), 'Mega nav dropdown sayısı 4 olmalı.');
-        $this->assertStringContainsString('bloomberght-icon-font-icon-radio', $html);
+        // CH-24: referans header — tek satır üst bar + eylem düğmeleri
+        $this->assertStringContainsString('class="sticky top-0 md:relative z-600 w-full h-full px-4 inset-x-0 bg-[#384552]"', $html, 'Referans header yapısı eksik.');
+        $this->assertStringContainsString('data-widget-type="nav-sub-menu"', $html, 'Mega nav barı eksik.');
+        $this->assertStringContainsString('class="nav-sub-menu container h-full mx-auto flex items-center justify-between z-90 whitespace-nowrap"', $html);
+        $this->assertStringContainsString('bloomberght-icon-font-play', $html);
+        $this->assertStringContainsString('bloomberght-icon-font-radio', $html);
+        $this->assertStringContainsString('search-widget-trigger bloomberght-icon-font-search', $html);
+        $this->assertStringContainsString('menu-button bloomberght-icon-font-menu', $html);
+        $this->assertSame(4, substr_count($html, 'class="drop-down absolute top-12 left-0 bg-[#4D596A] z-90 text-sm w-max hidden"'), 'Mega nav dropdown sayısı 4 olmalı.');
     }
 
     public function test_footer_has_five_exact_columns_and_extras(): void
@@ -101,7 +102,8 @@ class GlobalFrameTest extends TestCase
 
         $html = $this->get('/')->assertOk()->getContent();
 
-        $this->assertSame(5, substr_count($html, 'class="footer-col"'), 'Footer 5 sütun olmalı.');
+        $this->assertSame(5, substr_count($html, '<ul data-footer-col>'), 'Footer 5 sütun olmalı.');
+        $this->assertStringContainsString('id="footer-menu" class="grid grid-cols-2 sm:grid-cols-5 gap-4 items-start text-sm pt-8 pb-4 border-b-2 border-[#707070]"', $html, 'Footer grid referans yapısı eksik.');
 
         foreach ([
             'Kripto Fiyatları', 'Künye', 'Ata Altın Fiyatı', 'Altın ONS Fiyatı',

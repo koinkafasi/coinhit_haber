@@ -45,16 +45,91 @@
     }
 
     function initMenu() {
-        var toggle = document.querySelector('[data-menu-toggle]');
-        if (!toggle) {
+        var button = document.querySelector('.menu-button');
+        var panel = document.querySelector('[data-mega-menu-panel]');
+
+        if (!button || !panel) {
             return;
         }
 
-        var nav = document.getElementById(toggle.getAttribute('aria-controls'));
+        function close() {
+            panel.setAttribute('hidden', '');
+            document.body.classList.remove('bht-nav-open');
+        }
 
-        toggle.addEventListener('click', function () {
-            var open = document.body.classList.toggle('bht-nav-open');
-            toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        button.addEventListener('click', function () {
+            panel.removeAttribute('hidden');
+            document.body.classList.add('bht-nav-open');
+        });
+
+        var closeBtn = panel.querySelector('[data-menu-close]');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', close);
+        }
+
+        panel.addEventListener('click', function (event) {
+            if (event.target === panel) {
+                close();
+            }
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                close();
+            }
+        });
+
+        panel.querySelectorAll('[data-menu-caret]').forEach(function (caret) {
+            caret.addEventListener('click', function () {
+                var item = caret.closest('.mega-menu-item');
+                var children = item ? item.querySelector('.mega-menu-children') : null;
+
+                if (!children) {
+                    return;
+                }
+
+                var closed = children.classList.toggle('hidden');
+                caret.setAttribute('aria-expanded', closed ? 'false' : 'true');
+                caret.classList.toggle('is-open', !closed);
+            });
+        });
+    }
+
+    function initSearchWidget() {
+        var trigger = document.querySelector('.search-widget-trigger');
+        var overlay = document.querySelector('[data-search-overlay]');
+
+        if (!trigger || !overlay) {
+            return;
+        }
+
+        function close() {
+            overlay.setAttribute('hidden', '');
+        }
+
+        trigger.addEventListener('click', function () {
+            overlay.removeAttribute('hidden');
+            var input = overlay.querySelector('input[name="q"]');
+            if (input) {
+                window.setTimeout(function () { input.focus(); }, 50);
+            }
+        });
+
+        var closeBtn = overlay.querySelector('[data-search-close]');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', close);
+        }
+
+        overlay.addEventListener('click', function (event) {
+            if (event.target === overlay) {
+                close();
+            }
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                close();
+            }
         });
     }
 
@@ -162,68 +237,28 @@
     }
 
     /**
-     * Hero main-slider (grid-cols-12 swiper karşılığı).
+     * Hero main-slider — CH-24: referans Swiper (`[data-type="swiper"]`,
+     * opsiyonlar data-swiper JSON).
      */
-    function initHeroSlider() {
-        document.querySelectorAll('[data-hero-slider]').forEach(function (slider) {
-            var track = slider.querySelector('[data-hero-track]');
-            if (!track) {
-                return;
+    function initSwiper() {
+        if (!window.Swiper) {
+            return;
+        }
+
+        document.querySelectorAll('[data-type="swiper"]').forEach(function (el) {
+            var options = null;
+
+            try {
+                options = JSON.parse(el.getAttribute('data-swiper') || 'null');
+            } catch (e) {
+                options = null;
             }
 
-            var slides = Array.prototype.slice.call(track.children);
-            if (slides.length < 2) {
-                return;
+            if (!options || typeof options !== 'object') {
+                options = {};
             }
 
-            var pagination = slider.querySelector('[data-hero-pagination]');
-            var current = 0;
-            var timer = null;
-
-            function render() {
-                track.style.transform = 'translateX(-' + current * 100 + '%)';
-
-                if (pagination) {
-                    pagination.querySelectorAll('.dot').forEach(function (dot, index) {
-                        dot.classList.toggle('is-active', index === current);
-                    });
-                }
-            }
-
-            function go(index) {
-                current = (index + slides.length) % slides.length;
-                render();
-            }
-
-            if (pagination) {
-                slides.forEach(function (slide, index) {
-                    var dot = document.createElement('button');
-                    dot.type = 'button';
-                    dot.className = 'dot' + (index === 0 ? ' is-active' : '');
-                    dot.setAttribute('aria-label', String(index + 1));
-                    dot.addEventListener('click', function () { go(index); });
-                    pagination.appendChild(dot);
-                });
-            }
-
-            var prev = slider.querySelector('[data-hero-prev]');
-            var next = slider.querySelector('[data-hero-next]');
-
-            if (prev) {
-                prev.addEventListener('click', function () { go(current - 1); });
-            }
-            if (next) {
-                next.addEventListener('click', function () { go(current + 1); });
-            }
-
-            function start() {
-                timer = window.setInterval(function () { go(current + 1); }, 6000);
-            }
-
-            slider.addEventListener('mouseenter', function () { window.clearInterval(timer); });
-            slider.addEventListener('mouseleave', start);
-
-            start();
+            new window.Swiper(el, options);
         });
     }
 
@@ -722,10 +757,11 @@
     function init() {
         initCookie();
         initMenu();
+        initSearchWidget();
         initSearch();
         initScrollTop();
         initTabs();
-        initHeroSlider();
+        initSwiper();
         initRangeTabs();
         initShareCopy();
         initTextIncrease();

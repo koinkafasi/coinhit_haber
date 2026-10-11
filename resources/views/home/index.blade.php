@@ -18,34 +18,63 @@
 @section('content')
 <div class="home-page">
 
-    {{-- Modül 2: Hero / main-slider (grid-cols-12 swiper, dataType=headline) --}}
-    <section class="hero-main-slider" data-widget-type="headline">
-        <div class="main-slider slider-custom" data-hero-slider>
-            <div class="swiper-wrapper hero-slides" data-hero-track>
-                @foreach ($hero as $index => $item)
-                    <article class="swiper-slide hero-slide grid-cols-12" data-hash="haber-{{ $item->news_id }}" data-type="headline">
-                        <a href="{{ $item->url }}" class="hero-slide-link">
-                            <figure class="aspect-video bg-gray-50 hero-slide-figure">
-                                <x-lazy-image :src="asset($item->image ?: '/img/og-default.png')" alt="" contract="news_card" class="hero-slide-img" :eager="$index === 0" />
-                            </figure>
-                            <figcaption class="hero-slide-caption">
-                                <div class="category text-xs">{{ $item->category?->name }}</div>
-                                <h2 class="font-unna font-bold hero-slide-title line-clamp-2">{{ $item->title }}</h2>
-                                @if ($item->spot)
-                                    <p class="hero-slide-spot line-clamp-2">{{ \Illuminate\Support\Str::limit(strip_tags($item->spot), 160) }}</p>
-                                @endif
-                            </figcaption>
-                        </a>
-                    </article>
+    {{-- Modül 2: Hero / manşet slider (CH-24: referans grid-cols-12 + Swiper yapısı) --}}
+    <section data-section="headline" class="grid grid-cols-12 gap-4 mb-4 md:mb-10">
+        <div class="bht-grid col-span-12 md:col-span-6 row-span-1" dataType="headline">
+            <div data-widget-type="headline">
+                <div data-type="swiper" data-name="" class="swiper slider-custom relative hero-main-slider"
+                     data-swiper='{"loop":true,"pagination":{"el":".swiper-pagination","clickable":true},"navigation":{"nextEl":".main-slider .bloomberght-icon-font-chevron-right","prevEl":".main-slider .bloomberght-icon-font-chevron-left"}}'>
+                    <div class="swiper-wrapper">
+                        @foreach ($hero as $index => $item)
+                            <div class="swiper-slide" data-hash="haber-{{ $item->news_id }}" style="">
+                                <div class="-z-100">
+                                    <figure>
+                                        <div class="w-full h-auto aspect-video bg-gray-50">
+                                            <a href="{{ $item->url }}" title="{{ $item->title }}">
+                                                <x-lazy-image :src="asset($item->image ?: '/img/og-default.png')" alt="{{ $item->title }}" class="w-full h-full swiper-lazy" contract="news_card" :eager="$index === 0" />
+                                            </a>
+                                        </div>
+                                        <figcaption class="pt-10">
+                                            <a href="{{ $item->url }}" title="{{ $item->title }}" class="md:min-h-16 inline-flex items-center">
+                                                <div class="font-unna font-bold text-2xl text-ellipsis inline-flex">
+                                                    <span class="line-clamp-2">{{ $item->title }}</span>
+                                                </div>
+                                            </a>
+                                            @if ($item->spot)
+                                                <p class="hero-slide-spot line-clamp-2 mt-2 text-sm text-gray-700">{{ \Illuminate\Support\Str::limit(strip_tags($item->spot), 160) }}</p>
+                                            @endif
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="w-full h-20 absolute bottom-0">
+                        <div class="swiper-pagination relative type4"></div>
+                    </div>
+                    <div class="main-slider text-black absolute left-0 top-32 3xl:top-44 h-6 w-full z-10 pointer-events-none">
+                        <button type="button" aria-label="prev" class="swiper-button-prev pointer-events-auto after:content-[''] bg-black bg-opacity-40 text-white border-y border-r border-white w-9 h-9 bloomberght-icon-font-chevron-left left-0 cursor-pointer text-inherit hidden md:flex"></button>
+                        <button type="button" aria-label="next" class="swiper-button-next pointer-events-auto after:content-[''] bg-black bg-opacity-40 text-white border-y border-l border-white w-9 h-9 bloomberght-icon-font-chevron-right right-0 cursor-pointer text-inherit hidden md:flex"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Sağ kolon: Öne Çıkanlar (highlights) — CH-24 referans grid eşi --}}
+        <div class="bht-grid col-span-12 md:col-span-6 row-span-1" dataType="highlights">
+            <div class="highlights-list">
+                @foreach ($featuredNews as $index => $item)
+                    <a href="{{ $item->url }}" class="highlights-item flex items-center gap-4 py-4 {{ $index > 0 ? 'border-t border-gray-200' : '' }}">
+                        <span class="flex-1 min-w-0">
+                            <span class="category text-xs text-[#bd1b2d]">{{ $item->category?->name }}</span>
+                            <span class="block font-unna font-bold text-lg text-ellipsis line-clamp-2">{{ $item->title }}</span>
+                        </span>
+                        <span class="flex-shrink-0 w-24 h-16 overflow-hidden bg-gray-50">
+                            <x-lazy-image :src="asset(($item->image ?? '') ?: '/img/og-default.png')" alt="" class="w-full h-full object-cover" contract="news_card_square" />
+                        </span>
+                    </a>
                 @endforeach
             </div>
-            <button type="button" class="main-slider-nav main-slider-prev" data-hero-prev aria-label="{{ __('ui.previous') }}">
-                <span class="bloomberght-icon-font-icon-chevron-left" aria-hidden="true">&lsaquo;</span>
-            </button>
-            <button type="button" class="main-slider-nav main-slider-next" data-hero-next aria-label="{{ __('ui.next') }}">
-                <span class="bloomberght-icon-font-icon-chevron-right" aria-hidden="true">&rsaquo;</span>
-            </button>
-            <div class="main-slider-pagination type4" data-hero-pagination></div>
         </div>
     </section>
 

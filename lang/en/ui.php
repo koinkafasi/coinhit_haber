@@ -23,6 +23,8 @@ return [
 
     // Header / ticker
     'live' => 'Live',
+    'live_word' => 'Live',
+    'broadcast_word' => 'Broadcast',
     'radio' => 'Radio',
     'menu' => 'Menu',
     'main_nav' => 'Main navigation',
@@ -34,6 +36,7 @@ return [
     'market_data_aria' => 'Market data',
     'language' => 'Language',
     'switch_language' => 'Switch language',
+    'can_medya_grubu' => 'CAN MEDYA GROUP',
 
     // Footer
     'footer_nav' => 'Footer navigation',
