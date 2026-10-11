@@ -103,31 +103,6 @@
                 <a class="mw-aside-all" href="{{ \App\Support\Locale::url('/piyasalar') }}">{{ __('ui.all') }} &raquo;</a>
             </div>
 
-            {{-- Hızlı Linkler (rezerv/hisse/waller/fon ödemeleri vb. trendler) --}}
-            <div class="quick-links" data-widget-type="fastLinks">
-                <h3 class="mw-aside-title font-unna font-bold">{{ __('ui.quick_links') }}</h3>
-                <div class="quick-links-chips">
-                    @foreach ($trends as $trend)
-                        <a class="chip" href="{{ $trend->url }}"><i class="q-arrow-right" aria-hidden="true"></i>{{ $trend->label }}</a>
-                    @endforeach
-                </div>
-                <a class="mw-aside-all" href="{{ \App\Support\Locale::url('/trendler') }}">{{ __('ui.all') }} &raquo;</a>
-            </div>
-
-            {{-- Grafik --}}
-            <div class="market-charts-mini" data-widget-type="graphics">
-                <h3 class="mw-aside-title font-unna font-bold">{{ __('ui.charts') }}</h3>
-                <p class="mw-charts-desc">{{ __('ui.charts_desc') }}</p>
-                <div class="mw-charts-grid">
-                    @foreach ($charts as $chart)
-                        <a class="mw-chart-thumb" href="{{ $chart->url }}">
-                            <x-lazy-image :src="asset($chart->image ?: '/img/og-default.png')" alt="" width="120" height="68" class="img-contract" />
-                            <span class="mw-chart-thumb-title line-clamp-2">{{ $chart->title }}</span>
-                        </a>
-                    @endforeach
-                </div>
-                <a class="mw-aside-all" href="{{ \App\Support\Locale::url('/grafik-arsivi') }}">{{ __('ui.all') }} &raquo;</a>
-            </div>
-        </aside>
+</aside>
     </div>
 </section>

@@ -150,8 +150,9 @@ class WidgetsTest extends TestCase
 
         $this->assertStringContainsString('id="home-featured-office"', $html);
         $this->assertStringContainsString('Emtia Haberleri', $html);
-        $this->assertStringContainsString('category-news-module', $html);
-        $this->assertStringContainsString('news-card-grid', $html);
+        // Bolumler artik x-news-card ile kuruluyor (news-module kaldirildi).
+        $this->assertStringContainsString('data-widget-type="emtiaNews"', $html);
+        $this->assertStringContainsString('news-card-item', $html);
     }
 
     public function test_article_sidebar_featured_widget_variants(): void

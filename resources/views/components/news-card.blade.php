@@ -4,13 +4,23 @@
     'eager' => false,
     'showSpot' => false,
     'contract' => 'news_card',
+    'title' => null,
+    'href' => null,
 ])
 
 @php
-    $category = $news->category?->name;
+    // KapHaberi gibi kategori iliskisi olmayan modellerde de calisir.
+    $category = data_get($news, 'category.name');
+    // Referans: type5 bolum basligini kendi icinde tasir
+    // ("Piyasa Haberleri" / "Siyaset Haberleri" vb. link ile).
+    $sectionTitle = $title;
+    $sectionHref = $href ?? $news->url;
 @endphp
 
 <div class="news-card-item news-card-{{ $type }}" data-type="news-card-{{ $type }}" data-news-id="{{ $news->news_id }}">
+    @if ($type === 'type5' && $sectionTitle)
+        <a href="{{ $sectionHref }}" title="{{ $sectionTitle }}" class="block font-unna font-bold text-3xl mb-2 z-10">{{ $sectionTitle }}</a>
+    @endif
     <a href="{{ $news->url }}" title="{{ $news->title }}" class="{{ $type === 'type5' ? 'block' : '' }} news-card-link">
         @if ($type === 'type5')
             <figure class="relative w-full border-b mb-2 pb-2 news-card-figure">
@@ -61,6 +71,13 @@
                 </figcaption>
             </figure>
         @else
+            {{-- type1 (ve tip belirtilmemis): baslik varsa bolum basligi olarak
+                 <h2> ile tasir (referans sectorNews "Sektör Haberleri"). --}}
+            @if ($sectionTitle)
+                <a href="{{ $sectionHref }}" title="{{ $sectionTitle }}" class="block font-unna font-bold text-3xl mb-2 z-10">
+                    <h2>{{ $sectionTitle }}</h2>
+                </a>
+            @endif
             <figure class="px-2">
                 <figcaption class="news-card-caption">
                     @if ($category)
