@@ -13,6 +13,8 @@
 @font-face { font-family: 'Unna'; font-style: normal; font-weight: 400; src: url('/fonts/unna/Unna-Regular.woff') format('woff'); }
 @font-face { font-family: 'Unna'; font-style: normal; font-weight: 700; src: url('/fonts/unna/Unna-Bold.woff') format('woff'); }
 @font-face { font-family: 'Unna'; font-style: italic; font-weight: 400; src: url('/fonts/unna/Unna-Italic.woff') format('woff'); }
+/* CH-28: bloomberght-icon-font — referans app-style.css'ten BİREBİR @font-face */
+@font-face{font-family:bloomberght-icon-font;src:url(/fonts/bloomberght-icon-font/bloomberght-icon-font.eot?t=1784548949927);src:url(/fonts/bloomberght-icon-font/bloomberght-icon-font.eot?t=1784548949927#iefix) format("embedded-opentype"),url(/fonts/bloomberght-icon-font/bloomberght-icon-font.woff2?t=1784548949927) format("woff2"),url(/fonts/bloomberght-icon-font/bloomberght-icon-font.woff?t=1784548949927) format("woff"),url(/fonts/bloomberght-icon-font/bloomberght-icon-font.ttf?t=1784548949927) format("truetype"),url(/fonts/bloomberght-icon-font/bloomberght-icon-font.svg?t=1784548949927#bloomberght-icon-font) format("svg")}
 
 :root {
     /* --- Marka kimliği (sarı/siyah) --- */
@@ -46,6 +48,10 @@
     --container-gutter: 16px;
     --sidebar-width: 400px;       /* makale detay sağ sidebar */
     --header-bar-height: 64px;
+
+    /* --- Haber linki renkleri (referans: --news-link) --- */
+    --news-link: #1C64A8;
+    --news-link-hover: #134B80;
 
     /* --- Geriye dönük kısa adlar (CH-17 şablonları) --- */
     --black: var(--bht-black);
@@ -2386,35 +2392,96 @@ figure { max-width: 100%; }
     .\33 xl\:top-44 { top: 176px; }
 }
 
-/* ---------- İKON FONT glyph'leri (CH-24) ----------
-   Referans: boş öğe + bloomberght-icon-font-{ad}; görsel CSS
-   ::before + satır içi SVG (veri URI) ile kurulur. */
-[class^="bloomberght-icon-font-"]::before,
-[class*=" bloomberght-icon-font-"]::before {
-    content: "";
+/* ---------- İKON FONT glyph'leri (CH-28) ----------
+   referans app-style.css'ten BİREBİR: boş öğe + :before glyph (gerçek font).
+   Font dosyaları: /fonts/bloomberght-icon-font/* (self-host). */
+[class^=bloomberght-icon-font-],[class*=" bloomberght-icon-font-"]{font-family:bloomberght-icon-font;font-style:normal;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+/* Tüm glyph'ler (referans sırasıyla, birebir): 51 ikon */
+.bloomberght-icon-font-arrow-down:before{content:"\ea01"}
+.bloomberght-icon-font-arrow-left:before{content:"\ea02"}
+.bloomberght-icon-font-arrow-right:before{content:"\ea03"}
+.bloomberght-icon-font-arrow-up:before{content:"\ea04"}
+.bloomberght-icon-font-avatar:before{content:"\ea05"}
+.bloomberght-icon-font-home:before{content:"\ea06"}
+.bloomberght-icon-font-stats:before{content:"\ea07"}
+.bloomberght-icon-font-chevron-bottom:before{content:"\ea08"}
+.bloomberght-icon-font-chevron-left:before{content:"\ea09"}
+.bloomberght-icon-font-chevron-right:before{content:"\ea0a"}
+.bloomberght-icon-font-chevron-top:before{content:"\ea0b"}
+.bloomberght-icon-font-time:before{content:"\ea0c"}
+.bloomberght-icon-font-close:before{content:"\ea0d"}
+.bloomberght-icon-font-exclamation:before{content:"\ea0e"}
+.bloomberght-icon-font-facebook:before{content:"\ea0f"}
+.bloomberght-icon-font-fire:before{content:"\ea10"}
+.bloomberght-icon-font-full-screen-off:before{content:"\ea11"}
+.bloomberght-icon-font-full-screen-on:before{content:"\ea12"}
+.bloomberght-icon-font-graphic-down:before{content:"\ea13"}
+.bloomberght-icon-font-graphic-up:before{content:"\ea14"}
+.bloomberght-icon-font-icon-graphic-down:before{content:"\ea15"}
+.bloomberght-icon-font-icon-graphic-fixed:before{content:"\ea16"}
+.bloomberght-icon-font-icon-graphic-up:before{content:"\ea17"}
+.bloomberght-icon-font-instagram:before{content:"\ea18"}
+.bloomberght-icon-font-menu:before{content:"\ea19"}
+.bloomberght-icon-font-pause:before{content:"\ea1a"}
+.bloomberght-icon-font-play-skip-back:before{content:"\ea1b"}
+.bloomberght-icon-font-play-skip-forward:before{content:"\ea1c"}
+.bloomberght-icon-font-play:before{content:"\ea1d"}
+.bloomberght-icon-font-quote-left:before{content:"\ea1e"}
+.bloomberght-icon-font-quote-right:before{content:"\ea1f"}
+.bloomberght-icon-font-radio:before{content:"\ea20"}
+.bloomberght-icon-font-search:before{content:"\ea21"}
+.bloomberght-icon-font-share:before{content:"\ea22"}
+.bloomberght-icon-font-stop:before{content:"\ea23"}
+.bloomberght-icon-font-text-increase:before{content:"\ea24"}
+.bloomberght-icon-font-whatsapp:before{content:"\ea25"}
+.bloomberght-icon-font-x:before{content:"\ea26"}
+.bloomberght-icon-font-youtube:before{content:"\ea27"}
+.bloomberght-icon-font-compare:before{content:"\ea28"}
+.bloomberght-icon-font-notification:before{content:"\ea29"}
+.bloomberght-icon-font-user:before{content:"\ea2a"}
+.bloomberght-icon-font-settings:before{content:"\ea2b"}
+.bloomberght-icon-font-twitter-x:before{content:"\ea2c"}
+.bloomberght-icon-font-linkedin:before{content:"\ea2d"}
+.bloomberght-icon-font-copy:before{content:"\ea2e"}
+.bloomberght-icon-font-print:before{content:"\ea2f"}
+.bloomberght-icon-font-mail:before{content:"\ea30"}
+.bloomberght-icon-font-arrow-change:before{content:"\ea31"}
+.bloomberght-icon-font-bluesky:before{content:"\ea32"}
+.bloomberght-icon-font-web:before{content:"\ea33"}
+/* İkon glyph'leri için temel boyutlandırma: boş öğe + :before glyph 1em kutu */
+.bloomberght-icon-font-menu,
+.bloomberght-icon-font-search,
+.bloomberght-icon-font-close,
+.bloomberght-icon-font-play,
+.bloomberght-icon-font-radio,
+.bloomberght-icon-font-stats,
+.bloomberght-icon-font-time,
+.bloomberght-icon-font-home,
+.bloomberght-icon-font-x,
+.bloomberght-icon-font-facebook,
+.bloomberght-icon-font-instagram,
+.bloomberght-icon-font-youtube,
+.bloomberght-icon-font-chevron-left,
+.bloomberght-icon-font-chevron-right,
+.bloomberght-icon-font-chevron-bottom,
+.bloomberght-icon-font-twitter-x,
+.bloomberght-icon-font-linkedin,
+.bloomberght-icon-font-whatsapp,
+.bloomberght-icon-font-copy,
+.bloomberght-icon-font-mail,
+.bloomberght-icon-font-share { display: inline-block; line-height: 1; vertical-align: middle; }
+.bloomberght-icon-font-search:before,
+.bloomberght-icon-font-menu:before,
+.bloomberght-icon-font-close:before,
+.bloomberght-icon-font-play:before,
+.bloomberght-icon-font-radio:before,
+.bloomberght-icon-font-chevron-left:before,
+.bloomberght-icon-font-chevron-right:before {
     display: inline-block;
-    width: 1em;
-    height: 1em;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
     vertical-align: middle;
 }
-.bloomberght-icon-font-play::before        { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23384552'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E"); }
-.bloomberght-icon-font-radio::before       { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M12 2a1 1 0 011 1v1.06A8 8 0 0119.94 11H21a1 1 0 110 2h-1.06A8 8 0 0113 19.94V21a1 1 0 11-2 0v-1.06A8 8 0 014.06 13H3a1 1 0 110-2h1.06A8 8 0 0111 4.06V3a1 1 0 011-1zm0 5a5 5 0 100 10 5 5 0 000-10zm0 3a2 2 0 110 4 2 2 0 010-4z'/%3E%3C/svg%3E"); }
-.bloomberght-icon-font-search::before      { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z'/%3E%3C/svg%3E"); }
-.bloomberght-icon-font-menu::before        { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M3 6h18v2H3zM3 11h18v2H3zM3 16h18v2H3z'/%3E%3C/svg%3E"); }
-.bloomberght-icon-font-home::before        { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23384552'%3E%3Cpath d='M12 3 2 12h3v8a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1v-8h3z'/%3E%3C/svg%3E"); }
-.bloomberght-icon-font-stats::before       { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23384552'%3E%3Cpath d='M4 20h17v-2H4zM6 16h2V8H6zM11 16h2V4h-2zM16 16h2V7h-2z'/%3E%3C/svg%3E"); }
-.bloomberght-icon-font-time::before        { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23384552'%3E%3Cpath d='M12 2a10 10 0 100 20 10 10 0 000-20zm1 5a1 1 0 10-2 0v5a1 1 0 00.293.707l3 3a1 1 0 001.414-1.414L13 11.586z'/%3E%3C/svg%3E"); }
-.bloomberght-icon-font-close::before       { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M18.3 5.71a1 1 0 00-1.41 0L12 10.59 7.12 5.71A1 1 0 005.7 7.12l4.88 4.88-4.88 4.88a1 1 0 001.42 1.41L12 13.41l4.88 4.88a1 1 0 001.41-1.41L13.41 12l4.88-4.88a1 1 0 000-1.41z'/%3E%3C/svg%3E"); }
-.bloomberght-icon-font-chevron-bottom::before { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M6.71 9.29a1 1 0 00-1.42 1.42l6 6a1 1 0 001.42 0l6-6a1 1 0 10-1.42-1.42L12 14.59z'/%3E%3C/svg%3E"); }
-.bloomberght-icon-font-chevron-left::before  { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M14.29 6.71a1 1 0 00-1.42 0l-6 6a1 1 0 000 1.42l6 6a1 1 0 001.42-1.42L9.41 12l4.88-4.88a1 1 0 000-1.41z'/%3E%3C/svg%3E"); }
-.bloomberght-icon-font-chevron-right::before { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M9.29 6.71a1 1 0 000 1.42L13.17 12l-3.88 3.88a1 1 0 001.42 1.41l4.59-4.59a1 1 0 000-1.42L10.7 6.7a1 1 0 00-1.41.01z'/%3E%3C/svg%3E"); }
-.bloomberght-icon-font-x::before            { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/%3E%3C/svg%3E"); }
-.bloomberght-icon-font-facebook::before     { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987H7.898v-2.89h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562v1.875h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z'/%3E%3C/svg%3E"); }
-.bloomberght-icon-font-instagram::before    { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z'/%3E%3C/svg%3E"); }
-.bloomberght-icon-font-youtube::before      { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z'/%3E%3C/svg%3E"); }
+
+[class^="bloomberght-icon-font-icon-"], [class*=" bloomberght-icon-font-icon-"] { display: inline-block; line-height: 1; vertical-align: middle; }
 
 /* ---------- Üst header (birebir) ---------- */
 .site-header, header { outline: none; }
@@ -2659,10 +2726,8 @@ figure { max-width: 100%; }
 .q-arrow-down::before { content: ""; display: inline-block; width: .95em; height: .95em; margin-right: 2px; background: currentColor; -webkit-mask: no-repeat center / contain; mask: no-repeat center / contain; vertical-align: -.1em; }
 .q-arrow-up::before   { -webkit-mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 4l8 9h-5v7h-6v-7H4z'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 4l8 9h-5v7h-6v-7H4z'/%3E%3C/svg%3E"); }
 .q-arrow-down::before { -webkit-mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 20l8-9h-5V4h-6v7H4z'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 20l8-9h-5V4h-6v7H4z'/%3E%3C/svg%3E"); }
-.bloomberght-icon-font-icon-graphic-up::before,
-.bloomberght-icon-font-icon-graphic-down::before { content: ""; display: inline-block; width: 1em; height: 1em; background: currentColor; -webkit-mask: no-repeat center / contain; mask: no-repeat center / contain; }
-.bloomberght-icon-font-icon-graphic-up::before { -webkit-mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 4l8 9h-5v7h-6v-7H4z'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 4l8 9h-5v7h-6v-7H4z'/%3E%3C/svg%3E"); }
-.bloomberght-icon-font-icon-graphic-down::before { -webkit-mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 20l8-9h-5V4h-6v7H4z'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 20l8-9h-5V4h-6v7H4z'/%3E%3C/svg%3E"); }
+/* CH-28 NOT: skin ok ikonları (setIcon bloomberght-icon-font-icon-graphic-up/down/fixed)
+   artık gerçek font glyph'leriyle gelir (yukarıdaki CH-28 bölümü); mask kuralları kaldırıldı. */
 
 /* ---------- 2) Öne Çıkanlar (highlights) kartları ---------- */
 .highlights-list { display: flex; flex-direction: column; gap: 14px; }
