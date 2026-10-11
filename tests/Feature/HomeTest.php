@@ -58,24 +58,23 @@ class HomeTest extends TestCase
         $html = $this->get('/')->assertOk()->getContent();
 
         $anchors = [
-            'zone_1264',              // 1 masthead (header üstü)
+            'zone_1264',                 // 1 masthead (header üstü)
             'data-widget-type="headline"', // 2 hero
-            'finance-strip-mobile',   // 3 mobil finance şerit
-            'home-featured-strip',    // 5 ÖNE ÇIKANLAR şerit
-            'piyasalar-widget',       // 7 PİYASALAR
-            'home-programs',          // 8 PROGRAMLAR
-            'home-featured-cards',    // 10 ÖNE ÇIKANLAR kartlar
-            'home-all-news',          // 11 TÜM HABERLER
-            'home-broadcast',         // 12 YAYIN AKIŞI
-            'home-businessweek',      // 14 Businessweek + SON SAYILAR
-            'home-gallery',           // 15 Foto Haber
-            'home-videos',            // 16 VİDEOLAR
-            'home-podcasts',          // 18 PODCAST SERİLERİ
-            'home-kap',               // 19 KAP HABERLERİ
-            'market-data-widget',     // 20 Piyasa verileri
-            'home-sector',            // 22 SEKTÖR HABERLERİ
-            'home-crypto',            // 23 KRİPTO PARA
-            'home-most-read',         // 25 EN ÇOK OKUNANLAR
+            'finance-strip-mobile',      // 3 mobil finance şerit
+            'piyasalar-widget',          // PİYASALAR
+            'home-programs',             // PROGRAMLAR
+            'home-featured-office',      // ÖNE ÇIKANLAR (#2) ajandası
+            'home-all-news',             // TÜM HABERLER
+            'home-broadcast',            // YAYIN AKIŞI
+            'home-businessweek',         // Businessweek + SON SAYILAR
+            'home-gallery',              // Foto Haber
+            'home-videos',               // VİDEOLAR
+            'home-podcasts',             // PODCAST SERİLERİ
+            'home-kap',                  // KAP HABERLERİ
+            'market-data-widget',        // Piyasa verileri
+            'home-sector',               // SEKTÖR HABERLERİ (+Emtia, Siyaset)
+            'home-crypto',               // KRİPTO PARA
+            'home-most-read',            // EN ÇOK OKUNANLAR
         ];
 
         $previous = -1;

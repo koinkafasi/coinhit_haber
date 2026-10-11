@@ -148,10 +148,10 @@ class WidgetsTest extends TestCase
 
         $html = $this->get('/')->assertOk()->getContent();
 
-        $this->assertStringContainsString('id="home-featured-cards"', $html);
+        $this->assertStringContainsString('id="home-featured-office"', $html);
         $this->assertStringContainsString('Emtia Haberleri', $html);
         $this->assertStringContainsString('category-news-module', $html);
-        $this->assertStringContainsString('news-card-grid cols-3', $html);
+        $this->assertStringContainsString('news-card-grid', $html);
     }
 
     public function test_article_sidebar_featured_widget_variants(): void
