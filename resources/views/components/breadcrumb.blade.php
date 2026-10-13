@@ -27,12 +27,12 @@
 <nav class="breadcrumb block text-xs text-gray-500" aria-label="Breadcrumb">
     @foreach ($list as $index => $crumb)
         @if ($index > 0)
-            <x-icon name="chevron-right" class="text-black" />
+            <i class="bloomberght-icon-font-chevron-right inline-block align-top mx-1 w-1 h-1 text-xxxs text-black" aria-hidden="true"></i>
         @endif
         @if (! empty($crumb['url']) && $index < count($list) - 1)
             <a href="{{ $crumb['url'] }}">{{ $crumb['label'] }}</a>
         @else
-            <span aria-current="page">{{ $crumb['label'] }}</span>
+            <span class="font-bold" aria-current="page">{{ $crumb['label'] }}</span>
         @endif
     @endforeach
 </nav>

@@ -42,7 +42,7 @@
             </div>
             <div class="form-row">
                 <label for="spot">Spot / Lead</label>
-                <textarea id="spot" name="spot" style="min-height:80px">{{ old('spot', $news->spot) }}</textarea>
+                <textarea id="spot" name="spot" class="textarea-spot">{{ old('spot', $news->spot) }}</textarea>
             </div>
             <div class="form-row">
                 <label for="body">Gövde</label>

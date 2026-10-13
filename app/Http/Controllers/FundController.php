@@ -22,36 +22,63 @@ class FundController extends Controller
     public function __construct(private readonly FundDataService $funds) {}
 
     /**
-     * /yatirim-fonlari — ana fon bölümü.
+     * /yatirim-fonlari — ana fon bölümü (referans birebir).
+     *
+     * Üst 2 kolon: ana (fon haber hero slider) + aside 400px (alt-tool nav +
+     * advertisement1 reklam çifti) → Fon Saati (swiper) → Günün Özeti (KPI
+     * tablo) → Fon Sınıflarında Bugün (7 sınıf sekmesi; her panelde Yükselen/
+     * Düşen iki tablo) → Karşılaştırmalı Fon Getirileri (tümü + link).
      */
     public function index(Request $request): View
     {
-        $direction = $request->query('yon') === 'dusen' ? 'dusen' : 'yukselen';
-        $showAll = $request->boolean('tumu');
-
-        $classes = [];
-        foreach (Fund::classLabels() as $key => $label) {
-            $classes[] = [
-                'key' => $key,
-                'label' => $label,
-                'rows' => $this->funds->leaderboard($key, $direction, 10),
-            ];
-        }
-
         $allRows = $this->funds->all();
 
         return view('fund.index', array_merge([
             'pageTitle' => __('media.fund_title'),
-            'direction' => $direction,
-            'fundClasses' => $classes,
+            'fundClasses' => $this->classData(),
             'kpi' => $this->funds->kpi(),
             'fonSaati' => $this->fonSaatiEpisodes(),
-            'fundNews' => $this->latestNews(9),
-            'returnRows' => $showAll ? $allRows : $allRows->take(15),
+            'fundNews' => $this->latestNews(10),
+            'returnRows' => $allRows,
             'totalFundCount' => $allRows->count(),
-            'showAll' => $showAll,
             'toolLinks' => $this->toolLinks(),
         ], $this->layoutData()));
+    }
+
+    /**
+     * /yatirim-fonlari/fon-siniflarinda-bugun — bağımsız fon sınıfları sayfası.
+     */
+    public function fundClasses(Request $request): View
+    {
+        return view('fund.classes', array_merge([
+            'pageTitle' => __('media.fund_classes_page_title'),
+            'fundClasses' => $this->classData(),
+            'totalFundCount' => Fund::where('is_active', true)->count(),
+            'toolLinks' => $this->toolLinks(),
+        ], $this->layoutData()));
+    }
+
+    /**
+     * 7 fon sınıfı — her sınıf için Yükselen (10) ve Düşen (10) lider listesi.
+     *
+     * @return array<int, array{key: string, label: string, rows: array{yukselen: Collection, dusen: Collection}}>
+     */
+    private function classData(): array
+    {
+        $classes = [];
+
+        foreach (Fund::classLabels() as $key => $label) {
+            $classes[] = [
+                'key' => $key,
+                'label' => $label,
+                'rows' => [
+                    'yukselen' => $this->funds->leaderboard($key, 'yukselen', 10),
+                    'dusen' => $this->funds->leaderboard($key, 'dusen', 10),
+                ],
+            ];
+        }
+
+        return $classes;
     }
 
     /**
@@ -158,7 +185,8 @@ class FundController extends Controller
     }
 
     /**
-     * Alt-tool nav (3 buton) — spec §8, §15.8.
+     * Alt-tool nav (3 buton) — spec §8, §15.8 (referans birebir: "Fon Sınıflarında
+     * Bugün" bağımsız sayfaya gider).
      *
      * @return array<int, array{label: string, url: string, anchor: bool}>
      */
@@ -166,7 +194,7 @@ class FundController extends Controller
     {
         return [
             ['label' => __('media.compare_funds'), 'url' => '/yatirim-fonlari/fon-karsilastirma', 'anchor' => false],
-            ['label' => __('media.fund_classes_today'), 'url' => '/yatirim-fonlari#fon-siniflari', 'anchor' => true],
+            ['label' => __('media.fund_classes_today'), 'url' => '/yatirim-fonlari/fon-siniflarinda-bugun', 'anchor' => false],
             ['label' => __('media.fund_portfolio_allocation'), 'url' => '/yatirim-fonlari/fon-portfoy-dagilim', 'anchor' => false],
         ];
     }

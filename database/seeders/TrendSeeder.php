@@ -48,8 +48,11 @@ class TrendSeeder extends Seeder
                 ->pluck('id');
 
             if ($news->isEmpty()) {
+                // Fallback: her trend farklı haber kümesi alsın (ana sayfa Hızlı
+                // Linkler sekmeleri birebir farklı başlık göstersin).
                 $news = News::where('status', 'published')
                     ->orderByDesc('published_at')
+                    ->skip($order * 4)
                     ->take(4)
                     ->pluck('id');
             }

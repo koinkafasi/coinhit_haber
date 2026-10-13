@@ -225,6 +225,14 @@
 
         document.querySelectorAll('[data-widget-type="mostRead"]').forEach(function (container) {
             bindTabs(container, '.most-read-tabhead > [data-tab]', '.most-read-panels > [data-id]');
+
+            // CH-37: ana sayfa En Çok Okunanlar — referans `.tab-menu` yapısı
+            // (tab-head pill'leri + tab-body panelleri) birebir bağlanır.
+            bindTabs(container, '.tab-menu > .tab-head > [data-tab]', '.tab-menu > .tab-body > .tab-content[data-id]');
+        });
+
+        document.querySelectorAll('[data-widget-type="fastLinks"]').forEach(function (container) {
+            bindTabs(container, '.tab-button[data-tab]', '.tab-content[data-id]');
         });
 
         document.querySelectorAll('[data-widget-type="trend-tabs"]').forEach(function (container) {
@@ -232,7 +240,21 @@
         });
 
         document.querySelectorAll('[data-widget-type="fund-classes"]').forEach(function (container) {
-            bindTabs(container, '.fund-class-tabs > [data-tab]', '.fund-class-panels > [data-id]');
+            // Referans birebir: 7 fon sınıfı dropdown (select-tab-options change → panel)
+            var select = container.querySelector('.select-tab-options');
+            if (select) {
+                select.addEventListener('change', function () {
+                    var key = this.value;
+                    container.querySelectorAll('.select-tab-content').forEach(function (panel) {
+                        panel.classList.toggle('hidden', panel.getAttribute('data-id') !== key);
+                    });
+                });
+            }
+
+            // Referans: her sınıf panelinde Yükselen/Düşen iki tablo, toggle istemci tarafı
+            container.querySelectorAll('.fund-class-panel').forEach(function (panel) {
+                bindTabs(panel, '.tab-menu > .tab-head > [data-tab]', '.tab-menu > .tab-body > .tab-content[data-id]');
+            });
         });
 
         document.querySelectorAll('[data-widget-type="broadcast-days"]').forEach(function (container) {
@@ -240,7 +262,7 @@
         });
 
         document.querySelectorAll('[data-widget-type="marketDataLists"]').forEach(function (container) {
-            bindTabs(container, '.mdl-tabhead > [data-tab]', '.tab-body > [data-id]');
+            bindTabs(container, '.home-piyasa-verileri .tab-head > [data-tab]', '.tab-body > [data-id]');
         });
     }
 
@@ -386,19 +408,20 @@
     function initRelatedSlider() {
         document.querySelectorAll('[data-related-slider]').forEach(function (slider) {
             var track = slider.querySelector('[data-related-track]');
-
             if (!track) {
                 return;
             }
 
-            var slides = Array.prototype.slice.call(track.children);
+            var section = slider.closest('.article-related') || slider.parentElement;
+            var prevBtn = section ? section.querySelector('[data-related-prev]') : null;
+            var nextBtn = section ? section.querySelector('[data-related-next]') : null;
 
+            var slides = Array.prototype.slice.call(track.children);
             if (slides.length < 2) {
                 return;
             }
 
             var index = 0;
-            var timer = null;
 
             function step() {
                 return (slides[0].getBoundingClientRect().width || 288) + 16;
@@ -406,7 +429,6 @@
 
             function perView() {
                 var width = slider.clientWidth || 0;
-
                 return Math.max(1, Math.floor(width / step()));
             }
 
@@ -414,37 +436,60 @@
                 return Math.max(0, slides.length - perView());
             }
 
+            function updateButtons() {
+                if (prevBtn) {
+                    prevBtn.style.opacity = index <= 0 ? '0.4' : '1';
+                    prevBtn.style.pointerEvents = index <= 0 ? 'none' : 'auto';
+                }
+                if (nextBtn) {
+                    nextBtn.style.opacity = index >= maxIndex() ? '0.4' : '1';
+                    nextBtn.style.pointerEvents = index >= maxIndex() ? 'none' : 'auto';
+                }
+            }
+
             function render() {
                 if (window.innerWidth <= 767) {
                     track.style.transform = '';
                     return;
                 }
-
+                index = Math.max(0, Math.min(index, maxIndex()));
                 track.style.transform = 'translateX(-' + (index * step()) + 'px)';
+                updateButtons();
             }
 
             function next() {
-                index = index >= maxIndex() ? 0 : index + 1;
-                render();
+                if (index < maxIndex()) {
+                    index++;
+                    render();
+                }
             }
 
-            function start() {
-                timer = window.setInterval(next, 4000);
+            function prev() {
+                if (index > 0) {
+                    index--;
+                    render();
+                }
             }
 
-            function stop() {
-                window.clearInterval(timer);
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    next();
+                });
             }
 
-            slider.addEventListener('mouseenter', stop);
-            slider.addEventListener('mouseleave', start);
+            if (prevBtn) {
+                prevBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    prev();
+                });
+            }
+
             window.addEventListener('resize', function () {
-                index = Math.min(index, maxIndex());
                 render();
             });
 
             render();
-            start();
         });
     }
 
@@ -762,6 +807,197 @@
         });
     }
 
+    /**
+     * Finance-slider mini grafikleri — referans gibi <canvas> cizimi.
+     * Noktalar sunucu tarafinda data-spark JSON olarak gomulur; `down`/`up`
+     * yonune gore renklendirilir ve yari saydam alan dolgusu eklenir.
+     */
+    function initFinanceSparklines() {
+        document.querySelectorAll('[data-widget-type="finance-slider"] canvas.graphChart-wrapper[data-spark]').forEach(function (canvas) {
+            var pts;
+            try {
+                pts = JSON.parse(canvas.getAttribute('data-spark') || 'null');
+            } catch (e) {
+                return;
+            }
+            if (!pts || !pts.length) {
+                return;
+            }
+            var ctx = canvas.getContext && canvas.getContext('2d');
+            if (!ctx) {
+                return;
+            }
+
+            var w = canvas.width || 96;
+            var h = canvas.height || 48;
+            var pad = 2;
+            var min = Math.min.apply(null, pts);
+            var max = Math.max.apply(null, pts);
+            var range = (max - min) || 1;
+            var step = (w - pad * 2) / (pts.length - 1 || 1);
+            var up = canvas.getAttribute('data-colordirection') !== '-1';
+            // Referanstan olculen renkler (piksel analizi):
+            //   yukari -> cizgi #3EC65F, asagi -> cizgi #BE2E29
+            var color = up ? '#3EC65F' : '#BE2E29';
+
+            ctx.clearRect(0, 0, w, h);
+
+            // cizgi noktalari
+            var xs = [], ys = [];
+            pts.forEach(function (v, i) {
+                var x = pad + i * step;
+                var y = pad + (1 - (v - min) / range) * (h - pad * 2);
+                xs.push(x);
+                ys.push(y);
+            });
+
+            // alan dolgusu: cizgiden alta dogru dikey degrade (referans gibi)
+            var grad = ctx.createLinearGradient(0, Math.min.apply(null, ys) - 4, 0, h);
+            grad.addColorStop(0, up ? 'rgba(61,198,96,0.42)' : 'rgba(190,46,41,0.42)');
+            grad.addColorStop(1, up ? 'rgba(213,241,213,0.05)' : 'rgba(232,170,170,0.05)');
+            ctx.beginPath();
+            ctx.moveTo(xs[0], ys[0]);
+            xs.forEach(function (_x, i) {
+                if (i > 0) { ctx.lineTo(xs[i], ys[i]); }
+            });
+            ctx.lineTo(w - pad, h);
+            ctx.lineTo(pad, h);
+            ctx.closePath();
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            // ustteki cizgi
+            ctx.beginPath();
+            xs.forEach(function (_x, i) {
+                if (i === 0) { ctx.moveTo(xs[i], ys[i]); }
+                else { ctx.lineTo(xs[i], ys[i]); }
+            });
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1.5;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+            ctx.stroke();
+
+            bindFinanceTooltip(canvas, pts);
+        });
+    }
+
+    /**
+     * Finance mini grafik hover tooltip — mevcut canvas degismez, uzerine
+     * bindirilen sip tarafi. Fare grafik uzerinde gezdirildiginde en yakin
+     * noktanin zamanini ve degerini gosterir.
+     */
+    function bindFinanceTooltip(canvas, pts) {
+        var times = null;
+        try {
+            times = JSON.parse(canvas.getAttribute('data-spark-times') || 'null');
+        } catch (e) { /* yoksa indis kullanilir */ }
+
+        var tt = document.createElement('div');
+        tt.className = 'finance-chart-tooltip';
+        tt.setAttribute('role', 'tooltip');
+        document.body.appendChild(tt);
+
+        var w = canvas.width || 96;
+        var h = canvas.height || 48;
+        var pad = 2;
+        var step = (w - pad * 2) / (pts.length - 1 || 1);
+        var up = canvas.getAttribute('data-colordirection') !== '-1';
+        var color = up ? '#24A278' : '#BD1B2E';
+
+        function labelOf(i) {
+            if (times && times[i]) {
+                return times[i];
+            }
+            return String(i + 1);
+        }
+
+        function fmt(v) {
+            var num = typeof v === 'number' ? v : parseFloat(v);
+            if (isNaN(num)) { return String(v); }
+            return num.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+        }
+
+        canvas.addEventListener('mousemove', function (e) {
+            var r = canvas.getBoundingClientRect();
+            var x = e.clientX - r.left;
+            var idx = Math.round((x - pad) / step);
+            idx = Math.max(0, Math.min(pts.length - 1, idx));
+            tt.innerHTML =
+                '<span class="chart-tip-time" style="color:' + color + '">' + (times && times[idx] ? times[idx] : '') + '</span>' +
+                '<span class="chart-tip-value">' + fmt(pts[idx]) + '</span>';
+            tt.style.display = 'block';
+            tt.style.left = Math.round(e.clientX + 12) + 'px';
+            tt.style.top = Math.round(e.clientY - 26) + 'px';
+        });
+
+        canvas.addEventListener('mouseleave', function () {
+            tt.style.display = 'none';
+        });
+    }
+
+    /**
+     * Piyasalar widget Highcharts-görünümlü SSR grafiklerine hover tooltip.
+     * Aksiyal SSR SVG statiktir (JS Highcharts yok); seri verisi gomulur ve
+     * fare grafik üzerinde gezdirildiginde en yakin noktanin saati+degeri,
+     * referans Highcharts tooltip'ine benzer sekilde gosterilir.
+     */
+    function initMarketWidgetTooltips() {
+        document.querySelectorAll('.mw-chart-canvas[data-chart-values]').forEach(function (chartEl) {
+            var values = null, times = null;
+            try {
+                values = JSON.parse(chartEl.getAttribute('data-chart-values') || '[]');
+                times = JSON.parse(chartEl.getAttribute('data-chart-times') || '[]');
+            } catch (e) {
+                return;
+            }
+            if (!values || !values.length) {
+                return;
+            }
+            var label = chartEl.getAttribute('data-chart-label') || '';
+
+            var tt = document.createElement('div');
+            tt.className = 'chart-tooltip';
+            tt.setAttribute('role', 'tooltip');
+            document.body.appendChild(tt);
+
+            var svg = chartEl.querySelector('svg');
+
+            function fmt(v) {
+                var num = typeof v === 'number' ? v : parseFloat(v);
+                if (isNaN(num)) { return String(v); }
+                return num.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+            }
+
+            function showTooltip(e) {
+                var r = svg ? svg.getBoundingClientRect() : chartEl.getBoundingClientRect();
+                if (!r.width) {
+                    return;
+                }
+                var ratio = (e.clientX - r.left) / r.width;
+                var idx = Math.round(ratio * (values.length - 1));
+                idx = Math.max(0, Math.min(values.length - 1, idx));
+                var parts = [];
+                if (label) {
+                    parts.push('<span class="chart-tip-label">' + label + '</span>');
+                }
+                if (times && times[idx]) {
+                    parts.push('<span class="chart-tip-time">' + times[idx] + '</span>');
+                }
+                parts.push('<span class="chart-tip-value">' + fmt(values[idx]) + '</span>');
+                tt.innerHTML = parts.join('');
+                tt.style.display = 'block';
+                tt.style.left = Math.round(e.clientX + 12) + 'px';
+                tt.style.top = Math.round(e.clientY - 30) + 'px';
+            }
+
+            (svg || chartEl).addEventListener('mousemove', showTooltip);
+            (svg || chartEl).addEventListener('mouseleave', function () {
+                tt.style.display = 'none';
+            });
+        });
+    }
+
     function init() {
         initCookie();
         initMenu();
@@ -780,6 +1016,8 @@
         initGallerySlideshow();
         initRelatedSlider();
         initInfiniteArticle();
+        initFinanceSparklines();
+        initMarketWidgetTooltips();
     }
 
     if (document.readyState === 'loading') {

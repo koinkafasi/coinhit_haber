@@ -21,6 +21,7 @@
             <a href="{{ route('admin.galleries.index') }}" class="{{ str_starts_with($route, 'admin.galleries') ? 'active' : '' }}">Foto Haber</a>
             <a href="{{ route('admin.kap.index') }}" class="{{ str_starts_with($route, 'admin.kap') ? 'active' : '' }}">KAP</a>
             <a href="{{ route('admin.charts.index') }}" class="{{ str_starts_with($route, 'admin.charts') ? 'active' : '' }}">Grafik Arşivi</a>
+            <a href="{{ route('admin.advertisements.index') }}" class="{{ str_starts_with($route, 'admin.advertisements') ? 'active' : '' }}">Reklamlar</a>
         </nav>
     </aside>
 

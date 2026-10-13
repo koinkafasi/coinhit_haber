@@ -73,7 +73,7 @@ class AltinController extends Controller
             'featureQuotes' => $this->quotesFor(self::FEATURE_CODES),
             'serbestQuotes' => $this->serbestQuotes(),
             'otherCommodity' => $this->market->quotes(MarketInstrument::GROUP_PRECIOUS_METAL),
-            'relatedNews' => $this->categoryNews('piyasalar', 4),
+            'relatedNews' => $this->categoryNews('piyasalar', 6),
             'calculator' => $this->calculator->defaultContext(),
             'cmeNote' => $this->market->sourceNote('cme'),
         ], $this->marketWidgetData(), $this->layoutData()));

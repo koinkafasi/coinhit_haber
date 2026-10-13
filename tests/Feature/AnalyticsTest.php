@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Advertisement;
 use App\Models\News;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -52,6 +53,9 @@ class AnalyticsTest extends TestCase
 
     public function test_sticky_mobile_zone_2280_present_on_all_pages(): void
     {
+        // Mobil sticky bant yalnızca yönetilebilir reklam tanımlandığında görünür.
+        Advertisement::factory()->create(['position' => '2280']);
+
         foreach (['/', '/piyasalar', '/kunye'] as $path) {
             $html = $this->get($path)->assertOk()->getContent();
             $this->assertStringContainsString('zone_2280', $html, "zone 2280 eksik: {$path}");
@@ -61,6 +65,7 @@ class AnalyticsTest extends TestCase
     public function test_ad_zone_component_emits_desktop_and_mobile_variants(): void
     {
         $news = News::factory()->create();
+        Advertisement::factory()->create(['position' => '1258']);
 
         $html = $this->get($news->url)->assertOk()->getContent();
 

@@ -75,13 +75,19 @@
 @endpush
 
 @section('content')
-    {{-- Pageskin sol/sağ (spec §14.6 — makale detay 2126/2127) --}}
-    <div class="pageskin pageskin-left" id="ciner-pageskin-left" data-device="DESKTOP">
-        <div class="ads-zone lazy-init" data-adv="bht" data-device="DESKTOP" data-zone-id="zone_2126"></div>
-    </div>
-    <div class="pageskin pageskin-right" id="ciner-pageskin-right" data-device="DESKTOP">
-        <div class="ads-zone lazy-init" data-adv="bht" data-device="DESKTOP" data-zone-id="zone_2127"></div>
-    </div>
+    {{-- Pageskin sol/sağ (spec §14.6 — makale detay 2126/2127) — yönetilebilir, yoksa gizli --}}
+    @php($__adArtL = \App\Models\Advertisement::forZone('2126'))
+    @if ($__adArtL)
+        <div class="pageskin pageskin-left" id="ciner-pageskin-left" data-device="DESKTOP" data-zone-id="zone_2126">
+            @include('partials.ad-asset', ['ad' => $__adArtL])
+        </div>
+    @endif
+    @php($__adArtR = \App\Models\Advertisement::forZone('2127'))
+    @if ($__adArtR)
+        <div class="pageskin pageskin-right" id="ciner-pageskin-right" data-device="DESKTOP" data-zone-id="zone_2127">
+            @include('partials.ad-asset', ['ad' => $__adArtR])
+        </div>
+    @endif
 
     <div class="article-layout">
         <div class="article-main">
@@ -99,32 +105,18 @@
                 <x-ad-zone zone="1393" :index="2" />
             </div>
 
-            @if ($related->isNotEmpty())
-                <section class="article-related">
-                    <h2 class="article-related-title font-unna font-bold">{{ __('ui.related') }}</h2>
-                    <div class="related-slider" data-related-slider>
-                        <div class="related-track" data-related-track>
-                            @foreach ($related as $item)
-                                <article class="related-slide">
-                                    <a href="{{ $item->url }}">
-                                        <figure class="related-figure">
-                                            <x-lazy-image :src="asset($item->image ?: '/img/og-default.png')" alt=""
-                                                          contract="news_card" class="related-img" />
-                                        </figure>
-                                        <h3 class="related-slide-title line-clamp-3">{{ $item->title }}</h3>
-                                    </a>
-                                </article>
-                            @endforeach
-                        </div>
-                    </div>
-                </section>
-            @endif
+
 
             <div class="article-sentinel" data-infinite-sentinel aria-hidden="true"></div>
         </div>
 
         <aside class="article-sidebar">
             <x-featured-widget variant="sidebar" :title="__('content.featured_title')" :items="$featured" class="headlines-widget" />
+            @isset($mostReadTabs)
+                {{-- Anasayfa mostRead bloğundan BAĞIMSIZ yazı sayfası varyantı:
+                     referans most-read-slider DOM'u (2 kayıt, sekmesiz, görselsiz). --}}
+                <x-most-read-article :items="$mostReadTabs['today'] ?? []" class="mt-8" />
+            @endisset
         </aside>
     </div>
 @endsection

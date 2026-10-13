@@ -62,6 +62,8 @@ return [
     'channel_ekonomik_veriler_ve_gundem_description' => 'Enflasyon, büyüme, istihdam ve dış ticaret verileri; ekonomi gündemine dair son gelişmeler.',
     'channel_tarim' => 'Tarım',
     'channel_tarim_description' => 'Tarım ürünleri, gıda fiyatları ve tarımsal desteklere ilişkin haberler ve Tarım Analiz köşesi.',
+    'channel_tarim_analiz' => 'Tarım Analiz',
+    'channel_tarim_news' => 'Tarım Haberleri',
     'channel_zirve' => 'Zirve',
     'channel_zirve_description' => 'Ekonomi ve finans dünyasının zirve etkinlikleri, paneller ve konuşmacı haberleri.',
     'channel_siyaset' => 'Siyaset',

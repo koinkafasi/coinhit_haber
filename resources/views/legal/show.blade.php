@@ -8,9 +8,11 @@
 @section('og_image_width', '180')
 @section('og_image_height', '180')
 
-@section('masthead')
-    <x-ad-zone :zone="1264" index="1" variant="masthead" />
-@endsection
+@if (\App\Models\Advertisement::forZone('1264'))
+    @section('masthead')
+        <x-ad-zone :zone="1264" index="1" variant="masthead" />
+    @endsection
+@endif
 
 @push('jsonld')
 @php
@@ -38,13 +40,6 @@
 @endpush
 
 @section('content')
-    <div class="pageskin pageskin-left" id="ciner-pageskin-left" data-device="DESKTOP">
-        <div class="ads-zone lazy-init" data-adv="bht" data-device="DESKTOP" data-zone-id="zone_1253"></div>
-    </div>
-    <div class="pageskin pageskin-right" id="ciner-pageskin-right" data-device="DESKTOP">
-        <div class="ads-zone lazy-init" data-adv="bht" data-device="DESKTOP" data-zone-id="zone_1254"></div>
-    </div>
-
     <div class="static-layout">
         <x-breadcrumb :items="[['label' => $page['title'], 'url' => \App\Support\Locale::url('/'.$slug)]]" />
 
@@ -65,4 +60,17 @@
             @endif
         </article>
     </div>
+
+    @php($__adStatL = \App\Models\Advertisement::forZone('1253'))
+    @if ($__adStatL)
+        <div class="pageskin pageskin-left" id="ciner-pageskin-left" data-device="DESKTOP" data-zone-id="zone_1253">
+            @include('partials.ad-asset', ['ad' => $__adStatL])
+        </div>
+    @endif
+    @php($__adStatR = \App\Models\Advertisement::forZone('1254'))
+    @if ($__adStatR)
+        <div class="pageskin pageskin-right" id="ciner-pageskin-right" data-device="DESKTOP" data-zone-id="zone_1254">
+            @include('partials.ad-asset', ['ad' => $__adStatR])
+        </div>
+    @endif
 @endsection

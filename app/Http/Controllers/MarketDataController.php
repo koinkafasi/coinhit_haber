@@ -62,6 +62,49 @@ class MarketDataController extends Controller
     }
 
     /**
+     * PİYASALAR widget grafik verisi — referans `market-graph-data` ucu.
+     *
+     * Kaynak yükleyici (`highchart.js`) `/chart/{data-response-path}` adresinden
+     * bu JSON'u çeker ve her enstrümanın `allDay` (intraday) serisini Highcharts
+     * stockChart olarak basar. Sözleşme birebir:
+     *
+     *   {
+     *     "body": {
+     *       "marketGraphData": {
+     *         "foreignCurrency": { "items": [ { "allDay": "[[ts,val],...]" }, ... ] },
+     *         ...
+     *       }
+     *     }
+     *   }
+     *
+     * `GET /chart/market-graph-data`
+     */
+    public function marketGraphData(): JsonResponse
+    {
+        $body = ['marketGraphData' => []];
+
+        foreach ($this->market->widgetGroups() as $tab) {
+            $items = [];
+
+            foreach ($tab['codes'] as $code) {
+                $instrument = $this->market->all()->firstWhere('code', $code);
+
+                $items[] = [
+                    'allDay' => json_encode(
+                        $instrument
+                            ? $this->market->intradaySeries($instrument, 64, 900)
+                            : []
+                    ),
+                ];
+            }
+
+            $body['marketGraphData'][$tab['sec']] = ['items' => $items];
+        }
+
+        return response()->json(['body' => $body]);
+    }
+
+    /**
      * @return array<int, string>|null
      */
     private function parseGroups(mixed $value): ?array

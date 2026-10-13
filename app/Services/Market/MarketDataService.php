@@ -32,14 +32,15 @@ class MarketDataService
     private ?Collection $catalog = null;
 
     /**
-     * Kripto snapshot önbelleği (market_instrument_id => MarketSnapshot).
+     * Snapshot önbelleği (market_instrument_id => MarketSnapshot).
+     * Tüm grupların en taze satırları; kaynaklar TCMB/Yahoo/goldprice/CoinGecko.
      *
      * @var Collection<int, MarketSnapshot>|null
      */
-    private ?Collection $cryptoSnapshots = null;
+    private ?Collection $snapshots = null;
 
     /** Snapshot önbelleğinin yüklenip yüklenmediği (boş tabloda tekrar sorma). */
-    private bool $cryptoSnapshotsLoaded = false;
+    private bool $snapshotsLoaded = false;
 
     /**
      * @return Collection<int, MarketInstrument>
@@ -76,7 +77,9 @@ class MarketDataService
     /**
      * Tek enstrümanın güncel anlık görüntüsü.
      *
-     * Kripto grubunda taze CoinGecko snapshot'ı varsa ondan üretilir (CH-2).
+     * Herhangi bir grupta taze gerçek snapshot (TCMB/Yahoo/goldprice/
+     * CoinGecko) varsa ondan üretilir (CH-2 + gerçek veri katmanı);
+     * snapshot yoksa/bayatsa simülatöre düşülür.
      */
     public function quote(MarketInstrument|string $instrument, ?CarbonInterface $at = null): Quote
     {
@@ -87,12 +90,10 @@ class MarketDataService
 
         $at = $at ? CarbonImmutable::instance($at) : CarbonImmutable::now();
 
-        if ($instrument->group === MarketInstrument::GROUP_CRYPTO) {
-            $live = $this->liveQuote($instrument, $at);
+        $live = $this->liveQuote($instrument, $at);
 
-            if ($live !== null) {
-                return $live;
-            }
+        if ($live !== null) {
+            return $live;
         }
 
         $t = (float) $at->timestamp;
@@ -244,6 +245,58 @@ class MarketDataService
     }
 
     /**
+     * PİYASALAR büyük widget sekme tanımı (birebir kaynak DOM eşlemesi).
+     * `sec` değerleri referans `market-graph-data` sözleşmesindeki
+     * `data-name-sec` token'larıdır (foreignCurrency = Döviz, commodity = Emtia).
+     *
+     * @return array<string, array{label: string, sec: string, codes: array<int, string>}>
+     */
+    public function widgetGroups(): array
+    {
+        return [
+            'borsa' => ['label' => __('ui.market.borsa'), 'sec' => 'stockExchange', 'codes' => ['XU100', 'DOW', 'DAX', 'FTSE100', 'SHANGHAI']],
+            'doviz' => ['label' => __('ui.market.doviz'), 'sec' => 'foreignCurrency', 'codes' => ['USDTRY', 'EURTRY', 'GBPTRY', 'EURUSD', 'DXY']],
+            'emtia' => ['label' => __('ui.market.emtia'), 'sec' => 'commodity', 'codes' => ['GAU', 'GRAM', 'GUMUS_ONS', 'BRENT', 'WTI', 'BDIY']],
+            'faiz' => ['label' => __('ui.market.faiz'), 'sec' => 'interest', 'codes' => ['TR2Y', 'TR10Y', 'US10Y', 'DE10Y', 'GB10Y']],
+        ];
+    }
+
+    /**
+     * Kaynak `market-graph-data` sözleşmesine uygun guiniçi seri:
+     * [[timestampMs, değer], ...] — Highcharts area grafik için hazır.
+     *
+     * @return array<int, array{int, float}>
+     */
+    public function intradaySeries(MarketInstrument|string $instrument, int $points = 64, int $intervalSeconds = 900, ?CarbonInterface $at = null): array
+    {
+        if (is_string($instrument)) {
+            $instrument = $this->all()->firstWhere('code', $instrument)
+                ?? MarketInstrument::where('code', $instrument)->firstOrFail();
+        }
+
+        $now = $at ? CarbonImmutable::instance($at) : CarbonImmutable::now();
+        $target = (float) $this->quote($instrument, $now)->last; // gerçek güncel fiyat
+        if ($target <= 0) {
+            $target = (float) ($instrument->base_price ?: 1);
+        }
+
+        $phase = crc32($instrument->code.':'.$instrument->group);
+        $out = [];
+
+        // Deterministik güniçi yol: baştan sona yumuşak bir eğri, SON NOKTA
+        // gerçek güncel fiyata eşit. (Eski "SSR tabandan sıçrama" görüntüsü yok.)
+        for ($k = 0; $k < $points; $k++) {
+            $t = $now->subSeconds(($points - 1 - $k) * $intervalSeconds);
+            $p = $points > 1 ? $k / ($points - 1) : 1; // 0 → 1 (zaman ilerledikçe)
+            $wiggle = 0.006 * sin($phase + $k * 0.7) + 0.0032 * sin($phase * 1.31 + $k * 0.23);
+            $value = $target * (1 - 0.0035 * (1 - $p) + $wiggle);
+            $out[] = [$t->getTimestamp() * 1000, round($value, 2)];
+        }
+
+        return $out;
+    }
+
+    /**
      * Referans Highcharts alan grafiğini SSR basar (market widget büyük grafik).
      * Referans DOM'uyla aynı class/renk/ölçü yapısı; JS gerektirmez.
      */
@@ -355,25 +408,35 @@ class MarketDataService
     }
 
     /**
-     * Enstrümanın taze snapshot'ı (config `market.coingecko.max_age_minutes`
-     * içinde yakalanmış olmalı); istek boyunca önbelleklenir.
+     * Enstrümanın taze snapshot'ı. Tüm grupların en taze satırları bir kez
+     * yüklenir; tazelik penceresi `market.sources.{source}.max_age_minutes`
+     * (CoinGecko için eski `market.coingecko.max_age_minutes`) ile belirlenir.
      */
     private function freshSnapshot(MarketInstrument $instrument, CarbonImmutable $at): ?MarketSnapshot
     {
-        if (! $this->cryptoSnapshotsLoaded) {
-            $this->cryptoSnapshots = $this->tableExists()
-                ? MarketSnapshot::latestForGroup(MarketInstrument::GROUP_CRYPTO)
+        if (! $this->snapshotsLoaded) {
+            $this->snapshots = $this->tableExists()
+                ? MarketSnapshot::latestAll()
                 : collect();
-            $this->cryptoSnapshotsLoaded = true;
+            $this->snapshotsLoaded = true;
         }
 
-        $snapshot = $this->cryptoSnapshots?->get($instrument->id);
+        $snapshot = $this->snapshots?->get($instrument->id);
 
         if ($snapshot === null) {
             return null;
         }
 
-        $maxAge = (int) config('market.coingecko.max_age_minutes', 15);
+        $source = $snapshot->source ?? 'foreks';
+
+        $maxAge = (int) config("market.sources.{$source}.max_age_minutes");
+        if ($maxAge <= 0 && $source === 'coingecko') {
+            $maxAge = (int) config('market.coingecko.max_age_minutes', 15);
+        }
+        if ($maxAge <= 0) {
+            $maxAge = 30;
+        }
+
         $capturedAt = $snapshot->captured_at;
 
         if ($capturedAt === null || $capturedAt->lt($at->subMinutes($maxAge)) || $capturedAt->gt($at->addMinute())) {

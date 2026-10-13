@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdvertisementAdminController;
 use App\Http\Controllers\Admin\AuthorAdminController;
 use App\Http\Controllers\Admin\ChartAdminController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -212,6 +213,7 @@ $frontRoutes = function (): void {
     |----------------------------------------------------------------------
     */
     Route::get('/yatirim-fonlari', [FundController::class, 'index'])->name('fund.index');
+    Route::get('/yatirim-fonlari/fon-siniflarinda-bugun', [FundController::class, 'fundClasses'])->name('fund.classes');
     Route::get('/yatirim-fonlari/fon-karsilastirma', [FundController::class, 'compare'])->name('fund.compare');
     Route::get('/yatirim-fonlari/fon-portfoy-dagilim', [FundController::class, 'portfolio'])->name('fund.portfolio');
     Route::get('/yatirim-fonlari/{slug}', [FundController::class, 'show'])
@@ -304,6 +306,9 @@ Route::prefix('en')->name('en.')->middleware(SetLocale::class)->group($frontRout
 Route::get('/piyasa/veri', [MarketDataController::class, 'snapshot'])->name('market.snapshot');
 Route::get('/finance-slider-data', [MarketDataController::class, 'slider'])->name('market.slider');
 
+// PİYASALAR widget Highcharts verisi (referans `market-graph-data` sözleşmesi)
+Route::get('/chart/market-graph-data', [MarketDataController::class, 'marketGraphData'])->name('market.graph-data');
+
 /*
 |--------------------------------------------------------------------------
 | Görsel ölçekleme (geoim deseninin lokal karşılığı — Bölüm 4, 12)
@@ -328,6 +333,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', DashboardController::class)->name('dashboard');
 
         Route::resource('news', NewsAdminController::class)->except('show');
+        Route::resource('advertisements', AdvertisementAdminController::class)->except('show');
         Route::resource('authors', AuthorAdminController::class)->except('show');
         Route::resource('programs', ProgramAdminController::class)->except('show');
         Route::resource('kap', KapAdminController::class)->except('show');

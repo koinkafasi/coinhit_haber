@@ -45,7 +45,7 @@
             </div>
             <div class="form-row">
                 <label for="summary">Özet</label>
-                <textarea id="summary" name="summary" style="min-height:70px">{{ old('summary', $disclosure->summary) }}</textarea>
+                <textarea id="summary" name="summary" class="textarea-sm">{{ old('summary', $disclosure->summary) }}</textarea>
             </div>
             <div class="form-row">
                 <label for="body">Açıklama Metni</label>
@@ -54,7 +54,7 @@
         </div>
 
         <div class="card">
-            <h2 style="margin-top:0;font-size:16px">TR / EN Alan Tablosu</h2>
+            <h2 class="card-title">TR / EN Alan Tablosu</h2>
             <table class="admin-table">
                 <thead><tr><th>Alan</th><th>TR</th><th>EN</th></tr></thead>
                 <tbody>

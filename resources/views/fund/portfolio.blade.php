@@ -46,7 +46,7 @@
                         <div class="fund-distribution-row">
                             <span class="fund-distribution-label">{{ $asset }}</span>
                             <span class="fund-distribution-bar-track">
-                                <span class="fund-distribution-bar" style="width: {{ max(0, min(100, (float) $percent)) }}%"></span>
+                                <span class="fund-distribution-bar" style="--bar: {{ max(0, min(100, (float) $percent)) }}%"></span>
                             </span>
                             <span class="fund-distribution-value">{{ number_format((float) $percent, 1, ',', '.') }}%</span>
                         </div>

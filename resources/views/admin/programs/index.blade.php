@@ -5,7 +5,7 @@
 
 @section('content')
     <div class="card">
-        <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+        <div class="toolbar end">
             <a href="{{ route('admin.programs.create') }}" class="btn accent">+ Yeni Program</a>
         </div>
         <table class="admin-table">

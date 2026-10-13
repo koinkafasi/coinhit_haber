@@ -56,7 +56,7 @@ class NewsDetailTest extends TestCase
         $response->assertSee('/enerji', false);
 
         // Görünüm: spot (ul > li > h2.description), Google CTA, paylaş
-        $response->assertSee('<h2 class="description">', false);
+        $response->assertSee('<h2 class="description text-base md:text-lg">', false);
         $response->assertSee('google.com/preferences/source?q=bloomberght.com', false);
         $response->assertSee('facebook.com/sharer', false);
         $response->assertSee('twitter.com/intent/tweet', false);

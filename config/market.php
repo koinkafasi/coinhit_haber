@@ -32,12 +32,15 @@ return [
             'label' => 'Foreks',
             'delay_minutes' => 15,
             'delay_label' => '15 dk gecikmeli',
+            // Gerçek veri snapshot'ı yoksa/bayatsa simülatöre düşmeden önceki tazelik penceresi.
+            'max_age_minutes' => 30,
             'note' => 'Sitemizdeki veriler Foreks tarafından sağlanmaktadır. NASDAQ, Dow Jones Industrial Average, FTSE 100, CAC 40, DAX 30, Hang Seng, BOVESPA, VİOP, Tahvil-bono verileri 15 dk gecikmelidir.',
         ],
         'cme' => [
             'label' => 'CME',
             'delay_minutes' => 10,
             'delay_label' => '10 dk gecikmeli',
+            'max_age_minutes' => 30,
             'note' => 'CME, NYMEX ve S&P verileri 10 dk gecikmelidir. CME verilerinin izinsiz kullanımı yasaktır ve bu veriler hiçbir yapay zeka/öğrenme modelinin eğitiminde kullanılamaz (no AI/ML training use).',
             'license' => 'Bu sayfada yer alan piyasa verileri, Chicago Mercantile Exchange Inc. veya onun lisans verenlerine ait özel bilgileri içermektedir. Özel olarak yetki verilmedikçe kopyalanamaz, satılamaz veya dağıtılamaz. Yatırım tavsiyesi teşkil etmez. Yalnızca bilgilendirme amacıyla sağlanmaktadır. Hiçbir ticari amaçla kullanılmamaktadır. Tam, kesin veya zamanında olduğuna dair herhangi bir garanti verilmemektedir.',
         ],
@@ -45,13 +48,44 @@ return [
             'label' => 'Forex',
             'delay_minutes' => 15,
             'delay_label' => '15 dk gecikmeli',
+            'max_age_minutes' => 30,
             'note' => 'Döviz ve parite verileri 15 dk gecikmelidir.',
         ],
         'crypto' => [
             'label' => 'Kripto',
             'delay_minutes' => 0,
             'delay_label' => '7/24 anlık',
+            'max_age_minutes' => 15,
             'note' => 'Kripto para verileri 7/24 anlıktır.',
+        ],
+        // Gerçek veri toplayıcı kaynakları (market-collector Go aracı)
+        'tcmb' => [
+            'label' => 'TCMB',
+            'delay_minutes' => 0,
+            'delay_label' => 'Resmi kur',
+            'max_age_minutes' => 300, // TCMB bülteni gün içinde birkaç kez güncellenir
+            'note' => 'Döviz kurları Türkiye Cumhuriyet Merkez Bankası resmi gösterge kurlarıdır.',
+        ],
+        'yahoo' => [
+            'label' => 'Yahoo Finance',
+            'delay_minutes' => 15,
+            'delay_label' => '15 dk gecikmeli',
+            'max_age_minutes' => 30,
+            'note' => 'Borsa, parite ve emtia verileri Yahoo Finance üzerinden sağlanmaktadır (15 dk gecikmeli).',
+        ],
+        'goldprice' => [
+            'label' => 'GoldPrice.dev',
+            'delay_minutes' => 0,
+            'delay_label' => 'Spot',
+            'max_age_minutes' => 60,
+            'note' => 'Altın/Gümüş spot fiyatı goldprice.dev üzerinden sağlanmaktadır.',
+        ],
+        'evds' => [
+            'label' => 'TCMB EVDS',
+            'delay_minutes' => 0,
+            'delay_label' => 'Resmi',
+            'max_age_minutes' => 1440, // iş günü bazlı resmi seri (repo faizi)
+            'note' => 'Repo faiz oranları Türkiye Cumhuriyet Merkez Bankası EVDS resmi verileridir.',
         ],
     ],
 

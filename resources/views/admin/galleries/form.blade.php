@@ -56,9 +56,9 @@
 
     @if ($gallery->exists)
         <div class="card">
-            <h2 style="margin-top:0;font-size:16px">Görseller ({{ $gallery->items->count() }})</h2>
+            <h2 class="card-title">Görseller ({{ $gallery->items->count() }})</h2>
 
-            <form method="post" action="{{ route('admin.galleries.items.store', $gallery) }}" enctype="multipart/form-data" style="margin-bottom:20px">
+            <form method="post" action="{{ route('admin.galleries.items.store', $gallery) }}" enctype="multipart/form-data" class="stack-form">
                 @csrf
                 <div class="form-grid">
                     <div class="form-row">

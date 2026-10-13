@@ -80,13 +80,14 @@ class NewsController extends Controller
             ->where('id', '!=', $news->id)
             ->orderByDesc('is_featured')
             ->orderByDesc('views')
-            ->take(8)
+            ->take(4)
             ->get();
 
         return view('news.show', array_merge([
             'news' => $news,
             'related' => $related,
             'featured' => $featured,
+            'mostReadTabs' => $this->mostReadTabs(8),
             'categoryUrl' => $this->categoryUrl($news->category),
             'pageType' => 'article',
         ], $this->layoutData()));
@@ -109,8 +110,17 @@ class NewsController extends Controller
                 ->header('Content-Type', 'text/html; charset=UTF-8');
         }
 
+        $related = News::with(['category', 'author'])
+            ->where('category_id', $news->category_id)
+            ->where('id', '!=', $news->id)
+            ->where('status', 'published')
+            ->orderByDesc('published_at')
+            ->take(10)
+            ->get();
+
         return response()->view('news.infinite', [
             'news' => $news,
+            'related' => $related,
             'categoryUrl' => $this->categoryUrl($news->category),
         ])->header('Content-Type', 'text/html; charset=UTF-8');
     }

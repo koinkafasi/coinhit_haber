@@ -109,6 +109,42 @@ return [
         'alternatif' => 'Alternative',
     ],
 
+    // Market tables first-column headers — source marketDataLists birebir
+    'table_first_col' => [
+        'doviz' => 'CURRENCIES',
+        'pariteler' => 'PARITIES',
+        'gelisen_piyasa' => 'EMERGING MARKET RATES',
+        'bist' => 'BIST',
+        'artanlar' => 'Top Gainers',
+        'azalanlar' => 'Top Losers',
+        'tahvil' => 'BONDS',
+        'repo' => 'REPO',
+        'eurobond' => 'EUROBONDS',
+        'altin' => 'Gold',
+        'kiymetli' => 'PRECIOUS METALS',
+        'tarim' => 'AGRIC. COMMODITIES',
+        'alternatif_piyasalar' => 'BALTIC',
+        'alternatif' => 'ALTERNATIVE',
+    ],
+
+    // Market tables footer labels — source birebir ("Currency List" etc.)
+    'table_list_label' => [
+        'doviz' => 'Currency List',
+        'pariteler' => 'Parity List',
+        'gelisen_piyasa' => 'Emerging Market Currency List',
+        'bist' => 'BIST Index List',
+        'artanlar' => 'Top Gainers List',
+        'azalanlar' => 'Top Losers List',
+        'tahvil' => 'Bond List',
+        'repo' => 'Repo List',
+        'eurobond' => 'Eurobond List',
+        'altin' => 'Gold List',
+        'kiymetli' => 'Precious Metals List',
+        'tarim' => 'Agricultural Commodities List',
+        'alternatif_piyasalar' => 'Baltic Dry Index List',
+        'alternatif' => 'Alternative Markets List',
+    ],
+
     // News list / detail
     'news_title' => 'News',
     'news_suffix' => 'news',

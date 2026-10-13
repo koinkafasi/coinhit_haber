@@ -20,7 +20,7 @@ class HighchartsRenderer
 
     private const AREA = '#DEDEDE';
 
-    private const SERIES = '#333333';
+    private const SERIES = '#666666';
 
     /**
      * @param  array<int, float>  $values  kronolojik seri

@@ -55,7 +55,11 @@ class GlobalFrameTest extends TestCase
         $this->assertStringContainsString('https://www.bloomberghtradyo.com', $html);
         $this->assertStringContainsString(url('/sondakika'), $html);
         $this->assertStringContainsString('SON DAKİKA', $html);
-        $this->assertStringContainsString('breaking-track', $html);
+        // CD-38: son dakika artik Swiper carousel (marquee degil) — referansla birebir
+        $this->assertStringContainsString('data-type="swiper"', $html);
+        $this->assertStringContainsString('swiper-button-prev', $html);
+        $this->assertStringContainsString('swiper-button-next', $html);
+        $this->assertStringNotContainsString('breaking-track', $html);
     }
 
     public function test_menu_widget_endpoint_returns_locale_aware_json(): void

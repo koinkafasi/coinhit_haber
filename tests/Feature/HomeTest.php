@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Advertisement;
 use App\Models\Category;
 use App\Models\News;
 use Database\Seeders\DatabaseSeeder;
@@ -45,7 +46,7 @@ class HomeTest extends TestCase
             'Öne Çıkanlar', 'Piyasalar', 'Programlar', 'Tüm Haberler', 'Yayın Akışı',
             'Son Sayılar', 'Foto Haber', 'Videolar', 'Podcast Serileri', 'Kap Haberleri',
             'Sektör Haberleri', 'Siyaset Haberleri', 'Kripto Para', 'En Çok Okunanlar',
-            'Piyasa Haberleri', 'Hızlı Linkler', 'Grafik', 'REKLAM',
+            'Piyasa Haberleri', 'Hızlı Linkler', 'Grafik',
         ] as $title) {
             $this->assertStringContainsString($title, $html, "Eksik modül başlığı: {$title}");
         }
@@ -54,6 +55,8 @@ class HomeTest extends TestCase
     public function test_home_page_modules_keep_spec_order(): void
     {
         $this->seed(DatabaseSeeder::class);
+        // Masthead çapası için yönetilebilir bir reklam tanımla.
+        Advertisement::factory()->create(['position' => '1264']);
 
         $html = $this->get('/')->assertOk()->getContent();
 
@@ -73,8 +76,8 @@ class HomeTest extends TestCase
             'home-kap',                  // KAP HABERLERİ
             'market-data-widget',        // Piyasa verileri
             'home-sector',               // SEKTÖR HABERLERİ (+Emtia, Siyaset)
-            'home-crypto',               // KRİPTO PARA
-            'home-most-read',            // EN ÇOK OKUNANLAR
+            'data-section="crypto"',     // KRİPTO PARA (referans birebir; ek sınıf yok)
+            'data-section="mostRead"',   // EN ÇOK OKUNANLAR (referans birebir; ek sınıf yok)
         ];
 
         $previous = -1;
@@ -91,19 +94,18 @@ class HomeTest extends TestCase
     {
         $this->seed(DatabaseSeeder::class);
 
+        // Yönetilebilir reklam sistemi: tanımlanan zone'lara aktif reklam
+        // verilince alanlar görünür.
+        $zones = ['1264', '1257', '2167', '1265', '1395', '1400',
+            '2015', '2026', '2029', '2129', '22801', '22802', '2280'];
+        foreach ($zones as $zone) {
+            Advertisement::factory()->create(['position' => $zone]);
+        }
+
         $html = $this->get('/')->assertOk()->getContent();
 
-        foreach ([
-            'zone_1264', 'zone_1394',          // masthead
-            'zone_1257',                        // tek REKLAM
-            'zone_2167', 'zone_1265',           // REKLAM x2
-            'zone_1395', 'zone_1400',           // REKLAM x2
-            'zone_2015', 'zone_2026',           // REKLAM x2
-            'zone_2029', 'zone_2129',           // REKLAM x2
-            'zone_22801', 'zone_22802',         // REKLAM x2
-            'zone_2280',                        // mobil sticky
-        ] as $zone) {
-            $this->assertStringContainsString('data-zone-id="'.$zone.'"', $html, "Eksik ad zone: {$zone}");
+        foreach ($zones as $zone) {
+            $this->assertStringContainsString('data-zone-id="zone_'.$zone.'"', $html, "Eksik ad zone: {$zone}");
         }
 
         $this->assertStringContainsString('data-adv="bht"', $html);
@@ -148,13 +150,14 @@ class HomeTest extends TestCase
 
         foreach ([
             'Döviz', 'Pariteler', 'Gelişen Piyasa Kurları', 'BIST', 'En çok Artanlar',
-            'En çok Azalanlar', 'Tahvil', 'Repo', 'Eurobondlar', 'Altın', 'Kıymetli Metaller',
+            'En Çok Azalanlar', 'Tahvil', 'Repo', 'Eurobondlar', 'Altın', 'Kıymetli Metaller',
             'Tarım Emtia', 'Alternatif Piyasalar', 'Alternatif',
         ] as $table) {
             $this->assertStringContainsString($table, $html, "Eksik piyasa tablosu: {$table}");
         }
 
-        $this->assertStringContainsString('class="sparkline', $html);
+        $this->assertStringContainsString('class="graphChart-wrapper', $html);
+        $this->assertStringContainsString('data-type="foreignCurrency"', $html);
         $this->assertStringContainsString('data-market-code="XU100"', $html);
     }
 
@@ -170,6 +173,7 @@ class HomeTest extends TestCase
 
         $this->assertStringContainsString('data-widget-type="mostRead"', $html);
         $this->assertStringContainsString('data-widget-type="finance-slider"', $html);
-        $this->assertStringContainsString('crypto-swiper', $html);
+        $this->assertStringContainsString('data-section="crypto"', $html);
+        $this->assertStringContainsString('data-widget-type="crypto"', $html);
     }
 }

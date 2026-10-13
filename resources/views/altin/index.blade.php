@@ -5,47 +5,59 @@
 
 @section('content')
     @php
-        $goldColumns = [
-            ['label' => __('market.bid'), 'field' => 'bid', 'class' => 'lastPrice'],
-            ['label' => __('market.ask'), 'field' => 'ask', 'class' => 'lastPrice'],
-            ['label' => '%', 'field' => 'change_percent', 'class' => 'percentChange', 'color' => true],
-        ];
-        $sonColumns = [
-            ['label' => __('market.last'), 'field' => 'last', 'class' => 'lastPrice'],
-            ['label' => '%', 'field' => 'change_percent', 'class' => 'percentChange', 'color' => true],
-        ];
         $goldUrl = fn ($q) => $q->instrument->goldUrl();
         $commodityUrl = fn ($q) => $q->instrument->commodityUrl();
+        $goldColumns = [
+            ['label' => __('market.bid'), 'field' => 'bid', 'color' => true],
+            ['label' => __('market.ask'), 'field' => 'ask', 'color' => true],
+            ['label' => '%', 'field' => 'change_percent', 'color' => true, 'pct' => true],
+        ];
+        $commodityColumns = [
+            ['label' => __('market.last'), 'field' => 'last'],
+            ['label' => '%', 'field' => 'change_percent', 'color' => true, 'pct' => true],
+        ];
     @endphp
 
     <div class="borsa-page altin-page">
-        <h1 class="page-title font-unna font-bold">{{ __('market.gold') }}</h1>
+        <h1 class="font-unna font-bold text-2xl md:text-4xl mb-3">{{ __('market.gold') }}</h1>
 
         @include('altin.partials.quick-links')
 
-        <div class="borsa-layout">
-            <div class="borsa-main">
-                <x-market-table :title="__('market.gold_prices')" :firstLabel="__('market.gold_prices_heading')" :quotes="$featureQuotes"
-                    :columns="$goldColumns" :urlResolver="$goldUrl" id="altin-fiyatlari" />
+        {{-- 2 kolon: ana (Altın Fiyatları + Serbest Piyasa + İlgili Haberler) + aside 400px (reklam + Piyasalar) --}}
+        <div class="relative flex flex-wrap md:flex-nowrap gap-7">
+            <div class="w-full md:w-[calc(100%-400px)] min-w-0">
+                @include('altin.partials.economy-table', [
+                    'title' => __('market.gold_prices'),
+                    'firstLabel' => __('market.gold_prices_heading'),
+                    'columns' => $goldColumns,
+                    'quotes' => $featureQuotes,
+                    'href' => \App\Support\Locale::url('/altin'),
+                    'urlResolver' => $goldUrl,
+                    'id' => 'altin-fiyatlari',
+                ])
 
                 @include('altin.partials.serbest', ['quotes' => $serbestQuotes])
 
-                @include('borsa.partials.related-news', ['items' => $relatedNews])
+                @include('altin.partials.related-news', ['items' => $relatedNews])
             </div>
 
-            <aside class="borsa-aside">
-                <x-ad-zone :zone="1257" :index="1" />
-                <x-ad-zone :zone="1258" :index="2" />
+            <aside class="w-full md:w-[400px] relative altin-aside">
+                <x-ad-zone zone="22984" :index="1" :label="'REKLAM advertisement1'" />
+                @include('partials.market-widget-compact')
             </aside>
         </div>
 
-        @include('home.partials.market-widget')
+        {{-- Diğer Emtia (tam genişlik) --}}
+        @include('altin.partials.economy-table', [
+            'title' => __('market.other_commodities'),
+            'firstLabel' => __('market.precious_metal_heading'),
+            'columns' => $commodityColumns,
+            'quotes' => $otherCommodity,
+            'urlResolver' => $commodityUrl,
+            'id' => 'diger-emtia',
+        ])
 
-        <x-market-table :title="__('market.other_commodities')" :firstLabel="__('market.precious_metal_heading')" :quotes="$otherCommodity"
-            :href="\App\Support\Locale::url('/emtia')" :columns="$sonColumns" :urlResolver="$commodityUrl" id="diger-emtia" />
-
+        {{-- Altın Hesaplama (araç) --}}
         @include('altin.partials.calculator')
-
-        @include('altin.partials.cme-note')
     </div>
 @endsection

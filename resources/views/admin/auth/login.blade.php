@@ -29,9 +29,9 @@
             </div>
             <div class="checkbox">
                 <input id="remember" type="checkbox" name="remember" value="1">
-                <label for="remember" style="margin:0;font-weight:400">Beni hatırla</label>
+                <label for="remember" class="login-remember">Beni hatırla</label>
             </div>
-            <button type="submit" class="btn accent" style="width:100%">Giriş Yap</button>
+            <button type="submit" class="btn accent btn-block">Giriş Yap</button>
         </form>
     </div>
 </div>

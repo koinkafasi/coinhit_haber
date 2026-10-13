@@ -98,7 +98,7 @@ return [
         'gelisen_piyasa' => 'Gelişen Piyasa Kurları',
         'bist' => 'BIST',
         'artanlar' => 'En çok Artanlar',
-        'azalanlar' => 'En çok Azalanlar',
+        'azalanlar' => 'En Çok Azalanlar',
         'tahvil' => 'Tahvil',
         'repo' => 'Repo',
         'eurobond' => 'Eurobondlar',
@@ -107,6 +107,42 @@ return [
         'tarim' => 'Tarım Emtia',
         'alternatif_piyasalar' => 'Alternatif Piyasalar',
         'alternatif' => 'Alternatif',
+    ],
+
+    // Piyasa tabloları ilk sütun başlıkları — referans marketDataLists birebir
+    'table_first_col' => [
+        'doviz' => 'DÖVİZ',
+        'pariteler' => 'PARİTELER',
+        'gelisen_piyasa' => 'GELİŞEN PİYASA KURLARI',
+        'bist' => 'BİST',
+        'artanlar' => 'En çok Artanlar',
+        'azalanlar' => 'En Çok Azalanlar',
+        'tahvil' => 'TAHVİL',
+        'repo' => 'REPO',
+        'eurobond' => 'EUROBONDLAR',
+        'altin' => 'Altın',
+        'kiymetli' => 'KIYMETLİ METAL',
+        'tarim' => 'TARIM EMTİA',
+        'alternatif_piyasalar' => 'BALTIK',
+        'alternatif' => 'ALTERNATİF',
+    ],
+
+    // Piyasa tabloları altbilgi etiketleri — referans birebir ("Döviz Listesi" vb.)
+    'table_list_label' => [
+        'doviz' => 'Döviz Listesi',
+        'pariteler' => 'Parite Listesi',
+        'gelisen_piyasa' => 'Gelişen Piyasa Kurları Listesi',
+        'bist' => 'BIST Endeks Listesi',
+        'artanlar' => 'En Çok Artan Hisse Listesi',
+        'azalanlar' => 'En Çok Azalan Hisse Listesi',
+        'tahvil' => 'Tahvil Listesi',
+        'repo' => 'Repo Listesi',
+        'eurobond' => 'Eurobond Listesi',
+        'altin' => 'Altın Listesi',
+        'kiymetli' => 'Kıymetli Metaller Listesi',
+        'tarim' => 'Tarım Emtia Listesi',
+        'alternatif_piyasalar' => 'Baltık Kuru Yük Endeks Listesi',
+        'alternatif' => 'Alternatif Piyasalar Listesi',
     ],
 
     // Haber liste / detay

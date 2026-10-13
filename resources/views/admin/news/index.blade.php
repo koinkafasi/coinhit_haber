@@ -5,9 +5,9 @@
 
 @section('content')
     <div class="card">
-        <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:16px">
-            <form method="get" action="{{ route('admin.news.index') }}" style="display:flex;gap:8px">
-                <input type="text" name="q" value="{{ $q }}" placeholder="Başlıkta ara..." style="padding:8px 11px;border:1px solid var(--admin-border);border-radius:6px">
+        <div class="toolbar between">
+            <form method="get" action="{{ route('admin.news.index') }}" class="toolbar-form">
+                <input type="text" name="q" value="{{ $q }}" placeholder="Başlıkta ara..." class="search-input">
                 <button type="submit" class="btn ghost">Ara</button>
             </form>
             <a href="{{ route('admin.news.create') }}" class="btn accent">+ Yeni Haber</a>

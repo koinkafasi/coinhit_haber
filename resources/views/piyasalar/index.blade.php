@@ -8,18 +8,13 @@
 @section('og_image_width', '180')
 @section('og_image_height', '180')
 
-@section('masthead')
-    <x-ad-zone :zone="23022" index="1" variant="masthead" />
-@endsection
+@if (\App\Models\Advertisement::forZone('23022'))
+    @section('masthead')
+        <x-ad-zone :zone="23022" index="1" variant="masthead" />
+    @endsection
+@endif
 
 @section('content')
-    <div class="pageskin pageskin-left" id="ciner-pageskin-left" data-device="DESKTOP">
-        <div class="ads-zone lazy-init" data-adv="bht" data-device="DESKTOP" data-zone-id="zone_2228"></div>
-    </div>
-    <div class="pageskin pageskin-right" id="ciner-pageskin-right" data-device="DESKTOP">
-        <div class="ads-zone lazy-init" data-adv="bht" data-device="DESKTOP" data-zone-id="zone_2229"></div>
-    </div>
-
     <div class="markets-layout">
         <x-breadcrumb :items="[['label' => __('ui.markets'), 'url' => \App\Support\Locale::url('/piyasalar')]]" />
 
@@ -49,4 +44,17 @@
             </section>
         @endif
     </div>
+
+    @php($__adMarL = \App\Models\Advertisement::forZone('2228'))
+    @if ($__adMarL)
+        <div class="pageskin pageskin-left" id="ciner-pageskin-left" data-device="DESKTOP" data-zone-id="zone_2228">
+            @include('partials.ad-asset', ['ad' => $__adMarL])
+        </div>
+    @endif
+    @php($__adMarR = \App\Models\Advertisement::forZone('2229'))
+    @if ($__adMarR)
+        <div class="pageskin pageskin-right" id="ciner-pageskin-right" data-device="DESKTOP" data-zone-id="zone_2229">
+            @include('partials.ad-asset', ['ad' => $__adMarR])
+        </div>
+    @endif
 @endsection

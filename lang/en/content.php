@@ -62,6 +62,8 @@ return [
     'channel_ekonomik_veriler_ve_gundem_description' => 'Inflation, growth, employment and foreign trade data; the latest developments on the economic agenda.',
     'channel_tarim' => 'Agriculture',
     'channel_tarim_description' => 'News on agricultural products, food prices and agricultural support, plus the Agriculture Analysis column.',
+    'channel_tarim_analiz' => 'Agriculture Analysis',
+    'channel_tarim_news' => 'Agriculture News',
     'channel_zirve' => 'Summit',
     'channel_zirve_description' => 'Summit events, panels and speaker news from the world of economy and finance.',
     'channel_siyaset' => 'Politics',

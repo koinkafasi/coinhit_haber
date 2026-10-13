@@ -75,9 +75,14 @@
             }
         }
     @endphp
-    <link rel="stylesheet" href="{{ asset($__cssUrl) }}?v={{ $__cssVersion }}">
+    {{-- Swiper CSS ÖNCE, uygulama CSS'i SONRA: referans app-style.css'te
+         .swiper-button-* kuralları Tailwind utility'lerinden ÖNCE gelir, bu yüzden
+         utility sınıfları (w-8/h-11/text-inherit, ok rengi+ölçüsü) kazanır.
+         Ters sırada `.swiper-button-prev{color:var(--swiper-navigation-color,#007aff)}`
+         utility'leri ezip okları mavi bırakır. DOM ≥ görsel: referans sırası. --}}
     @php($__swiperCss = @filemtime(public_path('css/swiper-bundle.min.css')) ?: 1)
     <link rel="stylesheet" href="{{ asset('css/swiper-bundle.min.css') }}?v={{ $__swiperCss }}">
+    <link rel="stylesheet" href="{{ asset($__cssUrl) }}?v={{ $__cssVersion }}">
     @include('front.partials.jsonld')
     @stack('jsonld')
     @include('front.partials.analytics')
@@ -86,7 +91,7 @@
 <body class="bht-body relative w-full min-w-xs text-base overflow-x-hidden @yield('body_class')">
     {{-- Google Tag Manager (noscript) --}}
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5XBP88"
-                      height="0" width="0" style="display:none;visibility:hidden" title="GTM"></iframe></noscript>
+                      height="0" width="0" class="gtm-noscript" title="GTM"></iframe></noscript>
 
     @hasSection('masthead')
         <div class="masthead-zone" data-type="masthead">
@@ -101,13 +106,18 @@
          `container` 2xl'de 1536px verdiği için ölçülen 1280px `max-w-[1280px]`
          ile birebir karşılanır. İçerik sarmalayıcı `w-full min-w-full` → 1280px;
          pageskin'ler -ml/-mr-[160px] ile dışarı taşar, master'ı genişletmez. --}}
-    <main class="p-4">
+    <main class="py-4">
         <div class="master w-full flex justify-center items-start mx-auto max-w-[1280px]">
-            {{-- Pageskin sol reklam (zone_1252) --}}
-            <div data-adv="bht" data-device="DESKTOP" id="page-skin-left-sticky"
-                 class="pageskin page-skin-left pageskin-left hidden -ml-[160px] mr-4 justify-end sticky top-[212px] min-w-[160px] h-auto min-h-[600px] text-gray-400 z-[50]">
-                <div id="zone_1252" data-zone-id="1252" class="no-init" data-zone-viewtype="banner"></div>
-            </div>
+            {{-- Pageskin sol reklam (zone_1252) — aktif yönetilebilir reklam yoksa gizli --}}
+            @php($__adLeft = \App\Models\Advertisement::forZone('1252'))
+            @if ($__adLeft)
+                <div data-adv="bht" data-device="DESKTOP" id="page-skin-left-sticky"
+                     class="pageskin page-skin-left pageskin-left hidden -ml-[160px] mr-4 justify-end sticky top-[212px] min-w-[160px] h-auto min-h-[600px] text-gray-400 z-[50]">
+                    <div id="zone_1252" data-zone-id="1252" class="no-init" data-zone-viewtype="banner">
+                        @include('partials.ad-asset', ['ad' => $__adLeft])
+                    </div>
+                </div>
+            @endif
 
             {{-- Referans: <div class="w-full min-w-full"> — içerik master genişliğinde
                  (1280px) kalır; pageskin'ler negative margin ile dışarıda. --}}
@@ -117,22 +127,32 @@
                 </div>
             </div>
 
-            {{-- Pageskin sağ reklam (zone_1251) --}}
-            <div data-adv="bht" data-device="DESKTOP" id="page-skin-right-sticky"
-                 class="pageskin page-skin-right pageskin-right -mr-[160px] ml-4 hidden justify-start sticky top-[212px] min-w-[160px] h-auto min-h-[600px] text-gray-400 z-[50]">
-                <div id="zone_1251" data-zone-id="1251" class="no-init" data-zone-viewtype="banner"></div>
-            </div>
+            {{-- Pageskin sağ reklam (zone_1251) — aktif yönetilebilir reklam yoksa gizli --}}
+            @php($__adRight = \App\Models\Advertisement::forZone('1251'))
+            @if ($__adRight)
+                <div data-adv="bht" data-device="DESKTOP" id="page-skin-right-sticky"
+                     class="pageskin page-skin-right pageskin-right -mr-[160px] ml-4 hidden justify-start sticky top-[212px] min-w-[160px] h-auto min-h-[600px] text-gray-400 z-[50]">
+                    <div id="zone_1251" data-zone-id="1251" class="no-init" data-zone-viewtype="banner">
+                        @include('partials.ad-asset', ['ad' => $__adRight])
+                    </div>
+                </div>
+            @endif
         </div>
     </main>
 
     @include('front.partials.footer')
     @include('front.partials.cookie')
 
-    {{-- Mobil sticky alt bant (zone 2280) — Bölüm 2.5 / 14.6 --}}
-    <div class="widget-sticky-ads mobile-sticky-ad" data-type="stickyAds" data-device="MOBILE"
-         id="zone_auto_refresh_sticky" data-adv="bht" data-zone-id="zone_2280">
-        <div class="ads-zone lazy-init" data-adv="bht" data-device="MOBILE" data-zone-id="zone_2280"></div>
-    </div>
+    {{-- Mobil sticky alt bant (zone 2280) — aktif yönetilebilir reklam yoksa gizli --}}
+    @php($__adSticky = \App\Models\Advertisement::forZone('2280'))
+    @if ($__adSticky)
+        <div class="widget-sticky-ads mobile-sticky-ad" data-type="stickyAds" data-device="MOBILE"
+             id="zone_auto_refresh_sticky" data-adv="bht" data-zone-id="zone_2280">
+            <div class="sticky-ad-body" data-adv="bht" data-device="MOBILE" data-zone-id="zone_2280">
+                @include('partials.ad-asset', ['ad' => $__adSticky])
+            </div>
+        </div>
+    @endif
 
     {{-- Arama modalı (referans search-modal — body sonunda, mega-menu öncesi) --}}
     <div class="search-widget-overlay" data-widget-type="search-bar" data-search-overlay hidden>

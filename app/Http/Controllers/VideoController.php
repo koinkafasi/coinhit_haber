@@ -18,27 +18,77 @@ use Illuminate\Support\Collection;
 class VideoController extends Controller
 {
     /**
-     * /video — hero + seri grid + filtre + son videolar (Listele lazy-load).
+     * Referans `/video` seri sırası (bloomberght.com/video). Klon verisinde
+     * bulunmayan seriler atlanır; listede olmayanlar (ekstralar) sona eklenir.
+     *
+     * @var array<int, string>
+     */
+    private const REFERENCE_ORDER = [
+        'asli-safakla-isin-asli',
+        'acik-hava-sinemasi',
+        'dort-kadin-bir-dunya',
+        'tarih-keyfi',
+        'pandoranin-meraki',
+        'oyun-disi',
+        'spor-kulubu',
+        'iste-zirve',
+        'yarinin-zekasi',
+        'akustikhane',
+        'haber',
+        'finansal-teknoloji',
+        'fon-saati',
+    ];
+
+    /**
+     * Referans filtre hap kümesi — `/video` başlığı altındaki filtre swiper'ı
+     * yalnız bu 8 seriyi gösterir (14 bölüm sayfada, 8 hap üstte).
+     *
+     * @var array<int, string>
+     */
+    private const FILTER_SLUGS = [
+        'asli-safakla-isin-asli',
+        'acik-hava-sinemasi',
+        'tarih-keyfi',
+        'dort-kadin-bir-dunya',
+        'pandoranin-meraki',
+        'spor-kulubu',
+        'iste-zirve',
+        'yarinin-zekasi',
+    ];
+
+    /**
+     * /video — referans birebir: arka planlı "Video" başlığı + seri filtre
+     * hapları + her seri için [kapsamlı video (type1) + 3 kenar video (type2)
+     * + TÜMÜ linki].
      */
     public function index(Request $request): View
     {
+        $order = array_flip(self::REFERENCE_ORDER);
+
+        /** @var Collection<int, array{name: string, slug: string, url: string, episodes: Collection}> $series */
         $series = Program::series()
             ->where('is_active', true)
-            ->withCount('episodes')
-            ->orderBy('sort_order')
-            ->orderBy('name')
-            ->get();
+            ->get()
+            ->sortBy(fn (Program $program): int => $order[$program->slug] ?? PHP_INT_MAX)
+            ->values()
+            ->map(fn (Program $program): array => [
+                'name' => $program->name,
+                'slug' => $program->slug,
+                'url' => \App\Support\Locale::url('/video/'.$program->slug),
+                'episodes' => $program->episodes()->orderByDesc('air_at')->take(4)->get(),
+            ])
+            ->reject(fn (array $s): bool => $s['episodes']->isEmpty())
+            ->values();
 
-        $videos = ProgramEpisode::with('program')
-            ->orderByDesc('air_at')
-            ->paginate(12)
-            ->withQueryString();
+        $filter = collect(self::FILTER_SLUGS)
+            ->map(fn (string $slug): ?array => $series->firstWhere('slug', $slug))
+            ->filter()
+            ->values();
 
         return view('video.index', array_merge([
             'pageTitle' => __('media.video'),
             'series' => $series,
-            'videos' => $videos,
-            'categories' => $this->categoryLinks($series),
+            'filter' => $filter,
         ], $this->layoutData()));
     }
 

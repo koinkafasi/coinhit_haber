@@ -34,7 +34,7 @@ class HomeController extends Controller
             ->where('is_featured', true)
             ->with(['category', 'author'])
             ->orderByDesc('published_at')
-            ->take(6)
+            ->take(12)
             ->get();
 
         $latest = (clone $published())
@@ -43,7 +43,19 @@ class HomeController extends Controller
             ->take(30)
             ->get();
 
-        $hero = $featured->isNotEmpty() ? $featured : $latest->take(6);
+        // Manşet slider: referanstaki 12 slaytı her zaman doldur. Önce öne
+        // çıkanlar (featured), eksik kalanı en yeni yayınlarla doldur.
+        $hero = $featured->take(12);
+        if ($hero->count() < 12) {
+            $heroIds = $hero->pluck('news_id')->all();
+            $hero = $hero->merge(
+                (clone $published())
+                    ->whereNotIn('news_id', $heroIds)
+                    ->orderByDesc('published_at')
+                    ->take(12 - $hero->count())
+                    ->get()
+            );
+        }
 
         return view('home.index', array_merge([
             'hero' => $hero,
@@ -66,7 +78,7 @@ class HomeController extends Controller
             'commodityNews' => $this->categoryNewsModule('emtia', 4),
             'marketWidget' => $this->cached('home.market_widget', 30, fn () => $this->marketWidget()),
             'marketTables' => $this->cached('home.market_tables', 30, fn () => $this->marketTableData()),
-            'cryptoQuotes' => $this->market->quotes('crypto')->take(12)->values(),
+            'cryptoQuotes' => $this->market->quotes('crypto')->take(15)->values(),
             'latestBreaking' => BreakingNews::where('is_active', true)->orderByDesc('published_at')->take(10)->get(),
         ], $this->layoutData()));
     }
@@ -125,22 +137,17 @@ class HomeController extends Controller
 
     /**
      * PİYASALAR büyük widget: 4 sekme + enstrüman alt-sekmeleri + mini grafikler.
+     * `sec` değerleri HomeController.shop grafik motorunun `data-name-sec`
+     * sözleşmesine karşılık gelir (foreignCurrency = Döviz, commodity = Emtia).
      *
-     * @return array<int, array{key: string, label: string, items: array<int, array{quote: Quote, svg: string}>}>
+     * @return array<int, array{key: string, label: string, sec: string, items: array<int, array{quote: Quote}>}>
      */
     private function marketWidget(): array
     {
-        $definition = [
-            'borsa' => ['label' => __('ui.market.borsa'), 'codes' => ['XU100', 'DOW', 'DAX', 'FTSE100', 'SHANGHAI']],
-            'doviz' => ['label' => __('ui.market.doviz'), 'codes' => ['USDTRY', 'EURTRY', 'GBPTRY', 'EURUSD', 'DXY']],
-            'emtia' => ['label' => __('ui.market.emtia'), 'codes' => ['GAU', 'GRAM', 'GUMUS_ONS', 'BRENT', 'WTI', 'BDIY']],
-            'faiz' => ['label' => __('ui.market.faiz'), 'codes' => ['TR2Y', 'TR10Y', 'US10Y', 'DE10Y', 'GB10Y']],
-        ];
-
         $tabs = [];
         $tabIndex = 0;
 
-        foreach ($definition as $key => $tab) {
+        foreach ($this->market->widgetGroups() as $key => $tab) {
             $items = [];
             $i = 0;
 
@@ -154,12 +161,12 @@ class HomeController extends Controller
                 $items[] = [
                     'quote' => $this->market->quote($instrument),
                     'svg' => $this->market->sparklineSvg($instrument),
-                    'svg_big' => $this->market->highchartsArea($instrument, 64, 520, 180, 'home-'.$tabIndex.'-'.$i),
+                    'svg_big' => $this->market->highchartsArea($instrument, 64, 520, 180, $tab['sec'].'-'.$i),
                 ];
                 $i++;
             }
 
-            $tabs[] = ['key' => $key, 'label' => $tab['label'], 'items' => $items];
+            $tabs[] = ['key' => $key, 'label' => $tab['label'], 'sec' => $tab['sec'], 'items' => $items];
             $tabIndex++;
         }
 

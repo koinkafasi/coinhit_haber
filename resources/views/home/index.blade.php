@@ -2,36 +2,57 @@
 
 @section('title', ($siteSettings['site_name'] ?? 'Bloomberg HT').' | '.__('ui.site_tagline'))
 
-@section('masthead')
-    {{-- Modül 1: Masthead ad — zone_1264 (masaüstü) / zone_1394 (mobil), header ÜSTÜNDE --}}
-    <div class="masthead-ad">
-        <div class="ad-head"><span class="ad-label !text-xxs">{{ __('ui.ad') }}</span></div>
-        <div class="ad-body ad-body-desktop" data-device="DESKTOP">
-            <div class="ads-zone lazy-init" data-adv="bht" data-device="DESKTOP" data-zone-id="zone_1264" id="zone_1264"></div>
-        </div>
-        <div class="ad-body ad-body-mobile" data-device="MOBILE">
-            <div class="ads-zone lazy-init" data-adv="bht" data-device="MOBILE" data-zone-id="zone_1394" id="zone_1394" aria-hidden="true"></div>
-        </div>
-    </div>
-@endsection
+@push('scripts')
+    @php
+        $__hc = @filemtime(public_path('js/highchart.js')) ?: 1;
+    @endphp
+    <script type="module" src="{{ asset('js/highchart.js') }}?v={{ $__hc }}" defer></script>
+@endpush
+
+@if (\App\Models\Advertisement::forZone('1264'))
+    @section('masthead')
+        {{-- Modül 1: Masthead ad — yönetilebilir reklam (zone_1264); aktif reklam yoksa gizli --}}
+        @include('partials.ad-banner', ['zone' => '1264', 'variant' => 'masthead'])    @endsection
+@endif
 
 @section('content')
 <div class="home-page">
 
     {{-- Modül 2: Hero / manşet slider + sağda Öne Çıkanlar (headline + highlights) --}}
-    <section data-section="headline" class="grid grid-cols-12 gap-4 mb-4 md:mb-4 home-hero-row">
+    <section data-section="headline" class="grid grid-cols-12 gap-4 mb-4 md:mb-10">
         <div class="bht-grid col-span-12 md:col-span-6 row-span-1" dataType="headline">
             <div data-widget-type="headline">
-                <div data-type="swiper" data-name="" class="swiper slider-custom relative hero-main-slider"
-                     data-swiper='{"loop":true,"pagination":{"el":".swiper-pagination","clickable":true},"navigation":{"nextEl":".main-slider .bloomberght-icon-font-chevron-right","prevEl":".main-slider .bloomberght-icon-font-chevron-left"}}'>
+                <div data-type="swiper" data-name="" class="swiper slider-custom relative"
+                     data-swiper='{"hashMode":true,"lazy":{"loadPrevNext":true,"loadPrevNextAmount":1,"loadOnTransitionStart":true},"loop":true,"pagination":{"el":".swiper-pagination","clickable":true},"navigation":{"nextEl":".main-slider .bloomberght-icon-font-chevron-right","prevEl":".main-slider .bloomberght-icon-font-chevron-left"}}'>
                     <div class="swiper-wrapper">
                         @foreach ($hero as $index => $item)
-                            <div class="swiper-slide" data-hash="haber-{{ $item->news_id }}" style="">
+                            @php
+                                $__heroImg = asset($item->image ?: '/img/og-default.png');
+                            @endphp
+                            <div class="swiper-slide " data-hash="{{ md5((string) $item->news_id) }}" style="">
                                 <div class="-z-100">
                                     <figure>
                                         <div class="w-full h-auto aspect-video bg-gray-50">
                                             <a href="{{ $item->url }}" title="{{ $item->title }}">
-                                                <x-lazy-image :src="asset($item->image ?: '/img/og-default.png')" alt="{{ $item->title }}" class="w-full h-full swiper-lazy" contract="news_card" :eager="$index === 0" />
+                                                @if ($index === 0)
+                                                    <img
+                                                        srcset="{{ \App\Support\Media::srcset($__heroImg, [320, 400, 640, 1280]) }}"
+                                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 640px, 960px"
+                                                        src="{{ $__heroImg }}"
+                                                        alt="{{ $item->title }}"
+                                                        class="w-full h-full "
+                                                        loading="eager"
+                                                        fetchpriority="high"
+                                                    >
+                                                @else
+                                                    <img
+                                                        src="{{ $__heroImg }}"
+                                                        alt="{{ $item->title }}"
+                                                        class="swiper-lazy w-full h-full "
+                                                        decoding="async"
+                                                        loading="lazy"
+                                                    >
+                                                @endif
                                             </a>
                                         </div>
                                         <figcaption class="pt-10">
@@ -40,9 +61,6 @@
                                                     <span class="line-clamp-2">{{ $item->title }}</span>
                                                 </div>
                                             </a>
-                                            @if ($item->spot)
-                                                <p class="hero-slide-spot line-clamp-2 mt-2 text-sm text-gray-700">{{ \Illuminate\Support\Str::limit(strip_tags($item->spot), 160) }}</p>
-                                            @endif
                                         </figcaption>
                                     </figure>
                                 </div>
@@ -52,47 +70,103 @@
                     <div class="w-full h-20 absolute bottom-0">
                         <div class="swiper-pagination relative type4"></div>
                     </div>
-                    <div class="main-slider text-black absolute left-0 top-32 3xl:top-44 h-6 w-full z-10 pointer-events-none">
-                        <button type="button" aria-label="prev" class="swiper-button-prev pointer-events-auto after:content-[''] bg-black bg-opacity-40 text-white border-y border-r border-white w-9 h-9 bloomberght-icon-font-chevron-left left-0 cursor-pointer text-inherit hidden md:flex"></button>
-                        <button type="button" aria-label="next" class="swiper-button-next pointer-events-auto after:content-[''] bg-black bg-opacity-40 text-white border-y border-l border-white w-9 h-9 bloomberght-icon-font-chevron-right right-0 cursor-pointer text-inherit hidden md:flex"></button>
+                    <div class="main-slider text-black absolute left-0 top-[170px] 3xl:top-[218px] h-6 w-full z-10 pointer-events-none">
+                        <button aria-label="prev" class="swiper-button-prev pointer-events-auto after:content-[''] bg-black bg-opacity-40 text-white border-y border-r border-white w-9 h-9 bloomberght-icon-font-chevron-left left-0 cursor-pointer text-inherit hidden md:flex"></button>
+                        <button aria-label="next" class="swiper-button-next pointer-events-auto after:content-[''] bg-black bg-opacity-40 text-white border-y border-l border-white w-9 h-9 bloomberght-icon-font-chevron-right right-0 cursor-pointer text-inherit hidden md:flex"></button>
                     </div>
                 </div>
             </div>
         </div>
 
-        {{-- Öne Çıkanlar (highlights): referans grid md:grid-cols-2 + iki kolon;
-             ilk kart type3 (H2 + aspect-video kapak), devami type1. --}}
+        {{-- Öne Çıkanlar (highlights): referans birebir —
+             sol sütun: type3 (başlıklı kapak) + 2 type1;
+             sağ sütun: 2 type1 + type3 (kapak) + type1;
+             sağ sütun border-l border-t md:border-t-0; son kartlar md:mb-4. --}}
         <div class="bht-grid col-span-12 md:col-span-6 row-span-1" dataType="highlights" datatype="highlights">
+            {{-- Referans: highlights widget üstünde bölüm başlığı çubuğu —
+                 siyah çizgi + solda 230x10 siyah kalın belirteç (before). --}}
+            <div class="border-b border-black relative before:absolute before:top-0 before:bottom-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black"></div>
             <div data-widget-type="highlights" class="border">
                 @php
                     $__hl = $featuredNews->take(7)->values();
                 @endphp
-                {{-- Referans: sol sütun type3 (bolum başlıklı) + 2 type1;
-                     sağ sütun 2 type1 + type3 (başlıksız) + type1. Toplam 7. --}}
                 <div class="grid md:grid-cols-2">
                     <div class="flex flex-col justify-between">
                         @if ($__hl->get(0))
-                            <x-news-card :news="$__hl->get(0)" type="type3" :title="__('ui.featured')" />
+                            <div class="border-b mb-2 pb-2" data-type="news-card-type3" data-news-id="{{ $__hl->get(0)->news_id }}">
+                                <h2 class="font-unna font-bold text-3xl mb-2 p-2 pt-4">{{ __('ui.featured') }}</h2>
+                                <a href="{{ $__hl->get(0)->url }}" title="{{ $__hl->get(0)->title }}">
+                                    <figure class="px-2">
+                                        <div class="w-full h-full aspect-video bg-gray-50 mb-4">
+                                            <img src="{{ asset($__hl->get(0)->image ?: '/img/og-default.png') }}" alt="" class="w-full h-full" loading="lazy" decoding="async">
+                                        </div>
+                                        <figcaption class="w-full h-full flex flex-col justify-around">
+                                            <div class="font-unna font-bold text-base 2xl:text-xl text-ellipsis line-clamp-2">{{ $__hl->get(0)->title }}</div>
+                                        </figcaption>
+                                    </figure>
+                                </a>
+                            </div>
                         @endif
                         @if ($__hl->get(1))
-                            <x-news-card :news="$__hl->get(1)" type="type1" />
+                            <div class="border-b mb-2 pb-2" data-type="news-card-type1" data-news-id="{{ $__hl->get(1)->news_id }}">
+                                <a href="{{ $__hl->get(1)->url }}" title="{{ $__hl->get(1)->title }}">
+                                    <figure class="px-2"><figcaption>
+                                        <div class="font-unna font-bold text-base 2xl:text-xl text-ellipsis line-clamp-2">{{ $__hl->get(1)->title }}</div>
+                                    </figcaption></figure>
+                                </a>
+                            </div>
                         @endif
                         @if ($__hl->get(2))
-                            <x-news-card :news="$__hl->get(2)" type="type1" />
+                            <div class="md:mb-4" data-type="news-card-type1" data-news-id="{{ $__hl->get(2)->news_id }}">
+                                <a href="{{ $__hl->get(2)->url }}" title="{{ $__hl->get(2)->title }}">
+                                    <figure class="px-2"><figcaption>
+                                        <div class="font-unna font-bold text-base 2xl:text-xl text-ellipsis line-clamp-2">{{ $__hl->get(2)->title }}</div>
+                                    </figcaption></figure>
+                                </a>
+                            </div>
                         @endif
                     </div>
-                    <div class="flex flex-col justify-between">
+                    <div class="flex flex-col justify-between border-l border-t md:border-t-0">
                         @if ($__hl->get(3))
-                            <x-news-card :news="$__hl->get(3)" type="type1" />
+                            <div class="border-b mb-2 pb-2" data-type="news-card-type1" data-news-id="{{ $__hl->get(3)->news_id }}">
+                                <a href="{{ $__hl->get(3)->url }}" title="{{ $__hl->get(3)->title }}">
+                                    <figure class="px-2 pt-2"><figcaption>
+                                        <div class="font-unna font-bold text-base 2xl:text-xl text-ellipsis line-clamp-2">{{ $__hl->get(3)->title }}</div>
+                                    </figcaption></figure>
+                                </a>
+                            </div>
                         @endif
                         @if ($__hl->get(4))
-                            <x-news-card :news="$__hl->get(4)" type="type1" />
+                            <div class="border-b mb-2 pb-2" data-type="news-card-type1" data-news-id="{{ $__hl->get(4)->news_id }}">
+                                <a href="{{ $__hl->get(4)->url }}" title="{{ $__hl->get(4)->title }}">
+                                    <figure class="px-2"><figcaption>
+                                        <div class="font-unna font-bold text-base 2xl:text-xl text-ellipsis line-clamp-2">{{ $__hl->get(4)->title }}</div>
+                                    </figcaption></figure>
+                                </a>
+                            </div>
                         @endif
                         @if ($__hl->get(5))
-                            <x-news-card :news="$__hl->get(5)" type="type3" />
+                            <div class="border-b mb-2 pb-2" data-type="news-card-type3" data-news-id="{{ $__hl->get(5)->news_id }}" id="highlightsAdsArea2">
+                                <a href="{{ $__hl->get(5)->url }}" title="{{ $__hl->get(5)->title }}">
+                                    <figure class="px-2">
+                                        <div class="w-full h-full aspect-video bg-gray-50 mb-4">
+                                            <img src="{{ asset($__hl->get(5)->image ?: '/img/og-default.png') }}" alt="" class="w-full h-full" loading="lazy" decoding="async">
+                                        </div>
+                                        <figcaption class="w-full h-full flex flex-col justify-around">
+                                            <div class="font-unna font-bold text-base 2xl:text-xl text-ellipsis line-clamp-2">{{ $__hl->get(5)->title }}</div>
+                                        </figcaption>
+                                    </figure>
+                                </a>
+                            </div>
                         @endif
                         @if ($__hl->get(6))
-                            <x-news-card :news="$__hl->get(6)" type="type1" />
+                            <div class="md:mb-4" data-type="news-card-type1" data-news-id="{{ $__hl->get(6)->news_id }}">
+                                <a href="{{ $__hl->get(6)->url }}" title="{{ $__hl->get(6)->title }}">
+                                    <figure class="px-2"><figcaption>
+                                        <div class="font-unna font-bold text-base 2xl:text-xl text-ellipsis line-clamp-2">{{ $__hl->get(6)->title }}</div>
+                                    </figcaption></figure>
+                                </a>
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -121,55 +195,19 @@
     {{-- REKLAM --}}
     <x-ad-zone :zone="1257" :index="1" />
 
-    {{-- PİYASALAR büyük widget --}}
-    @include('home.partials.market-widget')
-
-    {{-- HIZLI LINKLER (col-span-8) + GRAFİK (col-span-4) yan yana --
-         referans fastLinks(8) | graphics(4) ayni satirda --}}
-    <section class="home-links-row grid grid-cols-12 gap-4 mb-4 md:mb-10">
-{{-- Referans fastLinks ölçümü: başlık düz metin (<h2> yok),
-         swiper pt-12 (48px), slide `w-auto`, link <button class="tab-button ...">`. --}}
-        <div class="bht-grid col-span-12 md:col-span-4 row-span-1" dataType="fastLinks" datatype="fastLinks">
-            <section class="relative" data-widget-type="fastLinks">
-                <div class="mb-4 border-b border-black relative before:absolute before:top-0 before:bottom-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black"></div>
-                <a href="{{ \App\Support\Locale::url('/trendler') }}" title=""
-                   class="absolute top-4 left-0 font-unna font-bold text-3xl mb-2 z-10">{{ __('ui.quick_links') }}</a>
-                <div class="tab-menu">
-                    <div class="tab-head my-4">
-                        <div data-type="swiper" data-name="" class="swiper slider-custom relative mb-4 pt-12 w-full text-sm md:text-base"
-                             data-swiper='{"slidesPerView":"auto","spaceBetween":10,"loop":false,"lazy":true,"navigation":{"nextEl":".fast-link .swiper-button-next","prevEl":".fast-link .swiper-button-prev"}}'>
-                            <div class="swiper-wrapper">
-                                @foreach ($trends as $__i => $trend)
-                                    <div class="swiper-slide w-auto">
-                                        <button type="button" class="tab-button inline-block px-4 py-2 rounded-3xl border font-bold {{ $__i === 0 ? 'bg-gray-200' : '' }}" data-tab="tab-fast-{{ $__i }}">{{ $trend->label }}</button>
-                                    </div>
-                                @endforeach
-                            </div>
-                            <div class="swiper-button-prev bloomberght-icon-font-chevron-left"></div>
-                            <div class="swiper-button-next bloomberght-icon-font-chevron-right"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+    {{-- PİYASALAR büyük widget (referans marketGraphData: col-span-8, row-span-2) --}}
+    <section data-section="markethData" class="home-market-row grid grid-cols-12 gap-4 mb-4 md:mb-10">
+        <div class="bht-grid col-span-12 md:col-span-8 row-span-2" dataType="marketGraphData" datatype="marketGraphData">
+            @include('home.partials.market-widget')
         </div>
-        <div class="bht-grid col-span-12 md:col-span-4" dataType="graphics" datatype="graphics">
-            <section class="home-graphics relative w-full" data-widget-type="graphics">
-                <div class="mb-4 border-b border-black relative w-full before:absolute before:top-0 before:bottom-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black"></div>
-                <a href="{{ \App\Support\Locale::url('/grafik-arsivi') }}" title="{{ __('ui.charts') }}"
-                   class="absolute top-4 left-0 font-unna font-bold text-3xl mb-2 z-10"><h2>{{ __('ui.charts') }}</h2></a>
-                <div data-type="swiper" data-name="" class="swiper slider-custom relative mb-4 pt-12 w-full graphic"
-                     data-swiper='{"slidesPerView":"1","spaceBetween":20,"autoplay":{"delay":2500,"disableOnInteraction":false},"loop":false,"lazy":true,"navigation":{"nextEl":".graphic .swiper-button-next","prevEl":".graphic .swiper-button-prev"}}'>
-                    <div class="swiper-wrapper">
-                        @foreach ($charts as $chart)
-                            <div class="swiper-slide">
-                                <x-news-card :news="$chart" type="type3" />
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="swiper-button-prev bloomberght-icon-font-chevron-left"></div>
-                    <div class="swiper-button-next bloomberght-icon-font-chevron-right"></div>
-                </div>
-            </section>
+
+        {{-- HIZLI LINKLER (col-span-4) + GRAFİK (col-span-4) yan yana --
+             referans fastLinks(4) + graphics(4), marketGraphData'nin altında. --}}
+        <div class="bht-grid col-span-12 md:col-span-4 row-span-1" dataType="fastLinks" datatype="fastLinks">
+            @include('home.partials.fast-links')
+        </div>
+        <div class="bht-grid col-span-12 md:col-span-4 row-span-1" dataType="graphics" datatype="graphics">
+            @include('home.partials.graphics')
         </div>
     </section>
 
@@ -183,7 +221,7 @@
         <div class="mb-4 border-b border-black relative w-full before:absolute before:top-0 before:bottom-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black"></div>
         <a href="{{ \App\Support\Locale::url('/video') }}" title="{{ __('ui.programs') }}" class="absolute top-4 left-0 font-unna font-bold text-3xl mb-2 z-10"><h2>{{ __('ui.programs') }}</h2></a>
         <div>
-            <div data-type="swiper" data-name="" class="swiper slider-custom relative mb-4 pt-12 w-full programs"
+            <div data-type="swiper" data-name="" class="swiper slider-custom relative mb-4 pt-12 w-full"
                  data-swiper='{"slidesPerView":"auto","spaceBetween":20,"loop":false,"autoplay":{"delay":4000,"disableOnInteraction":true,"pauseOnMouseEnter":true},"lazy":true,"navigation":{"nextEl":".programs .swiper-button-next","prevEl":".programs .swiper-button-prev"}}'>
                 <div class="swiper-wrapper">
                     @foreach ($programs as $episode)
@@ -206,6 +244,10 @@
                             </a>
                         </div>
                     @endforeach
+                </div>
+                <div class="programs text-black bg-white absolute -right-3 top-4 w-20 pl-4 z-90">
+                    <button aria-label="prev" class="swiper-button-prev after:content-[''] w-8 h-11 bloomberght-icon-font-chevron-left right-14 cursor-pointer text-inherit"></button>
+                    <button aria-label="next" class="swiper-button-next after:content-[''] w-8 h-11 bloomberght-icon-font-chevron-right right-0 cursor-pointer text-inherit"></button>
                 </div>
             </div>
         </div>
@@ -235,6 +277,18 @@
                     @endforeach
                 </div>
             </section>
+
+            {{-- Referans link-type1: TÜMÜ + belirteç deseni (çizgi + köşe işareti + chevron x3) --}}
+            <a href="{{ \App\Support\Locale::url('/tumhaberler') }}" data-type="link-type1" title="TÜMÜ"
+               class="w-full flex gap-2 my-2 items-center text-black bg-transparent">
+                <div class="flex-grow border-t border-gray-300 relative before:content-[''] before:absolute before:bottom-0 before:flex before:h-4 before:w-[1px] before:bg-gray-300"></div>
+                <span class="ml-2">
+                    <span class="text-base mr-2">{{ __('ui.all') }}</span>
+                    <span class="bloomberght-icon-font-chevron-right text-sm"></span>
+                    <span class="bloomberght-icon-font-chevron-right text-sm"></span>
+                    <span class="bloomberght-icon-font-chevron-right text-sm"></span>
+                </span>
+            </a>
         </div>
     </section>
 
@@ -246,59 +300,14 @@
     <x-ad-zone :zone="1400" :index="5" />
 
     {{-- Businessweek kapak + SON SAYILAR --}}
-    <section class="home-businessweek" data-widget-type="businessWeekTurkey">
-        <div class="bw-cover">
-            <a href="https://www.businessweek.com.tr/" target="_blank" rel="noopener noreferrer" class="bw-cover-link">
-                <x-lazy-image src="/img/placeholders/placeholder-3.svg" alt="Businessweek" contract="magazine" class="bw-cover-img img-contract" />
-            </a>
-        </div>
-        <div class="bw-issues">
-            <x-section-head :title="__('ui.latest_issues')" href="https://www.businessweek.com.tr/" allLabel="Businessweek" />
-            <ul class="bw-issue-list">
-                @foreach ([0, 1, 2, 3] as $week)
-                    <li>
-                        <a href="https://www.businessweek.com.tr/" target="_blank" rel="noopener noreferrer">
-                            <span class="bw-issue-no">{{ __('ui.issue') }} {{ 2026 - $week - 0 }}</span>
-                            <time class="bw-issue-date">{{ now()->subWeeks($week)->startOfWeek()->isoFormat('D MMMM YYYY') }}</time>
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-    </section>
+    @include('home.partials.businessweek', ['bwNews' => $featuredNews])
 
     {{-- Foto Haber + VİDEOLAR yan yana (referans photoNews + video) --}}
-    <section class="home-media-row grid grid-cols-12 gap-4 mb-4 md:mb-10">
+    <section data-section="photonews" class="home-media-row grid grid-cols-12 gap-4 mb-4 md:mb-10">
         <div class="bht-grid col-span-12 md:col-span-8" dataType="photoNews" datatype="photoNews">
 <section class="home-gallery h-full" id="home-gallery" data-widget-type="photoNews">
                 <div class="mb-4 border-b border-black relative before:absolute before:top-0 before:bottom-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black"></div>
-{{-- Referans photoNews ölçümü: 2 kolon x (type5 + type1) + link-type1.
-                 Sol: type5(başlıksız) + type1, sağ: type5 + type1. --}}
-                @php
-                    $__photoItems = $galleries->take(4)->values();
-                    $__photoCols = [
-                        array_slice($__photoItems->all(), 0, 2),
-                        array_slice($__photoItems->all(), 2, 2),
-                    ];
-                @endphp
-                <div class="grid grid-cols-1 md:grid-cols-2 md:gap-4">
-                    @foreach ($__photoCols as $__col)
-                        <div class="w-full flex flex-col justify-between">
-                            @foreach ($__col as $__j => $__gallery)
-                                <x-news-card :news="$__gallery" :type="$__j === 0 ? 'type5' : 'type1'" />
-                            @endforeach
-                        </div>
-                    @endforeach
-                </div>
-                <a href="{{ \App\Support\Locale::url('/fotohaber') }}" data-type="link-type1" title="{{ __('ui.all') }}" class="w-full flex gap-2 my-2 items-center text-black bg-white">
-                    <div class="flex-grow border-t border-gray-300 relative before:content-[''] before:absolute before:bottom-0 before:flex before:h-4 before:w-[1px] before:bg-gray-300"></div>
-                    <span class="ml-2">
-                        <span class="text-base mr-2">{{ __('ui.all') }}</span>
-                        <span class="bloomberght-icon-font-chevron-right text-sm"></span>
-                        <span class="bloomberght-icon-font-chevron-right text-sm"></span>
-                        <span class="bloomberght-icon-font-chevron-right text-sm"></span>
-                    </span>
-                </a>
+                    @include('home.partials.photo-gallery')
             </section>
         </div>
         <div class="bht-grid col-span-12 md:col-span-4" dataType="video" datatype="video">
@@ -514,31 +523,49 @@
         </div>
     </section>
 
-    {{-- KRİPTO PARA (referans crypto: siyah zemin + swiper + stats-bar kart) --}}
-    <section class="home-crypto relative py-8" data-widget-type="crypto" data-section="crypto">
-        <div data-type="background" class="absolute -z-10 left-1/2 top-0 w-[100vw] h-96 -translate-x-1/2 -mt-4 bg-cover bg-no-repeat bg-black h-full mt-0"></div>
-        <a href="{{ \App\Support\Locale::url('/kripto') }}" title="{{ __('ui.crypto') }}" class="absolute top-4 font-unna font-bold text-3xl mb-2 text-white z-10"><h2>{{ __('ui.crypto') }}</h2></a>
-        <div>
-            <div data-type="swiper" data-name="" class="crypto-swiper swiper slider-custom relative pt-10 w-full crypto"
-                 data-swiper='{"slidesPerView":"auto","loop":false,"lazy":true,"navigation":{"nextEl":".crypto .swiper-button-next","prevEl":".crypto .swiper-button-prev"}}'>
-                <div class="swiper-wrapper">
-                    @foreach ($cryptoQuotes as $quote)
-                        @php
-                            $dir = $quote->direction();
-                            $bar = $dir === 'up' ? 'before:bg-green-700' : ($dir === 'down' ? 'before:bg-red-500' : 'before:bg-gray-400');
-                        @endphp
-                        <div class="swiper-slide w-auto pr-4">
-                            <div data-type="stats-bar-type1">
-                                <a href="{{ $quote->instrument->url }}" title="{{ $quote->instrument->name }}" class="security-{{ \Illuminate\Support\Str::slug($quote->code()) }} block cursor-pointer" data-type="crypto">
-                                    <div class="flex flex-col relative before:absolute before:top-0 before:left-0 before:w-1 before:h-full setColor {{ $bar }} text-white pl-2 crypto-card" data-market-code="{{ $quote->code() }}">
-                                        <span class="text-xs text-ellipsis overflow-hidden whitespace-nowrap crypto-name">{{ $quote->instrument->name }}</span>
-                                        <span class="lastPrice font-bold" data-market-field="last">{{ $quote->formattedUsdPrice() }}</span>
-                                        <span class="percentChange text-xs" data-market-field="change_percent">{{ $quote->formattedChangePercent() }}</span>
+    {{-- KRİPTO PARA — referans bloomberght.com crypto DOM'u ile birebir (CH-36/CH-37):
+         siyah zemin, swiper kart şeridi, stats-bar-type1 kartlar, sağda ok butonları.
+         Referans: yalnızca BTC/ETH/XRP detay sayfasına linklenir; diğerleri link'siz. --}}
+    <section data-section="crypto" class="grid grid-cols-12 gap-4 mb-4 md:mb-10">
+        <div class="bht-grid col-span-12 md:col-span-12 row-span-1" dataType="crypto">
+            <div data-widget-type="crypto" class="relative py-8">
+                <div data-type="background" class="absolute -z-10 left-1/2 top-0 w-[100vw] h-96 -translate-x-1/2 -mt-4 bg-cover bg-no-repeat bg-black h-full mt-0"></div>
+                <a href="{{ \App\Support\Locale::url('/kripto') }}" title="{{ __('ui.crypto') }}" class="absolute top-4 font-unna font-bold text-3xl mb-2 text-white z-10"><h2>{{ __('ui.crypto') }}</h2></a>
+                <div>
+                    <div data-type="swiper" data-name="" class="swiper slider-custom relative pt-10 w-full"
+                         data-swiper='{"slidesPerView":"auto","loop":false,"lazy":true,"navigation":{"nextEl":".crypto .swiper-button-next","prevEl":".crypto .swiper-button-prev"}}'>
+                        <div class="swiper-wrapper">
+                            @foreach ($cryptoQuotes as $quote)
+                                @php
+                                    $dir = $quote->direction();
+                                    $bar = $dir === 'up' ? 'before:bg-green-700' : ($dir === 'down' ? 'before:bg-red-500' : '');
+                                    // Referans: "% -0,36" biçimi — % öneki, eksi işareti, sondaki %-siz TR sayı
+                                    $cpct = '% '.($quote->changePercent < 0 ? '-' : '').$quote->format(abs((float) $quote->changePercent), 2);
+                                    // Referans: BTC/ETH/XRP → /doviz/<slug>; diğerleri link'siz
+                                    $__cryptoTarget = $quote->instrument->cryptoUrl();
+                                @endphp
+                                <div class="swiper-slide w-auto pr-4">
+                                    <div data-type="stats-bar-type1">
+                                        @if ($__cryptoTarget)
+                                            <a href="{{ $__cryptoTarget }}" title="{{ $quote->instrument->name }}" class="security-{{ \Illuminate\Support\Str::slug($quote->instrument->name) }} block cursor-pointer" data-type="crypto">
+                                        @endif
+                                        <div class="flex flex-col relative before:absolute before:top-0 before:left-0 before:w-1 before:h-full setColor {{ $bar }} text-white pl-2" data-market-code="{{ $quote->code() }}">
+                                            <span class="text-xs text-ellipsis overflow-hidden whitespace-nowrap">{{ $quote->instrument->name }}</span>
+                                            <span class="lastPrice font-bold" data-market-field="last">{{ $quote->format($quote->last) }}</span>
+                                            <span class="percentChange text-xs" data-market-field="change_percent">{{ $cpct }}</span>
+                                        </div>
+                                        @if ($__cryptoTarget)
+                                            </a>
+                                        @endif
                                     </div>
-                                </a>
-                            </div>
+                                </div>
+                            @endforeach
                         </div>
-                    @endforeach
+                        <div class="crypto text-black bg-white absolute -right-3 top-2 w-20 pl-4 z-90 text-white">
+                            <button aria-label="prev" class="swiper-button-prev after:content-[''] w-8 h-11 bloomberght-icon-font-chevron-left right-14 cursor-pointer text-inherit"></button>
+                            <button aria-label="next" class="swiper-button-next after:content-[''] w-8 h-11 bloomberght-icon-font-chevron-right right-0 cursor-pointer text-inherit"></button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -548,8 +575,9 @@
     <x-ad-zone :zone="22801" :index="10" />
     <x-ad-zone :zone="22802" :index="11" />
 
-    {{-- EN ÇOK OKUNANLAR — Bugün | Bu Hafta | Bu Ay --}}
-    <x-most-read class="home-most-read"
+    {{-- EN ÇOK OKUNANLAR — referans bloomberght.com mostRead DOM'u ile birebir (CH-37):
+         3 sütunlu kart ızgarası (type5+type2), sağ üstte Bugün | Bu Hafta | Bu Ay pill'i. --}}
+    <x-most-read variant="home"
                  :tabs="[
                      'today' => $mostReadTabs['today'],
                      'week' => $mostReadTabs['week'],

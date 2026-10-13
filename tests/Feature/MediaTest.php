@@ -110,7 +110,7 @@ class MediaTest extends TestCase
         $this->get('/tv/program/olmayan-program')->assertNotFound();
     }
 
-    public function test_video_page_renders_series_grid_duration_badges_and_listele(): void
+    public function test_video_page_renders_series_sections_duration_badges_and_tumunu(): void
     {
         $response = $this->get('/video');
 
@@ -118,19 +118,19 @@ class MediaTest extends TestCase
         $html = $response->getContent();
 
         foreach ([
-            'Video', 'Seriler', 'Son Videolar', 'Oyun Dışı', 'Tarih Keyfi',
-            'Macera Sever', 'Üst Düzey', 'Gündem Teknoloji', 'Yarının Zekası',
+            'Video', 'Oyun Dışı', 'Tarih Keyfi', 'Macera Sever', 'Üst Düzey',
+            'Gündem Teknoloji', 'Yarının Zekası', 'Fon Saati',
         ] as $label) {
-            $this->assertStringContainsString($label, $html, "Eksik /video öğesi: {$label}");
+            $this->assertStringContainsString($label, $html, "Eksik /video bölümü: {$label}");
         }
 
-        // Süre rozeti (M:SS veya HH:MM:SS)
+        // Süre rozeti (M:SS veya HH:MM:SS) — trait/hero ve kenar kartlarında
         $this->assertMatchesRegularExpression('/class="program-duration"/', $html);
 
-        // Listele lazy-load
-        $this->assertStringContainsString('data-load-more', $html);
-        $this->assertStringContainsString('data-container="[data-load-more-container]"', $html);
-        $this->assertStringContainsString(__('ui.list'), $html);
+        // Her seri bölümünde TÜMÜ linki (link-type1: çizgili ayraç + "TÜMÜ" + 3 chevron)
+        $this->assertStringContainsString('data-type="link-type1"', $html);
+        $this->assertStringContainsString('TÜMÜ', $html);
+        $this->assertStringContainsString('bloomberght-icon-font-chevron-right', $html);
 
         // Seri sayfası bağlantısı (TÜMÜ)
         $this->assertStringContainsString('href="/video/oyun-disi"', $html);

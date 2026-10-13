@@ -28,3 +28,6 @@ Thumbs.db
 /.opencode/
 /AGENTS.md
 /database/database.sqlite
+
+# derlenmis go binary
+/market-collector/market-collector

@@ -71,4 +71,22 @@ class MarketSnapshot extends Model
 
         return $latest;
     }
+
+    /**
+     * Tüm aktif enstrümanlar için en taze snapshot satırları.
+     *
+     * Kaynaklar birleşik olarak okunur (coingecko + tcmb + yahoo + goldprice);
+     * tazelik MarketDataService tarafından kaynak bazında değerlendirilir.
+     *
+     * @return BaseCollection<int, MarketSnapshot> market_instrument_id => snapshot
+     */
+    public static function latestAll(): BaseCollection
+    {
+        return self::whereHas('instrument', fn ($q) => $q->where('is_active', true))
+            ->orderByDesc('captured_at')
+            ->orderByDesc('id')
+            ->get()
+            ->unique('market_instrument_id')
+            ->keyBy('market_instrument_id');
+    }
 }

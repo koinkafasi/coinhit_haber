@@ -5,7 +5,7 @@
 
 @section('content')
     <div class="card">
-        <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+        <div class="toolbar end">
             <a href="{{ route('admin.galleries.create') }}" class="btn accent">+ Yeni Galeri</a>
         </div>
         <table class="admin-table">

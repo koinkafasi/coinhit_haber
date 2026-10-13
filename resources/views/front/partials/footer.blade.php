@@ -12,8 +12,7 @@
      5 sütun grid, rozet/sosyal/marka şeritleri, yasal metinler)
      ============================================================ --}}
 <footer class="bg-[#121212] relative z-400">
-    <div class="mx-auto bg-[#384552] text-white bg-opacity-[0.9] bg-no-repeat bg-cover bg-center bg-blend-hard-light px-4 overflow-hidden"
-         style="background-image:url('/img/placeholders/bg-desktop-footer.png')">
+    <div class="mx-auto bg-[#384552] text-white bg-opacity-[0.9] bg-no-repeat bg-cover bg-center bg-blend-hard-light footer-bg-image px-4 overflow-hidden">
         <div class="container m-auto overflow-hidden">
 
             {{-- Logo üst şerit --}}

@@ -26,7 +26,7 @@ class FundTest extends TestCase
         $html = $response->getContent();
 
         foreach ([
-            'Yatırım Fonları', 'Fon Haberleri', 'Fon Karşılaştır',
+            'Yatırım Fonları', 'Fon Karşılaştır',
             'Fon Sınıflarında Bugün', 'Fon Portföy Dağılımı', 'Fon Saati',
             'Günün Özeti', 'Portföy Değeri', 'Portföy %', 'Fon Sayısı',
             'Yatırımcı Sayısı', 'Karşılaştırmalı Fon Getirileri',
@@ -61,36 +61,70 @@ class FundTest extends TestCase
             $this->assertStringContainsString($column, $html, "Eksik getiri kolonu: {$column}");
         }
 
-        // 7 sınıf sekmesi + 7 lider tablo paneli
-        $this->assertSame(7, substr_count($html, 'class="tab-button fund-class-tab'));
-        $this->assertSame(7, substr_count($html, 'class="tab-content fund-class-panel'));
+        // 7 sınıf dropdown seçeneği + 7 lider tablo paneli (referans: select-tab-menu)
+        $this->assertStringContainsString('class="select-tab-options', $html);
+        foreach (array_keys(\App\Models\Fund::CLASSES) as $classKey) {
+            $this->assertStringContainsString('value="'.$classKey.'"', $html, "Eksik fon sınıfı seçeneği: {$classKey}");
+        }
+        $this->assertSame(7, substr_count($html, 'class="select-tab-content fund-class-panel'));
 
         // Fon kodları ve detay bağlantısı (Kod → fon detay)
         $this->assertStringContainsString('TCD', $html);
         $this->assertStringContainsString('AFA', $html);
         $this->assertStringContainsString('href="/yatirim-fonlari/tacirler-portfoy-degisken-fon"', $html);
+
+        // Yükselen ve Düşen iki tablo da DOM'da (referans: toggle istemci tarafı)
+        $this->assertStringContainsString('En Çok Yükselen Fonlar / Yatırım Fonları', $html);
+        $this->assertStringContainsString('En Çok Düşen Fonlar / Yatırım Fonları', $html);
     }
 
-    public function test_direction_toggle_filters_leaderboard(): void
+    public function test_fund_classes_toggle_shows_rising_and_falling_tables(): void
     {
+        $html = $this->get('/yatirim-fonlari')->assertOk()->getContent();
+
+        // Her fon sınıfı panelinde Yükselen/Düşen tab-menu butonları (7 panel × 2) bulunur
+        $this->assertSame(14, substr_count($html, 'class="tab-button w-1/2 border py-2'));
+
+        // Yön sorguları artık sunucu çıktısını filtrelemez; iki tablo da SSR'dır ve
+        // her yönde her iki tablo (Yükselen+Düşen) sayfada bulunur.
         $rising = $this->get('/yatirim-fonlari?yon=yukselen')->assertOk()->getContent();
         $falling = $this->get('/yatirim-fonlari?yon=dusen')->assertOk()->getContent();
 
-        $this->assertStringContainsString('Yükselen Fonlar', $rising);
-        $this->assertStringContainsString('Yükselen Fonlar', $falling);
-        $this->assertStringContainsString('Düşen Fonlar', $falling);
-
-        // Yükselen ve düşen listeler farklı sıralama üretmeli
-        $this->assertNotSame($rising, $falling);
+        $this->assertStringContainsString('En Çok Yükselen Fonlar / Yatırım Fonları', $rising);
+        $this->assertStringContainsString('En Çok Düşen Fonlar / Yatırım Fonları', $rising);
+        $this->assertStringContainsString('En Çok Yükselen Fonlar / Yatırım Fonları', $falling);
+        $this->assertStringContainsString('En Çok Düşen Fonlar / Yatırım Fonları', $falling);
     }
 
-    public function test_show_all_query_expands_returns_table(): void
+    public function test_fund_classes_page_is_standalone(): void
     {
-        $limited = $this->get('/yatirim-fonlari')->assertOk()->getContent();
-        $full = $this->get('/yatirim-fonlari?tumu=1')->assertOk()->getContent();
+        $html = $this->get('/yatirim-fonlari/fon-siniflarinda-bugun')->assertOk()->getContent();
 
-        $this->assertStringContainsString('Tümünü Görüntüle', $limited);
-        $this->assertStringContainsString('Daha Az Görüntüle', $full);
+        $this->assertStringContainsString('Fon Sınıflarında Bugün', $html);
+        $this->assertStringContainsString('Yükselen Fonlar', $html);
+        $this->assertStringContainsString('Düşen Fonlar', $html);
+        $this->assertStringContainsString('class="select-tab-options', $html);
+        $this->assertSame(7, substr_count($html, 'class="select-tab-content fund-class-panel'));
+
+        // Alt-tool nav "Fon Sınıflarında Bugün" bağımsız sayfaya gider (referans birebir)
+        $index = $this->get('/yatirim-fonlari')->assertOk()->getContent();
+        $this->assertStringContainsString('href="/yatirim-fonlari/fon-siniflarinda-bugun"', $index);
+    }
+
+    public function test_returns_table_lists_all_funds_and_links_to_compare(): void
+    {
+        $html = $this->get('/yatirim-fonlari')->assertOk()->getContent();
+
+        // Karşılaştırmalı tablo tüm fonları içerir (limit/toggle yok — referans birebir)
+        $funds = Fund::where('is_active', true)->get();
+        $this->assertTrue($funds->isNotEmpty());
+        foreach ($funds as $fund) {
+            $this->assertStringContainsString($fund->name, $html, "Tablo eksik: {$fund->name}");
+        }
+
+        // "Tümünü Görüntüle" → /yatirim-fonlari/fon-karsilastirma (referans birebir)
+        $this->assertStringContainsString('href="/yatirim-fonlari/fon-karsilastirma"', $html);
+        $this->assertStringContainsString('Tümünü Görüntüle', $html);
     }
 
     public function test_fund_detail_page_renders_matrix_and_portfolio_link(): void

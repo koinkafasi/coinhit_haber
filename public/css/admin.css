@@ -109,3 +109,20 @@ table.admin-table tr:hover td { background: #fafbfc; }
 .login-card { width: 360px; background: #fff; border: 1px solid var(--admin-border); border-radius: 10px; padding: 28px; }
 .login-card h1 { margin: 0 0 4px; font-size: 20px; }
 .login-card p.muted { margin: 0 0 20px; }
+
+/* --- Merkezi yardımcı sınıflar (HTML içine inline stili yerine) --- */
+.toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.toolbar.end { justify-content: flex-end; }
+.toolbar.between { justify-content: space-between; }
+.toolbar-form { display: flex; gap: 8px; }
+.search-input { padding: 8px 11px; border: 1px solid var(--admin-border); border-radius: 6px; font: inherit; }
+.toolbar .search-input { width: 260px; }
+.card-title { margin-top: 0; font-size: 16px; }
+.textarea-sm { min-height: 70px !important; resize: vertical; }
+.textarea-spot { min-height: 80px !important; resize: vertical; }
+.textarea-code { min-height: 90px !important; resize: vertical; }
+.stack-form { margin-bottom: 20px; }
+.btn-block { width: 100%; }
+.img-preview-wrap { margin-bottom: 8px; }
+.img-preview { max-width: 340px; height: auto; display: block; border: 1px solid var(--admin-border); border-radius: 4px; }
+.login-remember { margin: 0; font-weight: 400; display: inline-flex; align-items: center; gap: 6px; font-size: 14px; }

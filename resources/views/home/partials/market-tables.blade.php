@@ -1,6 +1,8 @@
-{{-- Ana sayfa Piyasa Verileri tabbed widget — referans DOM ile birebir (CH-27).
+{{-- Ana sayfa Piyasa Verileri tabbed widget — referans bloomberght.com
+     marketDataLists DOM'u ile birebir (CH-36).
      Yapı: 5 üst sekme (Döviz/Borsa/Faiz-Bono/Altın-Emtia/Alternatif), her sekme
-     swiper içinde alt-tablolar (3 sütun, slidesPerView 1/2/3). --}}
+     swiper içinde alt-tablolar (3 sütun, slidesPerView 1/2/3); her tabloda
+     h2 (hidden) + tablo + TÜMÜNÜ GÖR altbilgisi. --}}
 @php
     $pmlGroups = [
         ['key' => 'tab-foreignExchange', 'label' => __('ui.market.doviz'), 'keys' => ['doviz', 'pariteler', 'gelisen-piyasa']],
@@ -12,9 +14,10 @@
     $pmlByKey = collect($marketTables)->keyBy('key');
 @endphp
 
-<section data-section="marketDataLists" class="grid grid-cols-12 gap-4 mb-4 md:mb-10 home-piyasa-verileri market-data-widget">
+<section data-section="marketDataLists"
+         class="grid grid-cols-12 gap-4 mb-4 md:mb-10 home-piyasa-verileri market-data-widget">
     <div class="bht-grid col-span-12 md:col-span-12 row-span-1" dataType="marketDataLists">
-        <div data-widget-type="marketDataLists" class="mdl-root relative">
+        <div data-widget-type="marketDataLists" class="relative">
             <div data-type="background" class="absolute -z-10 left-1/2 top-0 w-[100vw] h-96 -translate-x-1/2 -mt-4 overflow-hidden bg-gray-100 h-full mt-0" aria-hidden="true">
                 <picture>
                     <img src="https://im.bloomberght.com/assets/bht/bg/desktop/2x/bg-image-3.png?v=1004" alt="" role="presentation" loading="eager" fetchpriority="high" decoding="async" class="absolute inset-0 w-full h-full object-cover object-[center_top] max-md:object-contain max-md:object-[center_top]">
@@ -25,10 +28,9 @@
                class="md:absolute md:top-4 font-unna font-bold text-3xl mb-2 z-10">{{ __('ui.market_data_title') }}</a>
 
             <div class="tab-menu md:pt-16">
-                <div class="tab-head mdl-tabhead">
+                <div class="tab-head flex my-4 border rounded-3xl md:absolute md:top-0 md:right-0 bg-white overflow-auto *:whitespace-pre">
                     @foreach ($pmlGroups as $i => $group)
-                        <button type="button"
-                                class="tab-button mdl-tab {{ $i === 0 ? 'bg-gray-200' : '' }}"
+                        <button class="tab-button text-sm md:text-base px-4 py-2 rounded-3xl {{ $i === 0 ? 'bg-gray-200' : '' }}"
                                 data-tab="{{ $group['key'] }}">{{ $group['label'] }}</button>
                     @endforeach
                 </div>
@@ -54,18 +56,21 @@
                                                     </div>
                                                     <div class="border h-[calc(100%-75px)]">
                                                         @php
+                                                            $mbig = ($t['variant'] ?? '') === 'big';
                                                             $mcols = $t['columns'] ?? [
-                                                                ['label' => __('market.last'), 'field' => 'last', 'class' => 'lastPrice'],
+                                                                ['label' => __('market.last'), 'field' => 'last', 'class' => 'lastPrice', 'color' => true],
                                                                 ['label' => '%', 'field' => 'change_percent', 'class' => 'percentChange', 'color' => true],
                                                             ];
+                                                            // Altın/Emtia tipi tabla: tüm değer sütunlarına sabit min genişlik (referans min-w-20 2xl:min-w-24)
+                                                            $mminw = collect($mcols)->contains(fn ($mc) => in_array($mc['field'] ?? null, ['bid', 'ask', 'time'], true));
                                                             $mquotes = collect($t['quotes'])->take(6)->values();
                                                         @endphp
-                                                        <table data-type="table-type1" class="w-full text-center text-sm bg-white mdl-table">
+                                                        <table data-type="table-type1" class="w-full text-center text-sm bg-white">
                                                             <thead>
                                                             <tr class="border-b text-sm">
-                                                                <th class="sticky left-0 p-4 text-left bg-white">{{ strtoupper($t['title']) }}</th>
+                                                                <th class="sticky left-0 p-4 text-left bg-white">{{ $t['firstCol'] ?? strtoupper($t['title']) }}</th>
                                                                 @foreach ($mcols as $mc)
-                                                                    <th class="p-4 text-right">{{ $mc['label'] }}</th>
+                                                                    <th class="p-4 text-right{{ $mminw ? ' min-w-20 2xl:min-w-24' : '' }}">{{ $mc['label'] }}</th>
                                                                 @endforeach
                                                             </tr>
                                                             </thead>
@@ -73,35 +78,51 @@
                                                             @forelse ($mquotes as $mq)
                                                                 @php
                                                                     $mdir = $mq->direction();
+                                                                    $mdcls = $mdir === 'up' ? 'text-green-700' : ($mdir === 'down' ? 'text-red-700' : 'text-gray-500');
+                                                                    $micon = $mdir === 'up' ? 'bloomberght-icon-font-graphic-up' : ($mdir === 'down' ? 'bloomberght-icon-font-graphic-down' : 'bloomberght-icon-font-graphic-fixed');
                                                                 @endphp
-                                                                <tr class="border-b text-sm security-{{ $mq->instrument->slug }} {{ $mdir === 'up' ? 'is-up' : ($mdir === 'down' ? 'is-down' : 'is-flat') }}"
+                                                                <tr class="border-b text-sm security-{{ $mq->instrument->slug }}"
                                                                     data-market-code="{{ $mq->code() }}">
                                                                     <td class="py-4 sticky left-0 w-full px-4 bg-white">
-                                                                        <a href="{{ $mq->instrument->url }}" class="flex items-center gap-2 text-left cursor-pointer">
-                                                                            <i class="q-arrow q-arrow-{{ $mdir }} text-xs" aria-hidden="true"></i>
-                                                                            <span class="mdl-cell-name">
-                                                                                <span class="font-bold text-base line-clamp-2">{{ $mq->code() }}</span>
-                                                                                <span class="text-ellipsis line-clamp-1 text-xs text-gray-500">{{ $mq->instrument->name }}</span>
-                                                                            </span>
+                                                                        <a href="{{ $mq->instrument->url }}" title="{{ $mq->code() }}"
+                                                                           class="flex items-center gap-2 text-left{{ $mbig ? ' cursor-pointer' : '' }}">
+                                                                            <div class="setIcon setTextColor {{ $micon }} {{ $mdcls }} text-xs"></div>
+                                                                            <div>
+                                                                                <div class="font-bold{{ $mbig ? ' text-base line-clamp-2' : '' }}">{{ $mq->code() }}</div>
+                                                                                <div class="text-ellipses{{ $mbig ? ' line-clamp-1 text-sm' : ' text-xs' }}">{{ $mbig ? $mq->instrument->name : '' }}</div>
+                                                                            </div>
                                                                         </a>
                                                                     </td>
                                                                     @foreach ($mcols as $mc)
                                                                         @php
-                                                                            $mv = $mc['field'] === 'last' ? $mq->formattedLast()
-                                                                                : ($mc['field'] === 'change_percent' ? $mq->formattedChangePercent()
-                                                                                : ($mc['field'] === 'bid' ? $mq->formattedBid()
-                                                                                : ($mc['field'] === 'ask' ? $mq->formattedAsk()
-                                                                                : ($mc['field'] === 'change' ? $mq->formattedChange()
-                                                                                : $mq->format($mq->last)))));
-                                                                            $mcls = $mc['class'] ?? '';
+                                                                            $mf = $mc['field'] ?? 'last';
+                                                                            $mval = match ($mf) {
+                                                                                'change_percent' => $mq->formattedChangePercent(),
+                                                                                'bid' => $mq->formattedBid(),
+                                                                                'ask' => $mq->formattedAsk(),
+                                                                                'time' => $mq->time(),
+                                                                                'change' => $mq->formattedChange(),
+                                                                                'last' => $mq->formattedLast(),
+                                                                                default => $mq->format($mq->last),
+                                                                            };
+                                                                            $misTime = $mf === 'time';
+                                                                            $misPct  = $mf === 'change_percent';
+                                                                            $mwrap   = $mbig ? 'gap-2 whitespace-pre' : ($misPct ? 'whitespace-pre' : 'whitespace-pre gap-1');
+                                                                            $mspan   = $misPct
+                                                                                ? trim(($mc['class'] ?? '').' setTextColor')
+                                                                                : trim($mc['class'] ?? '');
+                                                                            if (! empty($mc['color'])) {
+                                                                                $mspan = trim($mspan.' '.$mdcls);
+                                                                            }
+                                                                            $miconCls = $misTime
+                                                                                ? 'text-xs'
+                                                                                : ($mbig ? '' : 'text-xs ').'setIcon setTextColor '.$micon.' '.$mdcls;
                                                                         @endphp
-                                                                        @if (! empty($mc['color']))
-                                                                            @php
-                                                                                $mcls .= $mdir === 'up' ? ' setTextColor text-green-700' : ($mdir === 'down' ? ' setTextColor text-red-700' : ' setTextColor text-gray-400');
-                                                                            @endphp
-                                                                        @endif
-                                                                        <td class="py-4 px-4 {{ trim($mcls) }}" data-market-field="{{ $mc['field'] }}">
-                                                                            <span class="text-right flex justify-end gap-2 whitespace-pre">{{ $mv }} <i class="setIcon setTextColor {{ $mdir === 'up' ? 'bloomberght-icon-font-graphic-up' : ($mdir === 'down' ? 'bloomberght-icon-font-graphic-down' : 'bloomberght-icon-font-icon-graphic-fixed') }}" aria-hidden="true"></i></span>
+                                                                        <td class="py-4 px-4 bg-white">
+                                                                            <div class="text-right flex justify-end {{ $mwrap }}">
+                                                                                <span class="{{ $mspan }}" data-market-field="{{ $mf }}">{{ $mval }}</span>
+                                                                                <span class="{{ $miconCls }}"></span>
+                                                                            </div>
                                                                         </td>
                                                                     @endforeach
                                                                 </tr>
@@ -110,6 +131,12 @@
                                                             @endforelse
                                                             </tbody>
                                                         </table>
+                                                    </div>
+                                                    <div class="border sticky bottom-0 left-0 bg-white">
+                                                        <a href="{{ $t['footerHref'] ?? $t['href'] }}" class="border block font-bold text-base text-center p-4">
+                                                            <div class="text-xs font-medium text-gray-500">{{ $t['footerSmall'] ?? $t['title'] }}</div>
+                                                            <div>{{ __('ui.all_see') }}</div>
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>

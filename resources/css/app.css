@@ -14,13 +14,19 @@
     --color-navy: #384552;
     --color-navy-hover: #4d596a;
     --color-bht-yellow: #ffe400;
-    --color-special-dark-maroon: #5b1a1a;
+    --color-special-dark-maroon: #61082a; /* referans En Çok Okunanlar sekmeleri (rgb 97,8,42) */
     --color-up: #24a278;
     --color-down: #bd1b2e;
 
     /* Olcu token'lari */
-    --container-gutter: 1rem;
-    --container-max: 1010px;
+    --bht-container-gutter: 1rem;
+    --bht-container-max: 1010px;
+
+    /* `container` utility'si — referans site Tailwind v3 ile kuruludur ve
+       2xl (1536px+) breakpoint'inde 1280px max-width kullanır. Tailwind v4
+       2xl'yi 1536px yapar; footer ve nav içeriği 1536px'e açılıyordu.
+       Referansla birebir olması için 2xl 1280px sabitlenir. */
+    --container-2xl: 1280px;
 }
 
 /* ------------------------------------------------------------------
@@ -82,10 +88,11 @@
     --gray-border: #e2e2e2;
     --footer-border: #707070;     /* rgb(112,112,112) */
     --special-maroon: #61082a;    /* En Çok Okunanlar (rgb 97,8,42) */
+    --border-default: #e5e7eb;    /* merkezi çerçeve rengi — kaynak gray-200 (rgb 229,231,235), mat gri */
 
     /* --- Layout ölçüleri --- */
-    --container-max: 1010px;      /* referans ölçüm (CH-23): bloomberght .container >=1024px'te 1010px */
-    --container-gutter: 16px;
+    --bht-container-max: 1010px;   /* referans ölçüm (CH-23): bloomberght .container >=1024px'te 1010px */
+    --bht-container-gutter: 16px;
     --sidebar-width: 400px;       /* makale detay sağ sidebar */
     --header-bar-height: 64px;
 
@@ -114,10 +121,11 @@
 /* --- Varsayılan border rengi ---
    Tailwind v4 `border-*` utility'sinde renk currentColor'a düşer (siyah).
    Referansta ölçülen değer gray-200 = rgb(229,231,235). Tüm `border-b`,
-   `border` utility'leri bu değeri kullanmalı. */
+   `border` utility'leri bu değeri kullanmalı. Tek merkezi değişken:
+   `--border-default` (kaynaktaki mat gri). */
 @layer base {
   *, ::before, ::after, ::backdrop, ::file-selector-button {
-    border-color: var(--color-gray-200, #e5e7eb);
+    border-color: var(--border-default, #e5e7eb);
   }
 }
 
@@ -159,21 +167,28 @@ img { max-width: 100%; display: block; }
 
 a { color: inherit; text-decoration: none; }
 
+/* Referans: bloomberght.com .container — >=1024px'te 1010px, >=1615px'te 1280px.
+   Unlayered (herhangi bir @layer disinda) tutulur: CSS spec'e gore unlayered
+   kurallar tum @layer kurallarini ezer. Tailwind v4'un kendi `container`
+   utility'si @layer utilities'ta 2xl'de 96rem (1536px) basar; unlayered
+   override onu kesin olarak gecersiz kilar. !important ek garantidir. */
 .container {
     width: 100%;
     min-width: 320px;
     max-width: 100%;
     margin: 0 auto;
-    padding: 0 var(--container-gutter);
+    padding: 0 var(--bht-container-gutter);
 }
-
-/* Referans ölçüm (CH-23): bloomberght.com .container — >=1024px'te 1010px, >=1615px'te 1280px */
 @media (min-width: 1024px) {
-    .container { max-width: var(--container-max); }
+    .container { max-width: var(--bht-container-max); }
 }
 @media (min-width: 1615px) {
-    .container { max-width: 1280px; }
+    .container { max-width: 1280px !important; }
 }
+
+/* Referans yukseklikte .container ust sinirlari (master 1280px). */
+.\32xl\:max-w-screen-xl { max-width: 1280px; }
+.\32xl\:max-w-screen-lg { max-width: 1280px; }
 
 /* ----- Tipografi (Bölüm 1.1) — referans: font-family:Poppins, sans-serif / Unna, serif ----- */
 
@@ -240,19 +255,6 @@ a { color: inherit; text-decoration: none; }
 
 /* ---------- Son dakika ---------- */
 
-
-
-.breaking-ticker {
-    display: flex;
-    gap: 28px;
-    overflow: hidden;
-    white-space: nowrap;
-    font-size: 14px;
-}
-
-.breaking-ticker a:hover { text-decoration: underline; }
-
-.ticker-time { font-weight: 700; margin-right: 6px; color: #ffeaea; }
 
 /* ---------- Sayfa / bölümler ---------- */
 .page { min-height: 60vh; padding-top: 20px; padding-bottom: 40px; }
@@ -359,7 +361,9 @@ a { color: inherit; text-decoration: none; }
 
 
 /* ---------- Makale ---------- */
-.breadcrumb { font-size: 13px; color: #666; margin-bottom: 12px; display: flex; gap: 6px; align-items: center; }
+.breadcrumb { margin-bottom: 12px; }
+.text-xxxs { font-size: .525rem; }
+.article-detail .breadcrumb { margin-bottom: 0; }
 
 .article { max-width: 820px; }
 
@@ -606,31 +610,32 @@ img[data-src].b-lazy-loaded {
 
 
 
-/* ---------- SON DAKİKA kayan şerit ---------- */
+/* ---------- SON DAKİKA şeridi (Swiper carousel, referansla birebir) ---------- */
 .bht-breaking { background: var(--breaking-red); color: #fff; }
 
-
-.breaking-track {
-    display: flex;
-    gap: 28px;
-    width: max-content;
-    animation: bht-marquee 45s linear infinite;
+/* Son dakika Swiper ok butonları — referansla birebir ok.
+   Referans gorseli = ikon-font ::before glifi (16px, ~9x24 ince ok);
+   inline SVG referansta display:none (gosterilmez). Butonlar 32x44,
+   en saga bitisik, aradaki bosluk 8px. */
+[data-widget-type="breaking-news"] .swiper-button-prev,
+[data-widget-type="breaking-news"] .swiper-button-next {
+    position: absolute !important;
+    top: 50% !important;
+    margin-top: -22px !important;
+    color: #fff !important;
+    width: 2rem !important;
+    height: 2.75rem !important;
+    font-size: 16px !important;
+    line-height: 24px !important;
+    left: auto !important;
+    cursor: pointer;
 }
-
-.breaking-track:hover { animation-play-state: paused; }
-
-.breaking-ticker a { flex-shrink: 0; }
-
-@keyframes bht-marquee {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-}
-
-.ticker-empty { color: #ffeaea; }
-
-@media (prefers-reduced-motion: reduce) {
-    .breaking-track { animation: none; }
-}
+[data-widget-type="breaking-news"] .swiper-button-prev { right: 40px !important; }
+[data-widget-type="breaking-news"] .swiper-button-next { right: 0 !important; }
+/* Referans gorseli gliftir; SVG gizli olmalidir (cift ok / kalin ok onlemi) */
+[data-widget-type="breaking-news"] .swiper-button-prev svg,
+[data-widget-type="breaking-news"] .swiper-button-next svg { display: none !important; }
+[data-widget-type="breaking-news"] .swiper-button-disabled { opacity: .4 !important; cursor: default; }
 
 /* ---------- Footer arama / rozet / marka şeridi ---------- */
 .sr-only {
@@ -882,13 +887,31 @@ img[data-src].b-lazy-loaded {
 .masthead-ad { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .masthead-ad .ad-body { max-width: 970px; min-height: 250px; }
 
-/* ---------- Hero main-slider (§17.3) ---------- */
-.hero-main-slider { position: relative; margin-bottom: 24px; }
-.main-slider { position: relative; overflow: hidden; }
-.hero-slide { flex: 0 0 100%; max-width: 100%; }
-.hero-slide-spot { font-size: 16px; color: #e5e5e5; margin: 0; }
+/* --- Merkezi yardımcı sınıflar (HTML içine inline stili yerine) --- */
+.gtm-noscript { display: none; visibility: hidden; }
+.footer-bg-image { background-image: url('/img/placeholders/bg-desktop-footer.png'); }
+/* Grafik hover tooltip'leri — site.js inline stil yerine merkezi sınıflar */
+.finance-chart-tooltip,
+.chart-tooltip {
+    position: fixed;
+    display: none;
+    pointer-events: none;
+    z-index: 9999;
+    background: rgba(20, 22, 26, .92);
+    color: #fff;
+    font-size: 12px;
+    line-height: 1.35;
+    padding: 6px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    font-family: Poppins, sans-serif;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .25);
+}
+.chart-tip-label { display: block; opacity: .85; font-size: 11px; }
+.chart-tip-time { display: block; font-weight: 700; }
+.chart-tip-value { display: block; }
 
-/* ---------- Finance slider (header) + mobil şerit ---------- */
+/* ---------- Finans şeridi (header) + mobil şerit ---------- */
 .finance-slider { border-bottom: 1px solid var(--gray-border); }
 .finance-strip-mobile { border-top: 1px solid var(--gray-border); overflow: hidden; }
 .finance-strip-track { display: flex; gap: 18px; width: max-content; animation: bht-marquee 40s linear infinite; padding: 8px 0; }
@@ -917,7 +940,8 @@ img[data-src].b-lazy-loaded {
 /* ---------- PİYASALAR büyük widget ---------- */
 .market-widget { margin-bottom: 32px; }
 .market-widget-body { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; }
-.market-widget-tabs, .market-widget-subtabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.market-widget-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.market-widget-subtabs { display: block; }
 .tab-button {
     border: 1px solid var(--gray-border); background: #fff; cursor: pointer;
     padding: 8px 16px; border-radius: 999px; font-size: 14px; font-weight: 500;
@@ -970,14 +994,31 @@ img[data-src].b-lazy-loaded {
 .broadcast-name { font-weight: 600; min-width: 220px; }
 .broadcast-desc { color: #666; font-size: 13px; }
 
-/* ---------- Businessweek ---------- */
-.home-businessweek { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 24px; margin-bottom: 32px; }
-.bw-cover-img { width: 260px; height: 342px; object-fit: cover; background: var(--gray-bg); }
-.bw-issue-list { list-style: none; margin: 0; padding: 0; }
-.bw-issue-list li { border-bottom: 1px solid var(--gray-border); }
-.bw-issue-list a { display: flex; justify-content: space-between; padding: 12px 0; }
-.bw-issue-no { font-weight: 700; }
-.bw-issue-date { color: #666; font-size: 13px; }
+/* ---------- Businessweek + SON SAYILAR ---------- */
+/* Referans (bloomberght.com) <section data-section="businessweek">: siyah bant
+   üzerinde sol öne çıkan haberler + sag "Son Sayilar" dergi kapaği swiper'i.
+   Yerleşim partial'daki Tailwind utility'leriyle birebir (burada display/grid
+   kurali YOK — utility'lerle çakışır). Yalniz kapsamli kurallar: ok butonlari. */
+.home-businessweek .swiper-slide figcaption { min-height: 16px; }
+
+/* "Son Sayilar" ok butonlari — referans birebir: 36x36 beyaz chevron, alt bar
+   hizasinda sol/sağ. swiper-bundle.min.css katmansiz oldugundan (app.css'ten
+   sonra yüklenir) utility/katmanli kurallari ezer; !important gerekir. */
+.businessweek .swiper-button-prev,
+.businessweek .swiper-button-next {
+    position: absolute !important;
+    top: 50% !important;
+    margin-top: -18px !important;
+    width: 2.25rem !important;
+    height: 2.25rem !important;
+    color: #fff !important;
+    font-size: 16px !important;
+    line-height: 24px !important;
+    cursor: pointer;
+}
+.businessweek .swiper-button-prev { left: 0 !important; right: auto !important; }
+.businessweek .swiper-button-next { right: 0 !important; left: auto !important; }
+.businessweek .swiper-button-disabled { opacity: .4 !important; cursor: default; }
 
 /* ---------- Foto haber / galeri ---------- */
 .gallery-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
@@ -1019,12 +1060,7 @@ img[data-src].b-lazy-loaded {
 .home-sector { margin-bottom: 32px; }
 .politics-block { margin-top: 24px; }
 
-/* ---------- Kripto swiper ---------- */
-.crypto-card {
-    flex: 0 0 170px; scroll-snap-align: start; border: 1px solid var(--gray-border);
-    border-radius: 6px; padding: 14px; display: flex; flex-direction: column; gap: 6px;
-}
-.crypto-name { color: #777; }
+/* ---------- Kripto swiper (referans stats-bar-type1, çerçevesiz) ---------- */
 
 /* ---------- En Çok Okunanlar ---------- */
 .most-read-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
@@ -1035,6 +1071,26 @@ img[data-src].b-lazy-loaded {
 .most-read-list a { display: flex; align-items: baseline; gap: 14px; padding: 10px 0; }
 .most-read-rank { font-family: Unna, serif; font-size: 22px; font-weight: 700; color: var(--special-maroon); min-width: 28px; }
 .most-read-title { flex: 1; font-size: 18px; }
+
+/* ---------- CH-37: Ana sayfa En Çok Okunanlar (referans mostRead, birebir) ----------
+   Genel `.tab-button` (çerçeve/beyaz/500) bu widget'ta referansın pill'ini
+   bozmamasi için kapsam içinde netleştirilir (home-piyasa-verileri örneğindeki
+   gibi). Hedef: yalnizca ana sayfa varyanti (`[data-section="mostRead"]`
+   altindaki mostRead); kenar çubuğu varyantı (`section[data-widget-type=...]`)
+   kendi `.aside-most-read .most-read-tab` kurallarini korur. */
+[data-section="mostRead"] [data-widget-type="mostRead"] .tab-head > .tab-button {
+    border: 0;
+    background: #fff;
+    font-family: Unna, Georgia, serif;
+    font-weight: 700;
+}
+[data-section="mostRead"] [data-widget-type="mostRead"] .tab-head > .tab-button.is-active,
+[data-section="mostRead"] [data-widget-type="mostRead"] .tab-head > .tab-button.bg-gray-200 {
+    background: rgb(229, 231, 235);
+}
+[data-section="mostRead"] [data-widget-type="mostRead"] .tab-head > .tab-button:not(.is-active) {
+    background: #fff;
+}
 
 /* ---------- Mobil sticky alt reklam ---------- */
 .mobile-sticky-ad {
@@ -1047,7 +1103,6 @@ img[data-src].b-lazy-loaded {
 /* ---------- Ana sayfa responsive ---------- */
 @media (max-width: 999px) {
     .market-widget-body { grid-template-columns: 1fr; }
-    .home-businessweek { grid-template-columns: 1fr; }
     .program-list, .video-list, .gallery-grid, .podcast-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .news-card-grid.cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -1055,7 +1110,6 @@ img[data-src].b-lazy-loaded {
 @media (max-width: 767px) {
     .program-list, .video-list, .gallery-grid, .podcast-grid,
     .news-card-grid.cols-3, .news-card-grid.cols-2 { grid-template-columns: 1fr; }
-    .hero-slide-title { font-size: 22px; }
     .ad-body-desktop { display: none; }
     .ad-body-mobile { display: flex; }
     .ad-body { min-height: 100px; }
@@ -1064,7 +1118,6 @@ img[data-src].b-lazy-loaded {
     .broadcast-name { min-width: 0; }
     .kap-company { min-width: 0; }
     .headline-list a { flex-wrap: wrap; }
-    .bw-cover-img { width: 100%; height: auto; }
 }
 
 /* ============================================================
@@ -1480,9 +1533,9 @@ img[data-src].b-lazy-loaded {
    metin büyütme, Google CTA, ilgili haber karusel, pageskin.
    ============================================================ */
 
-.article-layout { display: flex; gap: 28px; align-items: flex-start; }
-.article-main { width: calc(100% - 400px); min-width: 0; padding-right: 28px; }
-.article-sidebar { width: 400px; flex: 0 0 400px; position: relative; }
+.article-layout { display: flex; gap: 36px; align-items: flex-start; }
+.article-main { width: calc(100% - 376px); min-width: 0; padding-right: 36px; border-right: 1px solid var(--gray-border); }
+.article-sidebar { width: 340px; flex: 0 0 340px; position: relative; }
 
 .article-detail { position: relative; }
 .article-detail-infinite { margin-top: 48px; padding-top: 32px; border-top: 2px solid #000; }
@@ -1516,9 +1569,6 @@ img[data-src].b-lazy-loaded {
 .article-image { margin: 0 0 12px; }
 .article-image img { width: 100%; height: auto; }
 
-.article-meta { display: flex; flex-wrap: wrap; gap: 10px; color: #555; font-size: 13px; margin: 0 0 20px; }
-.article-updated { color: #777; }
-
 /* Gövde tipografisi + inline anahtar kelime bağlantıları */
 .article-wrapper p { font-size: 16px; line-height: 1.6; margin: 0 0 16px; }
 .article-wrapper a[href^="/haberleri/"] { color: #1C64A8; text-decoration: underline; text-underline-offset: 2px; }
@@ -1530,36 +1580,6 @@ img[data-src].b-lazy-loaded {
 /* Metin büyütme durumları (text-increase) */
 .article-wrapper.text-size-large p { font-size: 19px; line-height: 1.72; }
 .article-wrapper.text-size-xlarge p { font-size: 22px; line-height: 1.8; }
-
-/* Paylaş satırı */
-.article-tools { display: flex; align-items: center; gap: 12px; margin: 22px 0; position: relative; }
-.article-tool {
-    display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; cursor: pointer;
-    border: 1px solid var(--gray-border); border-radius: 4px; background: #fff; color: #333; font-size: 14px;
-}
-.article-tool:hover { background: #000; color: #fff; }
-.text-increase .ti-small { font-size: 12px; }
-.text-increase .ti-large { font-size: 19px; }
-.article-tool .bloomberght-icon-font svg { width: 16px; height: 16px; }
-
-.share-dropdown { position: relative; }
-.share-menu {
-    position: absolute; right: 0; top: calc(100% + 6px); z-index: 40;
-    display: none; align-items: center; gap: 14px; margin: 0; padding: 12px 16px;
-    list-style: none; background: #fff; border: 1px solid var(--gray-border);
-    border-radius: 4px; box-shadow: 0 8px 24px rgba(0, 0, 0, .15);
-}
-.share-dropdown:hover .share-menu,
-.share-dropdown:focus-within .share-menu,
-.share-dropdown.is-open .share-menu { display: flex; }
-.share-menu a, .share-menu .share-copy {
-    display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px;
-    border: 1px solid var(--gray-border); border-radius: 50%; background: #fff; color: #333; cursor: pointer;
-}
-.share-menu a:hover, .share-menu .share-copy:hover { background: #000; color: #fff; }
-.share-menu .share-copy { width: auto; border-radius: 17px; padding: 0 10px; gap: 6px; }
-.share-menu .shortlink-text { font-size: 12px; font-weight: 600; white-space: nowrap; }
-.share-menu .bloomberght-icon-font svg { width: 15px; height: 15px; }
 
 .article-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 0; }
 .article-tags a {
@@ -1608,64 +1628,53 @@ img[data-src].b-lazy-loaded {
     .related-track { flex-direction: column; transform: none !important; }
     .related-slide { flex: 1 1 auto; }
     .pageskin { display: none; }
-    .share-menu { right: auto; left: 0; }
 }
 
 /* ---------- YATIRIM FONLARI BÖLÜMÜ (spec §8, §15.8) ---------- */
 .fund-page { padding-bottom: 24px; }
 .fund-page .page-title { font-size: 36px; margin: 0 0 12px; }
 
-/* Fon haberleri grid — 9 kart, 640x360 */
-.fund-news { margin-bottom: 28px; }
-.fund-news-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-.fund-news-card { border-bottom: 1px solid var(--gray-border); padding-bottom: 10px; }
-.fund-news-link { display: block; }
-.fund-news-figure { position: relative; margin: 0 0 8px; overflow: hidden; }
-.fund-news-img { width: 100%; aspect-ratio: 640 / 360; object-fit: cover; background: var(--gray-bg); }
-.fund-news-caption .category { color: #777; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
-.fund-news-title { font-size: 18px; line-height: 1.3; margin: 2px 0 0; }
+/* Fon haberleri hero + üst 2 kolon */
+.fund-news { margin-bottom: 16px; }
 
-/* Alt-tool nav (3 buton) */
-.fund-tool-nav { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 28px; }
-.fund-tool-link {
-    display: inline-flex; align-items: center; gap: 8px;
-    border: 1px solid var(--gray-border); background: #fff; border-radius: 4px;
-    padding: 10px 16px; font-size: 14px; font-weight: 600; cursor: pointer;
-}
-.fund-tool-link:hover { background: var(--bht-yellow); }
-.fund-tool-link.is-anchor { background: var(--gray-bg); }
+/* Alt-tool nav (3 buton) — referans birebir: üst üste gri bloklar */
+.fund-tool-nav { display: flex; flex-direction: column; width: 100%; }
+.fund-tool-link { display: block; text-decoration: none; color: inherit; }
+.fund-tool-link:hover { background-color: #d1d5db; }
 
 /* Fon Saati */
 .fund-saati { margin-bottom: 32px; }
 
+/* Fon Saati swiper ok butonları — referans birebir (swiper default'unu ezer) */
+.funds .swiper-button-prev,
+.funds .swiper-button-next {
+    position: absolute !important;
+    top: 0 !important;
+    margin-top: 0 !important;
+    z-index: 12 !important;
+    color: #000 !important;
+    font-size: 16px !important;
+    line-height: 24px !important;
+    cursor: pointer;
+}
+.funds .swiper-button-prev { right: 56px !important; left: auto !important; }
+.funds .swiper-button-next { right: 0 !important; left: auto !important; }
+.funds .swiper-button-disabled { opacity: .4 !important; cursor: default; }
+
 /* Günün Özeti KPI */
 .fund-kpi { margin-bottom: 32px; }
-.fund-kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-.fund-kpi-card {
-    border: 1px solid var(--gray-border); border-top: 3px solid var(--bht-yellow);
-    border-radius: 6px; background: #fff; padding: 16px; display: flex; flex-direction: column; gap: 8px;
-}
-.fund-kpi-label { font-size: 12px; font-weight: 600; text-transform: uppercase; color: #777; letter-spacing: .05em; }
-.fund-kpi-value { font-size: 22px; font-weight: 700; }
 
 /* Fon Sınıflarında Bugün */
 .fund-classes { margin-bottom: 32px; }
-.fund-class-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
-.fund-direction-toggle { display: inline-flex; gap: 0; margin-bottom: 16px; }
-.fund-direction-button {
-    border: 1px solid var(--gray-border); background: #fff; padding: 8px 18px; font-size: 14px; font-weight: 600;
-}
-.fund-direction-button:first-child { border-radius: 4px 0 0 4px; }
-.fund-direction-button:last-child { border-radius: 0 4px 4px 0; border-left: 0; }
-.fund-direction-button.is-active { background: var(--navy); color: #fff; border-color: var(--navy); }
-.fund-leader-table a:hover, .fund-returns-table a:hover { text-decoration: underline; }
+.fund-classes .select-tab-content, .fund-classes .tab-content { min-width: 0; }
+.fund-dir-menu .tab-button { border-radius: 0; font-weight: 600; }
+.fund-dir-menu .tab-button.is-active { background: #e5e7eb; border-color: #9ca3af; font-weight: 700; }
+.fund-class-panel .tab-content a:hover,
+.fund-returns tbody a:hover { text-decoration: underline; }
 
 /* Karşılaştırmalı Fon Getirileri */
 .fund-returns { margin-bottom: 32px; }
-.fund-returns-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
-.fund-returns-count { font-size: 13px; color: #777; }
-.fund-returns-all { font-size: 14px; font-weight: 700; }
-.fund-returns-all:hover { color: var(--red); }
+.fund-returns .relative.bg-white a { color: inherit; }
 
 /* Fon detay */
 .fund-detail-head { margin-bottom: 24px; }
@@ -1701,16 +1710,10 @@ img[data-src].b-lazy-loaded {
 .fund-distribution-row { display: grid; grid-template-columns: 180px minmax(0, 1fr) 70px; align-items: center; gap: 14px; }
 .fund-distribution-label { font-size: 14px; font-weight: 600; }
 .fund-distribution-bar-track { height: 18px; background: var(--gray-bg); border-radius: 4px; overflow: hidden; }
-.fund-distribution-bar { display: block; height: 100%; background: linear-gradient(90deg, var(--navy), var(--bht-yellow)); }
+.fund-distribution-bar { display: block; height: 100%; width: var(--bar, 0%); background: linear-gradient(90deg, var(--navy), var(--bht-yellow)); }
 .fund-distribution-value { font-size: 14px; font-weight: 700; text-align: right; }
 
-@media (max-width: 1023px) {
-    .fund-news-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .fund-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
 @media (max-width: 767px) {
-    .fund-news-grid { grid-template-columns: 1fr; }
-    .fund-kpi-grid { grid-template-columns: 1fr; }
     .fund-page .page-title, .fund-detail-head h1, .fund-tool-page .page-title { font-size: 28px; }
     .fund-distribution-row { grid-template-columns: 120px minmax(0, 1fr) 60px; gap: 8px; }
 }
@@ -1818,19 +1821,6 @@ img[data-src].b-lazy-loaded {
 .tv-freq-table td { padding: 10px 12px; border-bottom: 1px solid var(--gray-border); }
 
 /* --- Video --- */
-.video-hero {
-    position: relative; margin-bottom: 22px; border-radius: 4px; overflow: hidden;
-    background: #000 url('/img/placeholders/placeholder-2.svg') center/cover no-repeat;
-}
-.video-hero-inner { padding: 46px 28px; background: linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.25)); color: #fff; }
-.video-hero-title { font-size: 2.6rem; margin: 0; color: #fff; }
-.video-hero-desc { margin: 6px 0 0; opacity: .9; }
-.video-filter { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
-.video-filter-link {
-    background: var(--gray-bg); border-radius: 999px; padding: 6px 14px; font-size: 13px; border: 1px solid var(--gray-border);
-}
-.video-filter-link:hover { background: var(--bht-yellow); }
-.video-filter-link.is-active { background: var(--navy); color: #fff; border-color: var(--navy); }
 
 .series-card a { display: block; border: 1px solid var(--gray-border); border-radius: 4px; overflow: hidden; height: 100%; }
 .series-card-figure { position: relative; margin: 0; }
@@ -1845,7 +1835,7 @@ img[data-src].b-lazy-loaded {
 .series-card a:hover .series-card-name { color: var(--red); }
 
 .video-series-name { display: block; font-size: 12px; color: var(--red); font-weight: 600; margin-top: 2px; }
-.video-latest, .video-related { margin-top: 30px; }
+.video-related { margin-top: 30px; }
 
 .series-head-info, .podcast-head-info { display: flex; flex-direction: column; align-items: flex-start; }
 .series-head-host { color: #777; font-size: 13px; margin-bottom: 8px; }
@@ -1889,7 +1879,6 @@ img[data-src].b-lazy-loaded {
     .broadcast-thumb img { width: 64px; }
     .program-detail-name, .series-head-name, .podcast-head-title { font-size: 1.5rem; }
     .video-detail-title { font-size: 1.4rem; }
-    .video-hero-title { font-size: 2rem; }
 }
 
 /* ============================================================
@@ -2145,13 +2134,13 @@ figure { max-width: 100%; }
 .bg-\[#bd1b2d\] { background-color: #bd1b2d; }
 .bg-\[#a00207\] { background-color: #a00207; }
 .bg-\[#FFE400\] { background-color: #ffe400; }
-.border { border: 1px solid currentColor; }
-.border-b { border-bottom: 1px solid currentColor; }
-.border-b-2 { border-bottom: 2px solid currentColor; }
-.border-t { border-top: 1px solid currentColor; }
-.border-y { border-top: 1px solid currentColor; border-bottom: 1px solid currentColor; }
-.border-l { border-left: 1px solid currentColor; }
-.border-r { border-right: 1px solid currentColor; }
+.border { border: 1px solid var(--border-default, #e5e7eb); }
+.border-b { border-bottom: 1px solid var(--border-default, #e5e7eb); }
+.border-b-2 { border-bottom: 2px solid var(--border-default, #e5e7eb); }
+.border-t { border-top: 1px solid var(--border-default, #e5e7eb); }
+.border-y { border-top: 1px solid var(--border-default, #e5e7eb); border-bottom: 1px solid var(--border-default, #e5e7eb); }
+.border-l { border-left: 1px solid var(--border-default, #e5e7eb); }
+.border-r { border-right: 1px solid var(--border-default, #e5e7eb); }
 .border-white { border-color: #fff; }
 .border-gray-300 { border-color: #d1d5db; }
 .border-\[#384552\] { border-color: #384552; }
@@ -2204,6 +2193,7 @@ figure { max-width: 100%; }
 }
 @media (min-width: 1920px) {
     .\33 xl\:top-44 { top: 176px; }
+    .\33 xl\:top-56 { top: 224px; }
 }
 
 /* ---------- İKON FONT glyph'leri (CH-28) ----------
@@ -2227,6 +2217,15 @@ figure { max-width: 100%; }
 .bloomberght-icon-font-play:before{content:"\ea1d"}
 .bloomberght-icon-font-radio:before{content:"\ea20"}
 .bloomberght-icon-font-search:before{content:"\ea21"}
+/* Paylaş / yazı-boyutu (makale) — referans kodepoint'leri (CH-28 font dosyasında mevcut) */
+.bloomberght-icon-font-share:before{content:"\ea22"}
+.bloomberght-icon-font-text-increase:before{content:"\ea24"}
+.bloomberght-icon-font-facebook:before{content:"\ea0f"}
+.bloomberght-icon-font-whatsapp:before{content:"\ea25"}
+.bloomberght-icon-font-twitter-x:before{content:"\ea2c"}
+.bloomberght-icon-font-linkedin:before{content:"\ea2d"}
+.bloomberght-icon-font-copy:before{content:"\ea2e"}
+.bloomberght-icon-font-mail:before{content:"\ea30"}
 /* İkon glyph'leri için temel boyutlandırma: boş öğe + :before glyph 1em kutu */
 .bloomberght-icon-font-menu,
 .bloomberght-icon-font-search,
@@ -2236,6 +2235,8 @@ figure { max-width: 100%; }
 .bloomberght-icon-font-stats,
 .bloomberght-icon-font-time,
 .bloomberght-icon-font-home,
+.bloomberght-icon-font-share,
+.bloomberght-icon-font-text-increase,
 .bloomberght-icon-font-x,
 .bloomberght-icon-font-facebook,
 .bloomberght-icon-font-instagram,
@@ -2283,7 +2284,6 @@ figure { max-width: 100%; }
     left: 0;
     background: #4d596a;
     z-index: 90;
-    min-width: 230px;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -2334,7 +2334,6 @@ figure { max-width: 100%; }
 }
 
 /* ---------- Hero Swiper (headline) ---------- */
-.hero-main-slider .swiper-wrapper {}
 .swiper-slide { height: auto; }
 /* slidesPerView:auto (fastLinks) icin parcaciklar icerik genisliginde olmali.
    Swiper kutuphanesi .swiper-slide{width:100%} uygular ve ayri bir <link> ile
@@ -2342,47 +2341,187 @@ figure { max-width: 100%; }
    icinde oldugu icin de kaybeder. !important ile zorlanir. */
 .swiper-auto-width > .swiper-wrapper > .swiper-slide { width: auto !important; }
 .swiper-slide figure { margin: 0; }
-.hero-main-slider .swiper-pagination {
-    position: absolute;
-    bottom: 16px;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    z-index: 10;
-}
-.hero-main-slider .swiper-pagination-bullet {
-    width: 10px;
-    height: 10px;
-    background: rgba(255, 255, 255, .8);
-    border: 1px solid #707070;
-    opacity: 1;
-}
-.hero-main-slider .swiper-pagination-bullet-active {
-    background: #000;
-}
-/* Swiper düğmeleri referans yapısında: ikon font ok → ::before */
+/* Swiper düğmeleri referans yapısında: varsayılan swiper oku gizlenir,
+   gerçek ok bloomberght-icon-font-chevron-* glyph'iyle gelir.
+   Referans app-style.css'te AÇIKÇA tanımlı (global):
+   `.swiper-button-prev svg, .swiper-button-next svg { display: none }`
+   — bu olmadan ikon-font glyph'i ile inline SVG üst üste binip
+   "elmas/çift ok" görüntüsü oluşuyor. */
 .swiper-button-prev::after,
 .swiper-button-next::after { content: "" !important; display: none; }
+.swiper-button-prev svg,
+.swiper-button-next svg { display: none; }
+
+/* Hero slider ok butonları — referans (bloomberght) birebir: 36x36,
+   siyah %40 zemin, beyaz ikon, kenardan 4px. swiper-bundle.min.css katmansız
+   olduğundan (app.css'ten sonra link ile yüklenir) hem Tailwind utility'leri
+   hem de bu katmanlı kural kaybeder; !important ile referans görünümü
+   garantiye alınır. Top/margin swiper'ın varsayılan hizalamasına
+   (çubuğun %50'si, -size/2) bırakılır = referansla aynı. */
 .main-slider .swiper-button-prev,
-.main-slider .swiper-button-next { position: absolute; top: 128px; transform: none; margin: 0; }
-.main-slider .swiper-button-prev { left: 0; }
-.main-slider .swiper-button-next { right: 0; }
-.main-slider .swiper-button-prev::before,
-.main-slider .swiper-button-next::before {
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    content: "";
+.main-slider .swiper-button-next {
+    width: 36px !important;
+    height: 36px !important;
+    background-color: rgba(0, 0, 0, .4) !important;
+    color: #fff !important;
 }
-.main-slider .swiper-button-prev::before {
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M14.29 6.71a1 1 0 00-1.42 0l-6 6a1 1 0 000 1.42l6 6a1 1 0 001.42-1.42L9.41 12l4.88-4.88a1 1 0 000-1.41z'/%3E%3C/svg%3E");
+.main-slider .swiper-button-prev { left: 4px !important; }
+.main-slider .swiper-button-next { right: 4px !important; }
+
+/* Hızlı Linkler (fastLinks) okları — referans: w-8 (32px), siyah ikon.
+   swiper-bundle.min.css katmansız olduğundan w-8/text-black utility'lerini
+   eziyor; !important ile referans görünümü netleştirilir. */
+.fast-link .swiper-button-prev,
+.fast-link .swiper-button-next {
+    width: 32px !important;
+    color: #000 !important;
 }
-.main-slider .swiper-button-next::before {
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M9.29 6.71a1 1 0 000 1.42L13.17 12l-3.88 3.88a1 1 0 001.42 1.41l4.59-4.59a1 1 0 000-1.42L10.7 6.7a1 1 0 00-1.41.01z'/%3E%3C/svg%3E");
+
+/* Programlar (programs) yön okları — referans birebir: 32x44px, siyah ikon,
+   sağ üstte yan yana (prev right:56px / next right:0). swiper-bundle katmansız
+   olduğundan !important ile netleştirilir. */
+.programs .swiper-button-prev,
+.programs .swiper-button-next {
+    width: 32px !important;
+    height: 44px !important;
+    color: #000 !important;
 }
+.programs .swiper-button-prev { right: 40px !important; left: auto !important; }
+.programs .swiper-button-next { right: 0 !important; left: auto !important; }
+
+/* Yayın Akışı (streaming) — referans birebir düzeltme.
+   swiper-bundle.min.css KATMANSIZ (unlayered) yüklendiği ve Tailwind v4
+   utility'leri @layer utilities içinde olduğu için CSS spec gereği katmansız
+   kurallar utility'leri daima ezer. Referansta (app-style.css, @layer YOK)
+   utility'ler son sırada gelir ve kazanır. Farkı !important ile kapatıyoruz:
+
+   1) .swiper-slide{width:100%}  -> kartlar tam genişlikte alt alta yığıyordu;
+      referans ölçümü: slayt 288px (w-72), mobil 256px (w-64).
+   2) .swiper-button-*{color:var(--swiper-navigation-color,#007aff)} -> oklar
+      mavi (#007aff) çıkıyordu; referansta siyah (text-inherit/text-black).
+   3) --swiper-navigation-size (28px) `w-8`/`h-11` utility'lerini eziyordu.
+
+   Konum (left/right): swiper sürüm farkı var. Bizim swiper-bundle
+   `var(--swiper-navigation-sides-offset, 10px)` fallback'i kullanıyor,
+   referans app-style.css ise `4px` fallback'ıyla çalışıyor (ölçülen referans
+   konumları: prev nav+4px / next nav sağ-4px). Referans değeri sabitleniyor. */
+[data-widget-type="streaming"] .swiper-slide { width: 16rem !important; }
+@media (min-width: 768px) {
+    [data-widget-type="streaming"] .swiper-slide { width: 18rem !important; }
+}
+[data-widget-type="streaming"] .swiper-button-prev,
+[data-widget-type="streaming"] .swiper-button-next {
+    width: 32px !important;
+    height: 44px !important;
+    color: #000 !important;
+}
+[data-widget-type="streaming"] .swiper-button-prev { left: 4px !important; right: auto !important; }
+[data-widget-type="streaming"] .swiper-button-next { right: 4px !important; left: auto !important; }
+
+/* Swiper kapsayıcıları — referans padding'leri: swiper-bundle'ın katmansız
+   `.swiper{padding:0}` kuralı Tailwind pt-10/pt-12/pb-6 utility'lerini ezer;
+   mutlak konumlanmış bölüm başlıkları slaytların üstüne biner. !important ile
+   referans değerleri (fastLinks/programs/podcast/graphics/streaming: pt-12
+   48px, crypto: pt-10 40px, streaming: pb-6 24px) netleştirilir. */
+[data-widget-type="fastLinks"] [data-type="swiper"],
+[data-widget-type="programs"] [data-type="swiper"],
+[data-widget-type="podcast"] [data-type="swiper"],
+[data-widget-type="graphics"] [data-type="swiper"],
+[data-widget-type="streaming"] [data-type="swiper"] {
+    padding-top: 3rem !important;
+}
+[data-widget-type="crypto"] [data-type="swiper"] {
+    padding-top: 2.5rem !important;
+}
+[data-widget-type="streaming"] [data-type="swiper"] {
+    padding-bottom: 1.5rem !important;
+}
+
+/* Hızlı Linkler pill'leri — referans birebir (16px/400, şeffaf, gray-200 çerçeve;
+   aktif: gray-200 zemin+çerçeve, 700). Genel `.tab-button` (14px/500/beyaz) ve
+   swiper `.swiper-slide{width:100%}` utility'leri ezdiği için !important. */
+[data-widget-type="fastLinks"] [data-type="swiper"] .swiper-slide { width: auto !important; }
+[data-widget-type="fastLinks"] .tab-button {
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    background: transparent !important;
+    border: 1px solid #e5e7eb !important;
+}
+[data-widget-type="fastLinks"] .tab-button.is-active {
+    font-weight: 700 !important;
+    background: #e5e7eb !important;
+    border-color: #e5e7eb !important;
+}
+
+/* Piyasalar (marketGraphData) sekmeleri — referans: çerçevesiz pill,
+   pasif şeffaf/400, aktif gri/700. Genel `.tab-button` (çerçeve/beyaz/500)
+   bunları ezdiği için !important ile netleştirilir. */
+.market-widget-tabs > .tab-head > .tab-button {
+    border: 0 !important;
+    background: transparent !important;
+    font-weight: 400 !important;
+}
+.market-widget-tabs > .tab-head > .tab-button.bg-gray-200,
+.market-widget-tabs > .tab-head > .tab-button.is-active {
+    background: rgb(229, 231, 235) !important;
+    font-weight: 700 !important;
+}
+/* Alt-sekme satırları — aynı stil (12px, pasif şeffaf/400, aktif gri/700) */
+.market-widget-subtabs .tab-button {
+    border: 0 !important;
+    background: transparent !important;
+    font-weight: 400 !important;
+}
+.market-widget-subtabs .tab-button.bg-gray-200,
+.market-widget-subtabs .tab-button.is-active {
+    background: rgb(229, 231, 235) !important;
+    font-weight: 700 !important;
+}
+/* Referans: alt-sekme kapsayıcısı çerçevesiz/şeffaf (çerçeveyi chart
+   `.wrapper.border` taşır). Ana sayfa widget'ına özgü (compact'tan bağımsız). */
+.home-page .market-widget-charts {
+    border: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+}
+
+/* Hero slider nav noktaları — referans (bloomberght): noktalar görsel ile
+   başlık arasında, başlığın ÜSTÜNDE durur. Markuptaki `relative` sınıfını
+   katmansız swiper-bundle (.swiper-pagination{position:absolute} +
+   bullets bottom:8px) eziyor; bu yüzden relative zorlanır — böylece noktalar
+   h-20 şeridinin ÜSTÜNDE kalır ve swiper'ın bottom:8px offset'iyle
+   referanstaki gibi -8px yukarı kayar (başlıktan önce). */
+div[data-widget-type="headline"] .swiper-pagination {
+    position: relative !important;
+}
+
+/* Hero slide başlığı — kaynak gibi: noktalar ile yazı arası sıkı (8px).
+   Başlık çapası md:min-h-16 (64px) + items-center (katmansız swiper değil ama
+   Tailwind items-center katmanlı). Tek satır kısa başlıklar çapada ortalandığı
+   için nokta–yazı arasında gereksiz boşluk kalıyor; üste hizalayınca kaynak
+   görünümü sağlanır (2 satır başlıklar çapayı zaten doldurur, hiç değişmez). */
+div[data-widget-type="headline"] .swiper-slide figcaption a {
+    align-items: flex-start !important;
+}
+
+/* ---------- Pagination tipleri (referans app-style, birebir) ---------- */
+.type1.swiper-pagination::after,
+.type2.swiper-pagination::after { content: ""; position: absolute; top: 8px; width: 90%; border-bottom: 2px dotted #707070; z-index: -10 !important; }
+.type4.swiper-pagination::after { content: ""; position: absolute; top: 8px; width: 100%; border-bottom: 2px dotted #707070; z-index: -10 !important; }
+.type3.swiper-pagination::after { content: ""; position: absolute; top: 8px; left: 5px; width: 22%; border-bottom: 2px dotted #707070; z-index: -10 !important; }
+.type1.swiper-pagination { display: flex !important; align-items: center !important; justify-content: space-evenly !important; }
+.type4.swiper-pagination { display: flex !important; align-items: center !important; justify-content: space-between !important; }
+.type2.swiper-pagination { display: flex !important; align-items: center !important; justify-content: space-evenly !important; left: -1rem !important; }
+.type3.swiper-pagination { display: flex !important; align-items: center !important; gap: 1rem; margin-top: 1rem; position: relative; }
+.type1 .swiper-pagination-bullet,
+.type2 .swiper-pagination-bullet,
+.type3 .swiper-pagination-bullet,
+.type4 .swiper-pagination-bullet { width: 10px !important; height: 10px !important; background-color: #fff !important; border: 1px solid #707070 !important; opacity: 1 !important; position: relative; z-index: 10 !important; }
+.type1 .swiper-pagination-bullet-active,
+.type2 .swiper-pagination-bullet-active,
+.type3 .swiper-pagination-bullet-active,
+.type4 .swiper-pagination-bullet-active { width: 16px !important; height: 16px !important; background: #000 !important; z-index: 10 !important; }
 
 /* ---------- Öne Çıkanlar sağ kolon (highlights) ---------- */
 
@@ -2454,10 +2593,6 @@ figure { max-width: 100%; }
     .sub-menu-wrapper > .drop-down { top: 3rem; }
     .home-page > section[data-section="headline"] .highlights-list { padding-top: 8px; }
 }
-
-/* Eski (CH-17/19) main-slider görseli CH-24 referans Swiper yapısına devreder:
-   `.main-slider` artık hero düğme şerididir (absolute, overflow görünür). */
-.main-slider { position: absolute; left: 0; top: 128px; width: 100%; overflow: visible; }
 
 
 /* ============================================================
@@ -2571,6 +2706,16 @@ figure { max-width: 100%; }
 .ad-body-mobile .ads-zone:empty::after { content: "320×100"; }
 .masthead-ad .ad-body .ads-zone:empty::before { letter-spacing: 8px; }
 
+/* ---------- Yönetilebilir reklam banner'ı (admin/advertisements) ---------- */
+.ad-banner { width: 100%; display: flex; justify-content: center; align-items: flex-start; }
+.ad-banner .ad-slot,
+.ad-banner > a { display: inline-block; }
+.ad-banner .ad-image,
+.ad-banner > img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+.ad-banner iframe,
+.ad-banner ins,
+.ad-banner script { max-width: 100%; margin: 0 auto; display: block; }
+
 /* ---------- 10) Genel hizalama / spacing ---------- */
 .home-page > section,
 .home-page > .market-data-widget,
@@ -2585,13 +2730,6 @@ figure { max-width: 100%; }
 .home-all-news .headline-list a, .politics-block .headline-list a { gap: 10px; }
 .home-all-news .headline-list li { border-bottom: 1px solid var(--gray-border); }
 .home-page .news-card-grid { row-gap: 22px; column-gap: 22px; }
-
-/* Hero: kategori etiketi + daha geniş manşet (CH-25) */
-.hero-main-slider .hero-slide-caption { display: none; }
-.hero-main-slider figcaption { position: static; padding: 0; }
-.hero-main-slider .hero-slide-title { font-size: 30px; }
-.hero-main-slider .swiper-slide figure > div { border-radius: 0; }
-.hero-main-slider .swiper-pagination { position: absolute; bottom: 0; }
 
 /* Foto haber / podcast / kap kart görseli düzeni */
 .gallery-body h4, .podcast-body h3 { font-size: 15px; line-height: 1.3; }
@@ -2612,52 +2750,28 @@ header.bg-\[\#384552\] { background-color: #384552; }
 .bg-\[\#4D596A\] { background-color: #4d596a; }
 .text-\[\#384552\] { color: #384552; }
 
-/* ---------- CH-27: Piyasa Verileri tabbed widget (referans marketDataLists) ---------- */
-.home-piyasa-verileri .mdl-title-rule::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-    left: 0;
-    width: 230px;
-    height: 10px;
-    background: #000;
-}
-.mdl-tabhead {
-    display: flex;
-    margin: 16px 0;
-    border: 1px solid #d9d9d9;
-    border-radius: 999px;
-    overflow-x: auto;
-    background: #fff;
-    width: max-content;
-    max-width: 100%;
-}
-.mdl-tabhead .mdl-tab {
-    border: 0;
-    background: #fff;
-    border-radius: 999px;
-    padding: 8px 18px;
-    font-size: 14px;
-    cursor: pointer;
+/* ---------- CH-36: Piyasa Verileri tabbed widget (referans marketDataLists, birebir) ---------- */
+/* Üst sekmeler: kapsayıcı çerçeveli pill (`.tab-head.flex.border.rounded-3xl`),
+   butonlar çerçevesiz pill. Genel `.tab-button` (çerçeve/beyaz/500) bunları ezdiği
+   için !important ile netleştirilir — referanstaki `*:whitespace-pre` eşdeğeri
+   (sekmeler tek satır kalır). */
+.home-piyasa-verileri .tab-head > * { white-space: pre; }
+.home-piyasa-verileri .tab-head > .tab-button {
+    border: 0 !important;
+    background: transparent !important;
+    font-weight: 400 !important;
     white-space: nowrap;
-    color: #222;
 }
-.mdl-tabhead .mdl-tab.is-active,
-.mdl-tabhead .mdl-tab.bg-gray-200,
-.mdl-tabhead .mdl-tab:first-child { background: #e5e7eb; }
-.mdl-table th { font-size: 13px; font-weight: 600; color: #333; background: #fff; }
-.mdl-table th:first-child { text-align: left; }
-.mdl-table td { font-size: 14px; }
-.mdl-table td.px-4.text-right span { align-items: center; }
-.mdl-table .q-arrow { margin: 0 0 0 4px; }
-.mdl-cell-name { min-width: 0; display: flex; flex-direction: column; }
-.mdl-cell-name .text-xs { color: #666; }
+.home-piyasa-verileri .tab-head > .tab-button.bg-gray-200,
+.home-piyasa-verileri .tab-head > .tab-button.is-active {
+    background: rgb(229, 231, 235) !important;
+    font-weight: 700 !important;
+}
 .home-piyasa-verileri .swiper { padding-bottom: 8px; }
-@media (max-width: 768px) {
-    .mdl-tabhead { width: 100%; }
-    .mdl-tabhead .mdl-tab { flex: 1; text-align: center; }
+/* Altın/Emtia/Baltık satırlarındaki sabit sütun genişlikleri (referans min-w-20, 2xl:min-w-24) */
+.min-w-20 { min-width: 5rem; }
+@media (min-width: 1536px) {
+    .\32xl\:min-w-24 { min-width: 6rem; }
 }
 /* CH-27 eksik utility fallback'leri (referans DOM'dan birebir) */
 .text-gray-500 { color: #6b7280; }
@@ -2714,15 +2828,9 @@ header.bg-\[\#384552\] { background-color: #384552; }
 /* Ortak: kaydırılabilir liste */
 .all-news-scroll { max-height: 620px; overflow-y: auto; }
 
-/* Yayın Akışı şeridi (streaming) */
-.bcast-title { color: #000; }
-.bcast-card { display: flex; align-items: center; border: 1px solid #b6bbc3; border-radius: 9999px; border-top-left-radius: 9999px; border-bottom-left-radius: 9999px; padding: 6px; background: #fff; }
-.bcast-thumb { flex: 0 0 88px; height: 88px; width: 88px; overflow: hidden; }
-.bcast-thumb-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
-.bcast-thumb-ph { width: 88px; height: 88px; border-radius: 50%; background: #384552; color: #fff; display: flex; align-items: center; justify-content: center; font-family: Unna, serif; font-size: 28px; font-weight: 700; }
-.bcast-info { min-width: 0; margin-left: 14px; padding-right: 16px; }
-.bcast-time { font-size: 22px; line-height: 1.1; display: block; }
-.bcast-name { font-size: 17px; line-height: 1.25; color: #000; display: block; }
+/* Yayın Akışı şeridi (streaming): kart ölçüleri referans DOM/görsel ile
+   birebir (slayt w-72 / gap 20 · kart 288×114 · daire 96 · ml-3) ve blade'de
+   doğrudan utility sınıflarıyla ifade edilir; ek bileşen sınıfı yok. */
 
 /* Podcast şeridi */
 .podcast-strip-card { margin: 0; }
@@ -2750,8 +2858,6 @@ header.bg-\[\#384552\] { background-color: #384552; }
 @media (max-width: 768px) {
     .home-media-row .gallery-grid,
     .home-media-row .video-list { grid-template-columns: repeat(2, 1fr); }
-    .bcast-card { padding: 4px; }
-    .bcast-thumb { flex-basis: 64px; height: 64px; width: 64px; }
 }
 
 
@@ -2851,11 +2957,59 @@ article .adv-news .body, article .adv-news .body .ads-zone, article .adv-news .b
 .top-pageskin-center:before { left: 0; }
 .top-pageskin-center:after { right: 0; }
 
-/* --- CH-28: finance-band ok düğmeleri (referans swiper nav) --- */
-.finance-band { pointer-events: auto; }
-.finance-band .swiper-button-prev,
-.finance-band .swiper-button-next { position: static; margin: 0; top: auto; transform: none; display: inline-flex; align-items: center; justify-content: center; color: #000; font-size: 1.1rem; }
-.finance-band .swiper-button-prev:hover,
-.finance-band .swiper-button-next:hover { color: #384552; }
-.finance-band .swiper-button-disabled { opacity: .3; cursor: default; }
+/* --- CH-28: finance-band ok düğmeleri (kaldırıldı — elimizde spinner yok) --- */
 }
+
+/* finance-slider slaytlari — referans (bloomberght) gibi icerige gore genislik.
+   swiper-bundle.min.css `.swiper-slide{width:100%}` kuralsiz (unlayered)
+   geldigi ve `w-auto` utility'sini ezdigi icin slaytlar 1280px'e aciliyor,
+   gecislerde buyuk bosluklar olusuyordu. !important ile otomatik genislik. */
+[data-widget-type="finance-slider"] .swiper-slide { width: auto !important; }
+
+/* CH-37: ana sayfa Kripto Para swiper'ı — referans (bloomberght) gibi içeriğe
+   göre genişlik. Aynı neden: swiper-bundle.min.css kuralsız (unlayered) yüklenip
+   `w-auto` utility'sini eziyor, slaytlar tam genişliğe açılıp birimler arasında
+   büyük boşluk bırakıyordu. finance-slider/fastLinks ile aynı desen. */
+[data-widget-type="crypto"] .swiper-slide { width: auto !important; }
+
+/* ---------- Bloomberg HT Sidebar Widgets (Öne Çıkanlar & En Çok Okunanlar) 1:1 Clone ---------- */
+.featured-sidebar { display: flex; flex-direction: column; gap: 14px; }
+.featured-sidebar > div { border-bottom: 1px solid var(--gray-border); padding-bottom: 12px; margin-bottom: 12px; }
+.featured-sidebar > div:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.featured-sidebar .news-card-item { border-bottom: 1px solid var(--gray-border); padding-bottom: 12px; margin-bottom: 12px; }
+.featured-sidebar .news-card-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+.aside-most-read { margin-top: 36px; }
+.aside-most-read .section-head { margin-bottom: 14px; }
+.aside-most-read .most-read-tabs { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+.aside-most-read .most-read-tabhead { display: inline-flex; border: 1px solid var(--gray-border); border-radius: 999px; background: #fff; overflow: hidden; margin: 0 !important; position: static !important; }
+.aside-most-read .most-read-tab { padding: 4px 14px; font-size: 11.5px; font-weight: 600; cursor: pointer; border: none; background: transparent; font-family: Inter, sans-serif; }
+.aside-most-read .most-read-tab.bg-gray-200, .aside-most-read .most-read-tab[aria-selected="true"] { background: #e5e7eb; color: #000; }
+
+.aside-most-read .most-read-list li { border-bottom: 1px solid var(--gray-border); padding: 10px 0; }
+.aside-most-read .most-read-list li:last-child { border-bottom: none; }
+.aside-most-read .most-read-list a { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.aside-most-read .most-read-rank { font-family: Unna, Georgia, serif; font-size: 26px; font-weight: 700; color: #61082a; min-width: 26px; text-align: center; line-height: 1; }
+.aside-most-read .most-read-figure { flex: 0 0 64px; width: 64px; height: 64px; overflow: hidden; background: #f5f5f5; }
+.aside-most-read .most-read-img { width: 100%; height: 100%; object-fit: cover; }
+.aside-most-read .most-read-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.aside-most-read .most-read-body .category { font-size: 11px; text-transform: uppercase; color: #666; font-weight: 600; letter-spacing: .02em; }
+.aside-most-read .most-read-title { font-family: Unna, Georgia, serif; font-size: 15px; font-weight: 700; line-height: 1.25; color: #111; }
+.aside-most-read .most-read-title:hover { color: #bd1b2e; }
+
+/* ---------- HOME PROGRAMLAR kart rozeti: kaynak (bloomberght) birebir ----------
+   Yukaridaki .program-play/.program-duration kuralari (video widget icin: sol altta
+   daire play + sag altta sure) sinif adi ayni oldugu icin home-programs sliderina
+   da carpiyordu; rozeti kaynaktaki gibi 'sag altta beyaz yigili rozet' yapar. */
+.home-programs .program-thumb > .absolute { width: auto !important; max-width: none; overflow: visible; }
+.home-programs .program-play,
+.home-programs .program-duration {
+    position: static !important;
+    left: auto !important; right: auto !important; bottom: auto !important;
+    background: #fff !important; color: #000 !important;
+    border-radius: 0 !important; padding: 0 !important;
+    font-weight: 400 !important;
+}
+.home-programs .program-play { width: 56px !important; height: 56px !important; }
+.home-programs .program-play::before { width: auto !important; height: auto !important; }
+.home-programs .program-duration { width: 56px !important; height: 28px !important; font-size: 12px !important; }

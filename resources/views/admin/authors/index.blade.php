@@ -5,7 +5,7 @@
 
 @section('content')
     <div class="card">
-        <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+        <div class="toolbar end">
             <a href="{{ route('admin.authors.create') }}" class="btn accent">+ Yeni Yazar</a>
         </div>
         <table class="admin-table">

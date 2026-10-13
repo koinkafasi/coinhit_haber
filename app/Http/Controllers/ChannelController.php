@@ -65,6 +65,11 @@ class ChannelController extends Controller
 
         $category = Category::where('slug', $config['category'])->first();
 
+        // Tarım — referans birebir özel şablon (hero + Tarım Analiz aside + 3 kolon grid)
+        if ($channel === 'tarim') {
+            return $this->showTarim($category, $config);
+        }
+
         $query = News::where('status', 'published')
             ->when($category !== null, fn ($builder) => $builder->where('category_id', $category->id))
             ->with(['category', 'author'])
@@ -112,5 +117,47 @@ class ChannelController extends Controller
         }
 
         return view('channels.show', array_merge($data, $this->layoutData()));
+    }
+
+    /**
+     * /tarim — referans birebir: arka planlı "Tarım" başlığı + 2 kolon
+     * (hero haber main-slider + aside Tarım Analiz köşesi) + Tarım Haberleri
+     * 3 kolonlu grid (Listele lazy-load).
+     */
+    private function showTarim(?Category $category, array $config): View
+    {
+        $query = News::with(['category', 'author'])
+            ->where('status', 'published')
+            ->when($category !== null, fn ($builder) => $builder->where('category_id', $category->id))
+            ->orderByDesc('published_at');
+
+        $hero = (clone $query)->take(12)->get();
+        $news = $query->paginate(18)->withQueryString();
+
+        $author = null;
+        $authorOpinions = collect();
+
+        if (! empty($config['author'])) {
+            $author = Author::where('slug', $config['author'])->first();
+
+            if ($author !== null) {
+                $authorOpinions = News::where('author_id', $author->id)
+                    ->where('status', 'published')
+                    ->orderByDesc('published_at')
+                    ->take(3)
+                    ->get();
+            }
+        }
+
+        return view('channels.tarim', array_merge([
+            'channel' => 'tarim',
+            'title' => __('content.channel_tarim'),
+            'description' => __('content.channel_tarim_description'),
+            'category' => $category,
+            'hero' => $hero,
+            'news' => $news,
+            'author' => $author,
+            'authorOpinions' => $authorOpinions,
+        ], $this->layoutData()));
     }
 }
