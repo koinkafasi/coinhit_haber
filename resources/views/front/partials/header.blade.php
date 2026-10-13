@@ -9,7 +9,7 @@
      CH-24 birebir referans header: stickly üst bar (logo + eylemler).
      Sınıf deseni https://www.bloomberght.com ile birebir.
      ============================================================ --}}
-<header class="sticky top-0 md:relative z-600 w-full h-full inset-x-0 bg-[#384552]">
+<header class="sticky top-0 md:relative z-600 w-full h-full px-4 inset-x-0 bg-[#384552]">
     <div class="relative container mx-auto flex justify-between items-center py-4">
         <a href="{{ \App\Support\Locale::route('home') }}" title="Bloomberght" class="block" aria-label="{{ $settings['logo_alt'] ?? 'Bloomberg HT' }}">
             <img src="{{ asset($settings['logo_white_path'] ?? '/brand/logo-white.svg') }}" alt="{{ $settings['logo_alt'] ?? 'Bloomberg HT' }}"

@@ -163,6 +163,30 @@ class NewsSeeder extends Seeder
             'Küresel emtia görünümü raporu yayımlandı',
         ],
     ];
+    /**
+     * Kategori slug'ı => ek başlıklar (konumsal sayacı bozmadan eklenen içerik).
+     *
+     * Zirve kaynakta 12 kartlık grid ile gösteriliyor; TITLES'ta yalnızca 4
+     * başlık tanımlıydı. Yeni başlıklar burada tutulur ve EXTRA_ID_BASE'ten
+     * başlayan AYRI bir ID aralığına yazılır — böylece TITLES'a içerik eklemek
+     * mevcut kayıtların `3791000 + $count` numaralarını kaydırmaz, seed
+     * idempotent kalır.
+     */
+    public const EXTRA_ID_BASE = 3792000;
+
+    public const EXTRA_TITLES = [
+        'zirve' => [
+            'Yapay zeka altyapısına yatırım hızlanıyor',
+            'Elektrikli araç batarya zincirinde Avrupa hamlesi',
+            'Finansal teknolojilerde regülasyon güncellemesi',
+            'Girişim sermayesi fonları teknolojiye yöneliyor',
+            'Küresel tedarik zincirinde çeşitlendirme arayışı',
+            'Veri merkezlerinde enerji verimliliği gündemi',
+            'Yarı iletken yatırımları bölgesel hâle geliyor',
+            'Dijital bankacılıkta müşteri deneyimi öncelik kazandı',
+        ],
+    ];
+
 
     public const OPINION_AUTHORS = [
         'gorus' => [
@@ -194,36 +218,76 @@ class NewsSeeder extends Seeder
             }
 
             foreach ($titles as $index => $title) {
-                $newsId = 3791000 + $count;
-
-                $content = $this->buildContent($category->name, $title);
-
-                News::updateOrCreate(
-                    ['news_id' => $newsId],
-                    [
-                        'category_id' => $category->id,
-                        'author_id' => ($slug === 'gorus') ? $authors->get(self::OPINION_AUTHORS['gorus'][$index])?->id : null,
-                        'title' => $title,
-                        'slug' => Str::slug($title),
-                        'spot' => $content['spot'],
-                        'body' => $content['body'],
-                        'image' => $this->placeholderFor($slug),
-                        'image_og' => '/img/og-default.png',
-                        'source' => 'Bloomberg HT',
-                        'tags' => $this->buildTags($title),
-                        'status' => 'published',
-                        'is_breaking' => false,
-                        'is_featured' => in_array($slug, ['haberler', 'piyasalar', 'enerji'], true) && $index < 2,
-                        'views' => fake()->numberBetween(1000, 500000),
-                        'editor_id' => 1,
-                        'published_at' => now()->subHours((92 - $count) * 2),
-                        'modified_at' => now()->subHours((92 - $count) * 2)->addMinutes(15),
-                    ]
-                );
+                $this->upsertNews($category, $slug, $authors, $index, $title, 3791000 + $count, $count);
 
                 $count++;
             }
         }
+
+        $this->seedExtraTitles($authors, $count);
+    }
+
+    /**
+     * Yalnızca EXTRA_TITLES içeriğini tohumlar; TITLES kayıtlarına dokunmaz.
+     *
+     * Mevcut veritabanına yeni içerik eklerken `db:seed --class=NewsSeeder`
+     * çalıştırmak TITLES'taki tüm satırların published_at/views değerlerini
+     * yeniden yazar. Bu metot yalnızca ek başlıkları kapsar.
+     */
+    public function seedExtraTitles($authors = null, int $sequence = 0): void
+    {
+        $authors ??= collect();
+        $categories = Category::whereIn('slug', array_keys(self::EXTRA_TITLES))->get()->keyBy('slug');
+
+        $extra = 0;
+
+        foreach (self::EXTRA_TITLES as $slug => $titles) {
+            $category = $categories->get($slug);
+
+            if (! $category) {
+                continue;
+            }
+
+            foreach ($titles as $index => $title) {
+                $this->upsertNews($category, $slug, $authors, $index, $title, self::EXTRA_ID_BASE + $extra, $sequence + $extra);
+
+                $extra++;
+            }
+        }
+    }
+
+    /**
+     * Tek bir haber satırını idempotent olarak yazar (updateOrCreate: news_id).
+     *
+     * @param  \Illuminate\Support\Collection  $authors
+     */
+    private function upsertNews(Category $category, string $slug, $authors, int $index, string $title, int $newsId, int $sequence): void
+    {
+        $content = $this->buildContent($category->name, $title);
+        $publishedAt = now()->subHours((92 - $sequence) * 2);
+
+        News::updateOrCreate(
+            ['news_id' => $newsId],
+            [
+                'category_id' => $category->id,
+                'author_id' => ($slug === 'gorus') ? $authors->get(self::OPINION_AUTHORS['gorus'][$index])?->id : null,
+                'title' => $title,
+                'slug' => Str::slug($title),
+                'spot' => $content['spot'],
+                'body' => $content['body'],
+                'image' => $this->placeholderFor($slug),
+                'image_og' => '/img/og-default.png',
+                'source' => 'Bloomberg HT',
+                'tags' => $this->buildTags($title),
+                'status' => 'published',
+                'is_breaking' => false,
+                'is_featured' => in_array($slug, ['haberler', 'piyasalar', 'enerji'], true) && $index < 2,
+                'views' => fake()->numberBetween(1000, 500000),
+                'editor_id' => 1,
+                'published_at' => $publishedAt,
+                'modified_at' => $publishedAt->copy()->addMinutes(15),
+            ]
+        );
     }
 
     /**

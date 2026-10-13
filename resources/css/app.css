@@ -787,7 +787,11 @@ img[data-src].b-lazy-loaded {
    ============================================================ */
 
 /* ---------- Markup hook utility'leri (Tailwind karşılıkları) ---------- */
-.hidden { display: none !important; }
+.hidden { display: none; }
+/* !important KALDIRILDI (CH-39): bu hook, `.hidden` + `group-hover:*` gibi
+   birlestirmelerde utility'yi ezip menunun hic acilmamasina yol aciyordu.
+   Normal bildirimlerde @layer components, @layer utilities'ten ONCE gelir;
+   bu kural Tailwind'in kendi `.hidden` utility'sini zaten yener. */
 .w-full { width: 100%; }
 .bg-white { background: #fff; }
 .text-center { text-align: center; }
@@ -3023,14 +3027,14 @@ article .adv-news .body, article .adv-news .body .ads-zone, article .adv-news .b
    2) CH-6 "markup hook" kuralımız `.hidden { display: none !important }`
       (app.css ~790) utility'nin üstüne biniyordu.
 
-   Çözüm: kural `@layer base` içinde ve `!important` ile tanımlanır.
-   CSS spec: !important bildirimlerinde katman önceliği TERSİR — `base`
-   katmanı `components`'ten önce geldiği için buradaki kural `.hidden`'ı yener
-   (katmansız !important, katmandaki !important'i yenemezdi). */
-@layer base {
-    .group:hover .group-hover\:flex {
-        display: flex !important;
-    }
+   Çözüm: kural KATMANSUZ (unlayered) ve `!important` OLMADAN tanımlandı —
+   yani referansla birebir. CSS spec gereği katmansız normal bildirimler tüm
+   katmanları (theme/base/components/utilities) yener; böylece hem bizim
+   `.hidden` hook'umuzu hem de Tailwind'in `@media (hover: hover)` sarmalayıcısını
+   yener. (Önceki denemede `!important` + `@layer base` gerekiyordu; `.hidden`
+   hook'u !important'sız yapılınca o karmaşa tamamen gereksizleşti.) */
+.group:hover .group-hover\:flex {
+    display: flex;
 }
 
 
