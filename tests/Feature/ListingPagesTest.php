@@ -105,7 +105,26 @@ class ListingPagesTest extends TestCase
             'status' => 'published',
         ]);
 
-        $this->get('/gorus')->assertOk()->assertSee('Demo Köşe Yazarı');
+        $response = $this->get('/gorus');
+
+        $response->assertOk();
+        $response->assertSee('Demo Köşe Yazarı');
+        $response->assertSee('Demo köşe yazısı');
+
+        // Referans (bloomberght.com/gorus) yapısı birebir:
+        // background -> head-type1 (h1) -> 3 kolonlu grid -> person-card-type2
+        $response->assertSee('data-type="background"', false);
+        $response->assertSee('data-type="head-type1"', false);
+        $response->assertSee('<h1 class="font-unna font-bold text-3xl mb-2">', false);
+        $response->assertSee('grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4', false);
+        $response->assertSee('data-widget-type="person-card-type2"', false);
+        $response->assertSee('person-card-wrapper relative flex items-center gap-4', false);
+        $response->assertSee('person-image w-24 h-full mb-4 aspect-square', false);
+        $response->assertSee('relative block w-full py-1 text-black bg-yellow-50 mt-4', false);
+
+        // Eski (kaynakta olmayan) kart yapısı kaldırıldı
+        $response->assertDontSee('opinion-grid');
+        $response->assertDontSee('opinion-card');
     }
 
     public function test_author_archive_lists_columns(): void

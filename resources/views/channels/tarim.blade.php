@@ -98,7 +98,7 @@
                             <figure class="person-card-wrapper relative flex items-center gap-4">
                                 @if ($loop->first)
                                     <div class="person-image w-24 h-full mb-4 aspect-square">
-                                        <img data-src="{{ $author?->avatar ? asset($author->avatar) : asset('/img/placeholders/placeholder-1.svg') }}"
+                                        <img data-src="{{ $author?->avatar ? asset($author->avatar) : asset('/img/placeholders/avatar-placeholder.svg') }}"
                                              src="{{ \App\Support\Media::transparentGif() }}"
                                              alt="{{ $item->title }}"
                                              class="rounded-full object-fill h-full w-full " decoding="async">
