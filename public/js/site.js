@@ -337,6 +337,35 @@
     /**
      * Makale "yazı boyutunu artır" (text-increase, spec §9, §10).
      */
+    function toggleTextSize(wrapper) {
+        var level = wrapper.classList.contains('text-size-xlarge')
+            ? 2
+            : (wrapper.classList.contains('text-size-large') ? 1 : 0);
+
+        level = (level + 1) % 3;
+
+        wrapper.classList.remove('text-size-large', 'text-size-xlarge');
+
+        if (level === 1) {
+            wrapper.classList.add('text-size-large');
+        } else if (level === 2) {
+            wrapper.classList.add('text-size-xlarge');
+        }
+    }
+
+    /**
+     * Referans markup'inda buton `onclick="textIncrease()"` ile gelir; global
+     * alias doğrudan toggle'i çağırır (button.click() üzerinden DEĞİL —
+     * o yol onclick'i tekrar tetikleyip sonsuz döngüye yol açardı).
+     */
+    window.textIncrease = function () {
+        var wrapper = document.querySelector('.article-detail .article-wrapper');
+
+        if (wrapper) {
+            toggleTextSize(wrapper);
+        }
+    };
+
     function initTextIncrease() {
         document.addEventListener('click', function (event) {
             var button = event.target.closest ? event.target.closest('[data-text-increase]') : null;
@@ -352,19 +381,7 @@
                 return;
             }
 
-            var level = wrapper.classList.contains('text-size-xlarge')
-                ? 2
-                : (wrapper.classList.contains('text-size-large') ? 1 : 0);
-
-            level = (level + 1) % 3;
-
-            wrapper.classList.remove('text-size-large', 'text-size-xlarge');
-
-            if (level === 1) {
-                wrapper.classList.add('text-size-large');
-            } else if (level === 2) {
-                wrapper.classList.add('text-size-xlarge');
-            }
+            toggleTextSize(wrapper);
         });
     }
 
@@ -998,7 +1015,12 @@
         });
     }
 
-    function init() {
+        /**
+     * Referans markup'inda buton `onclick="textIncrease()"` ile gelir; global
+     * alias (delegeli [data-text-increase] dinleyicisiyle aynı işi yapar).
+     */
+
+function init() {
         initCookie();
         initMenu();
         initSearchWidget();

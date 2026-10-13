@@ -70,6 +70,12 @@ class ChannelController extends Controller
             return $this->showTarim($category, $config);
         }
 
+        // Zirve — referans birebir özel şablon (bg başlık + hero slider +
+        // 400px piyasa widget aside + Videolar swiper + Zirve Haberleri grid)
+        if ($channel === 'zirve') {
+            return $this->showZirve($category, $config);
+        }
+
         $query = News::where('status', 'published')
             ->when($category !== null, fn ($builder) => $builder->where('category_id', $category->id))
             ->with(['category', 'author'])
@@ -159,5 +165,39 @@ class ChannelController extends Controller
             'author' => $author,
             'authorOpinions' => $authorOpinions,
         ], $this->layoutData()));
+    }
+
+    /**
+     * /zirve — referans birebir (bloomberght.com/zirve DOM sırası):
+     *   1. `data-type="background"` + `data-type="head-type2"` → "Zirve" başlığı
+     *   2. hero `data-widget-type="main-slider"` + 400px aside piyasa widget'ı
+     *   3. "Videolar" swiper bölümü (`/zirve/video/...`)
+     *   4. `data-type="head-type1"` "Zirve Haberleri" + 3 kolon grid
+     *      (her kolonda type5 → type2 → type1 → type4)
+     */
+    private function showZirve(?Category $category, array $config): View
+    {
+        $query = News::with(['category', 'author'])
+            ->where('status', 'published')
+            ->when($category !== null, fn ($builder) => $builder->where('category_id', $category->id))
+            ->orderByDesc('published_at');
+
+        $hero = (clone $query)->take(12)->get();
+        $news = $query->paginate(12)->withQueryString();
+
+        $videos = ProgramEpisode::with('program')
+            ->orderByDesc('air_at')
+            ->take(6)
+            ->get();
+
+        return view('channels.zirve', array_merge([
+            'channel' => 'zirve',
+            'title' => __('content.channel_zirve'),
+            'description' => __('content.channel_zirve_description'),
+            'category' => $category,
+            'hero' => $hero,
+            'news' => $news,
+            'videos' => $videos,
+        ], $this->marketWidgetData(), $this->layoutData()));
     }
 }

@@ -2352,6 +2352,22 @@ figure { max-width: 100%; }
 .swiper-button-prev svg,
 .swiper-button-next svg { display: none; }
 
+/* Referans app-style.css'te nsosyal ikonu FONT glifi değil, arka plan
+   görselidir: `.bloomberght-icon-font-nsosyal{display:inline-block;
+   background-image:url(...nsosyal.svg);background-repeat:no-repeat;
+   background-position:center;background-size:contain;width:.7em;height:.7em;
+   vertical-align:middle}`. Yerel kopyadan servis edilir. */
+.bloomberght-icon-font-nsosyal {
+    display: inline-block;
+    background-image: url('/img/icons/nsosyal.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    width: .7em;
+    height: .7em;
+    vertical-align: middle;
+}
+
 /* Hero slider ok butonlarının DİKEY konumu — görselin tam ortasında
    (üst-alt mesafe eşit).
    Referans app-style.css'te sabit değerler var: `top-32 3xl:top-44` ve
@@ -2995,6 +3011,28 @@ article .adv-news .body, article .adv-news .body .ads-zone, article .adv-news .b
 
 /* --- CH-28: finance-band ok düğmeleri (kaldırıldı — elimizde spinner yok) --- */
 }
+
+/* ---------- Paylaşım menüsü hover ile açılır ----------
+   Referans (app-style.css) kuralı: `.group:hover .group-hover\:flex { display: flex }`
+   — medya sorgusuna BAĞLI DEĞİLDİR, yani her ortamda hover ile açılır.
+
+   Bizim iki engelimiz vardı:
+   1) Tailwind v4 bu utility'yi `@media (hover: hover)` içine sarıyor; hover
+      desteği olmayan ortamlarda (dokunmatik cihaz, `hover: none` bildiren
+      tarayıcılar) menü hiç açılmıyordu.
+   2) CH-6 "markup hook" kuralımız `.hidden { display: none !important }`
+      (app.css ~790) utility'nin üstüne biniyordu.
+
+   Çözüm: kural `@layer base` içinde ve `!important` ile tanımlanır.
+   CSS spec: !important bildirimlerinde katman önceliği TERSİR — `base`
+   katmanı `components`'ten önce geldiği için buradaki kural `.hidden`'ı yener
+   (katmansız !important, katmandaki !important'i yenemezdi). */
+@layer base {
+    .group:hover .group-hover\:flex {
+        display: flex !important;
+    }
+}
+
 
 /* finance-slider slaytlari — referans (bloomberght) gibi icerige gore genislik.
    swiper-bundle.min.css `.swiper-slide{width:100%}` kuralsiz (unlayered)

@@ -16,6 +16,7 @@ return [
     // Makale detay
     'google_news_promo' => "Türkiye'nin ekonomi platformu Bloomberg HT'yi Google listesine ekleyin",
     'increase_font_size' => 'Yazı boyutunu artır',
+    'mail_share_placeholder' => 'Buraya gönderilecek adresi giriniz.',
     'featured_title' => 'Öne Çıkanlar',
 
     // İletişim formu
@@ -65,6 +66,7 @@ return [
     'channel_tarim_analiz' => 'Tarım Analiz',
     'channel_tarim_news' => 'Tarım Haberleri',
     'channel_zirve' => 'Zirve',
+    'channel_zirve_news' => 'Zirve Haberleri',
     'channel_zirve_description' => 'Ekonomi ve finans dünyasının zirve etkinlikleri, paneller ve konuşmacı haberleri.',
     'channel_siyaset' => 'Siyaset',
     'channel_siyaset_description' => 'Ekonomi politikalarını etkileyen siyasi gelişmeler ve gündem haberleri.',

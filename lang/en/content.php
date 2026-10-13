@@ -16,6 +16,7 @@ return [
     // Article detail
     'google_news_promo' => "Add Bloomberg HT, Turkey's economy platform, to your Google list",
     'increase_font_size' => 'Increase font size',
+    'mail_share_placeholder' => 'Enter the address to send to.',
     'featured_title' => 'Featured',
 
     // Contact form
@@ -65,6 +66,7 @@ return [
     'channel_tarim_analiz' => 'Agriculture Analysis',
     'channel_tarim_news' => 'Agriculture News',
     'channel_zirve' => 'Summit',
+    'channel_zirve_news' => 'Summit News',
     'channel_zirve_description' => 'Summit events, panels and speaker news from the world of economy and finance.',
     'channel_siyaset' => 'Politics',
     'channel_siyaset_description' => 'Political developments affecting economic policy and current affairs news.',

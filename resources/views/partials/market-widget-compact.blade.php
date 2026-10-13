@@ -3,7 +3,16 @@
     spec §7 modül 7, §15.12 / §15.13. site.js `market-graphic-tab` seçicileriyle uyumlu.
 --}}
 <section class="market-widget market-widget-compact" data-widget-type="market-graphic-tab">
-    <x-section-head :title="__('ui.markets')" :href="\App\Support\Locale::url('/piyasalar')" />
+    {{-- Kanal sayfalarında (Zirve aside) referans widget'ı başlıksız gelir:
+         `data-widget-type="market-graphic-tab"` doğrudan `tab-menu` ile başlar.
+         Diğer sayfalarda (arama/altın/haberler) bölüm başlığı gösterilir. --}}
+    @isset($head)
+        @if ($head)
+            <x-section-head :title="__('ui.markets')" :href="\App\Support\Locale::url('/piyasalar')" />
+        @endif
+    @else
+        <x-section-head :title="__('ui.markets')" :href="\App\Support\Locale::url('/piyasalar')" />
+    @endisset
 
     <div class="market-widget-tabs tab-menu" role="tablist" aria-label="{{ __('ui.markets_aria') }}">
         @php($first = true)

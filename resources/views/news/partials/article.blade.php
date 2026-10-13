@@ -9,6 +9,14 @@
     $spotItems = $news->spotItems();
     $shareUrl = $news->url;
     $shareTitle = $news->title;
+    // Referans (bloomberght) paylaşım linkleri KISA linki (`bb.ht/{kod}`) ve
+    // ağ bazlı son ek kullanır: facebook `/f`, twitter `/t`, whatsapp `/w`.
+    // (nsosyal + linkedin + mailto gövdesi son eksiz.)
+    $shortUrl = $news->shortlink_url;
+    $short = urlencode($shortUrl);
+    $shortF = urlencode($shortUrl.'/f');
+    $shortT = urlencode($shortUrl.'/t');
+    $shortW = urlencode($shortUrl.'/w');
     $u = urlencode($shareUrl);
     $t = urlencode($shareTitle);
     $mainImage = $news->image ?: '/img/og-default.png';
@@ -64,27 +72,23 @@
                 @endif
             </div>
             <div class="flex flex-none gap-2">
-                <ul class="flex items-center justify-center text-xl gap-2">
+                <ul class="flex items-end justify-center text-xl">
                     <li class="block p-2">
-                        <button type="button" aria-label="{{ __('content.increase_font_size') }}" class="text-increase" data-text-increase>
+                        <button type="button" aria-label="{{ __('content.increase_font_size') }}" onclick="textIncrease()" class="text-increase" data-text-increase>
                             <i class="bloomberght-icon-font-text-increase" aria-hidden="true"></i>
                         </button>
                     </li>
-                    <li class="block p-2">
-                        <button type="button" aria-label="Yazdır" class="print-button hover:text-red-700 transition" onclick="window.print()" title="Yazdır">
-                            <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2m-4 0v5H8v-5m4 0h4"></path></svg>
-                        </button>
-                    </li>
                     <li class="relative group">
-                        <i class="bloomberght-icon-font-share block p-2 cursor-pointer hover:text-red-700 transition" aria-hidden="true" title="Paylaş"></i>
-                        <ul class="absolute right-0 bg-white shadow-md flex gap-4 p-3 border border-gray-200 rounded-sm hidden group-hover:flex text-black z-20 items-center" role="menu" aria-label="{{ __('ui.share') }}">
-                            <li><a href="https://www.facebook.com/sharer/sharer.php?u={{ $u }}" target="_blank" rel="noopener noreferrer" title="Facebook"><i class="bloomberght-icon-font-facebook py-1" aria-hidden="true"></i></a></li>
-                            <li><a href="https://twitter.com/intent/tweet?url={{ $u }}&text={{ $t }}" target="_blank" rel="noopener noreferrer" title="X (Twitter)"><i class="bloomberght-icon-font-twitter-x py-1" aria-hidden="true"></i></a></li>
-                            <li><a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $u }}" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="bloomberght-icon-font-linkedin py-1" aria-hidden="true"></i></a></li>
-                            <li><a href="https://wa.me/?text={{ $t }}%20{{ $u }}" target="_blank" rel="noopener noreferrer" title="WhatsApp"><i class="bloomberght-icon-font-whatsapp py-1" aria-hidden="true"></i></a></li>
-                            <li><a href="mailto:?subject={{ $t }}&body={{ $u }}" title="E-posta"><i class="bloomberght-icon-font-mail py-1" aria-hidden="true"></i></a></li>
+                        <i class="bloomberght-icon-font-share block p-2 cursor-pointer" aria-hidden="true"></i>
+                        <ul class="absolute right-0 bg-white shadow flex gap-6 p-4 border rounded-sm hidden group-hover:flex text-black z-20" role="menu" aria-label="{{ __('ui.share') }}">
+                            <li><a href="https://www.facebook.com/sharer/sharer.php?u={{ $shortF }}" title="facebook" target="_blank" rel="noopener noreferrer"><i class="bloomberght-icon-font-facebook facebook py-2" aria-hidden="true"></i></a></li>
+                            <li><a href="https://twitter.com/intent/tweet?text={{ $t }}&amp;url={{ $shortT }}&amp;original_referer={{ $shortT }}&amp;via=bloomberght" title="twitter-x" target="_blank" rel="noopener noreferrer"><i class="bloomberght-icon-font-twitter-x twitter-x py-2" aria-hidden="true"></i></a></li>
+                            <li><a href="https://nsosyal.com/share?url={{ $short }}&amp;title={{ $t }}" title="nsosyal" target="_blank" rel="noopener noreferrer"><i class="bloomberght-icon-font-nsosyal nsosyal py-2" aria-hidden="true"></i></a></li>
+                            <li><a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $short }}&amp;text={{ $t }}" title="linkedin" target="_blank" rel="noopener noreferrer"><i class="bloomberght-icon-font-linkedin linkedin py-2" aria-hidden="true"></i></a></li>
+                            <li><a href="https://wa.me/?text={{ $t }}%20-%20{{ $shortW }}" title="whatsapp" target="_blank" rel="noopener noreferrer"><i class="bloomberght-icon-font-whatsapp whatsapp py-2" aria-hidden="true"></i></a></li>
+                            <li><a href="mailto:{{ __('content.mail_share_placeholder') }}?subject={{ $t }}&amp;body={{ $short }}" title="mail"><i class="bloomberght-icon-font-mail mail py-2" aria-hidden="true"></i></a></li>
                             <li>
-                                <button type="button" aria-label="{{ __('ui.copy_short_link') }}" class="copy" data-copy-link="{{ $news->shortlink_url }}" title="Bağlantıyı Kopyala">
+                                <button type="button" aria-label="{{ __('ui.copy_short_link') }}" class="copy" data-copy-link="{{ $shortUrl }}" title="{{ __('ui.copy_short_link') }}">
                                     <i class="bloomberght-icon-font-copy" aria-hidden="true"></i>
                                 </button>
                             </li>
