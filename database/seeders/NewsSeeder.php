@@ -175,6 +175,14 @@ class NewsSeeder extends Seeder
     public const EXTRA_ID_BASE = 3792000;
 
     public const EXTRA_TITLES = [
+        'enerji' => [
+            'LNG ithalatında uzun vadeli anlaşmalar artıyor',
+            'Güneş ve rüzgar santrallerine yatırım hızlandı',
+            'Elektrikli araç şarj ağı ülke geneline yayılıyor',
+            'Kömür ithalatında düşüş, doğal gazda artış',
+            'Enerji verimliliği yatırımlarında devlet desteği sürüyor',
+            'Hidrojen üretimi için ilk yatırım tesisi kuruluyor',
+        ],
         'zirve' => [
             'Yapay zeka altyapısına yatırım hızlanıyor',
             'Elektrikli araç batarya zincirinde Avrupa hamlesi',

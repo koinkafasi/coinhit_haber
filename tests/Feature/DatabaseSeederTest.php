@@ -24,9 +24,10 @@ class DatabaseSeederTest extends TestCase
         $this->assertDatabaseCount('users', 1);
         $this->assertDatabaseCount('categories', 17);
         $this->assertDatabaseCount('authors', 6);
-        // 114 = NewsSeeder::TITLES, +8 = NewsSeeder::EXTRA_TITLES (Zirve 12 kartlık
-        // grid'i doldurur; mevcut ID'leri kaydırmamak için ayrı aralıkta tutulur).
-        $this->assertDatabaseCount('news', 122);
+        // 114 = NewsSeeder::TITLES, +14 = NewsSeeder::EXTRA_TITLES (Zirve ve Enerji'nin
+        // 12'şer kartlık grid'ini doldurur; mevcut ID'leri kaydırmamak için ayrı
+        // ID aralığında tutulur).
+        $this->assertDatabaseCount('news', 128);
         $this->assertDatabaseCount('breaking_news', 10);
         $this->assertDatabaseCount('chart_archives', 5);
         $this->assertGreaterThan(10, SiteSetting::count());

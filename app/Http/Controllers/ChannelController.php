@@ -76,6 +76,11 @@ class ChannelController extends Controller
             return $this->showZirve($category, $config);
         }
 
+        // Enerji — referans birebir özel şablon (bg başlık + 3 kolon haber grid)
+        if ($channel === 'enerji') {
+            return $this->showEnerji($category);
+        }
+
         $query = News::where('status', 'published')
             ->when($category !== null, fn ($builder) => $builder->where('category_id', $category->id))
             ->with(['category', 'author'])
@@ -199,5 +204,29 @@ class ChannelController extends Controller
             'news' => $news,
             'videos' => $videos,
         ], $this->marketWidgetData(), $this->layoutData()));
+    }
+    /**
+     * /enerji — referans birebir (bloomberght.com/enerji DOM sırası):
+     *   1. `data-type="background"` + `data-type="head-type2"` → "Enerji" başlığı
+     *   2. 3 kolonlu haber grid'leri (her grid'de kolonlara göre
+     *      type5 → type2 → type1 → type4 deseni)
+     * Hero slider'ı ve aside'ı yoktur (haberler sayfasıyla aynı yapı).
+     */
+    private function showEnerji(?Category $category): View
+    {
+        $news = News::where('status', 'published')
+            ->when($category !== null, fn ($builder) => $builder->where('category_id', $category->id))
+            ->with(['category', 'author'])
+            ->orderByDesc('published_at')
+            ->paginate(24)
+            ->withQueryString();
+
+        return view('channels.enerji', array_merge([
+            'channel' => 'enerji',
+            'title' => __('content.channel_enerji'),
+            'description' => __('content.channel_enerji_description'),
+            'category' => $category,
+            'news' => $news,
+        ], $this->layoutData()));
     }
 }
