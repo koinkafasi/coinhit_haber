@@ -182,12 +182,13 @@ return [
     'opinion_archive' => 'Opinion Archive',
 
     // IPO calendar
+    'ipo_heading' => 'IPOs REALIZED ON BORSA ISTANBUL',
     'ipo_title' => 'IPO Calendar',
-    'ipo_intro' => 'The IPO calendar brings together information on companies currently in the book-building process and those about to start trading.',
+    'ipo_intro' => 'You can find all the important details about the IPO calendar on the Bloomberg HT page. The demand collection dates of the companies going public for financing, liquidity, institutionalization, promotion and reputation purposes are listed on this page. IPO applications of companies are reviewed by the Capital Markets Board. Once the review is completed, the IPO process starts if it is deemed appropriate. Price determination reports are prepared during this process. The pre-demand collection announcement and the prospectus are published. On Bloomberght.com pages you can read all the important news and developments about IPOs and Borsa Istanbul. In addition, all macroeconomic indicators that may affect risk appetite on Borsa Istanbul and all developments that may have an impact on pricing can be followed on Bloomberght.com. When participating in an IPO, the company\'s research reports, price determination report and financial statements should be analyzed carefully. The content on this IPO calendar and Bloomberght.com pages does not contain any investment advice. Investors are obligated to evaluate the content here according to their risk perception.',
     'ipo_legal' => 'The information on this page does not constitute investment advice; evaluate your investment decisions together with your investment advisor.',
     'ipo_request_dates' => 'Book Building Dates',
     'ipo_col_request' => 'Book Building Dates',
-    'ipo_col_company' => 'Company (ticker)',
+    'ipo_col_company' => 'Company',
     'ipo_col_value' => 'IPO Value',
     'ipo_col_price' => 'IPO Price',
 

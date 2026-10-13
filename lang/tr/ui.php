@@ -183,11 +183,13 @@ return [
 
     // Halka arz takvimi
     'ipo_title' => 'Halka Arz Takvimi',
-    'ipo_intro' => 'Halka arz takvimi, talep toplama süreci devam eden ve yakında işlem görmeye başlayacak şirketlerin bilgilerini bir araya getirir.',
+    // Referans (bloomberght.com/halka-arz-takvimi) h1 metni birebir
+    'ipo_heading' => "BORSA İSTANBUL'DA GERÇEKLEŞEN HALKA ARZLAR",
+    'ipo_intro' => 'Halka arz takvimiyle ilgili tüm önemli detayları Bloomberg HT sayfasında bulabilirsiniz. Finansman kaynağı, likidite, kurumsallaşma, tanıtım ve itibar sağlamak amacıyla halka açılan şirketlerin talep toplama tarihleri bu sayfada yer alıyor. Şirketlerin halka arz başvuruları Sermaye Piyasası Kurulu tarafından inceleniyor. Gerekli inceleme tamamlandıktan sonra şirketin halka arz edilmesi uygunsa halka arz süreci başlıyor. Bu süreçte fiyat tespit raporları hazırlanıyor. Halka arzın ön talep toplama duyurusu ve ilanı yayımlanıyor. Bloomberght.com sayfalarında halka arzlarla ve Borsa İstanbul ile ilgili tüm önemli haberleri, tüm gelişmeleri okuyabilirsiniz. Bunların yanında Borsa İstanbul’da risk iştahını etkileyecek tüm makroekonomik göstergeleri, fiyatlamalar üzerinde etkili olabilecek tüm gelişmeleri Bloomberght.com üzerinden takip edebilirsiniz. Halka arza katılırken, şirketin , araştırma raporları, fiyat tespit raporu ve finansal tabloların iyi bir şekilde analiz edilmesi gerekiyor. Bu halka arz takvimi ve Bloomberght.com sayfalarında yer alan içerikler herhangi bir yatırım tavsiyesi içermemektedir. Yatırımcılar risk algılarına göre buradaki içerikleri değerlendirmekle yükümlüdür.',
     'ipo_legal' => 'Bu sayfadaki bilgiler yatırım tavsiyesi niteliği taşımaz; yatırım kararlarınızı yatırım danışmanınızla birlikte değerlendirmeniz önerilir.',
     'ipo_request_dates' => 'Talep Toplama Tarihleri',
     'ipo_col_request' => 'Talep Toplama Tarihleri',
-    'ipo_col_company' => 'Şirket (ticker)',
+    'ipo_col_company' => 'Şirket',
     'ipo_col_value' => 'Halka Arz Değeri',
     'ipo_col_price' => 'Halka Arz Fiyatı',
 

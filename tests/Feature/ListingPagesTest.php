@@ -126,12 +126,40 @@ class ListingPagesTest extends TestCase
     {
         IpoCalendar::factory()->create(['company_name' => 'Demo Halka Arz A.Ş.', 'ticker' => 'DMHR']);
 
+        // Kaynakta aside'deki "Öne Çıkanlar" (highlights) ve article içindeki
+        // "İlgili Haberler" blokları için haber fixture'ı gerekiyor.
+        $piyasalar = Category::factory()->create(['name' => 'PİYASALAR', 'slug' => 'piyasalar']);
+        News::factory()->create([
+            'category_id' => $piyasalar->id,
+            'title' => 'Borsa İstanbul yükselişle açıldı',
+            'status' => 'published',
+        ]);
+
         $response = $this->get('/halka-arz-takvimi');
 
         $response->assertOk();
-        $response->assertSee('Talep Toplama Tarihleri');
-        $response->assertSee('Şirket (ticker)');
-        $response->assertSee('Demo Halka Arz A.Ş.');
+
+        // Referans (bloomberght.com/halka-arz-takvimi): h1 + tablo başlıkları
+        // kaynak markup'ıyla birebir; "Şirket" sütununda TICKER görünür.
+        $response->assertSee('<h1 class="text-4xl font-unna font-bold mb-4">', false);
+        $response->assertSee("BORSA İSTANBUL'DA GERÇEKLEŞEN HALKA ARZLAR");
+        $response->assertSee('<th class="p-4 text-left ml-4">Talep Toplama Tarihleri</th>', false);
+        $response->assertSee('<th class="p-4 text-left ml-4">Şirket</th>', false);
+        $response->assertSee('<th class="p-4 text-left ml-4">Halka Arz Değeri</th>', false);
+        $response->assertSee('<th class="p-4 text-left ml-4">Halka Arz Fiyatı</th>', false);
+        $response->assertSee('DMHR');
+        $response->assertDontSee('Şirket (ticker)');
+
+        // Kaynak düzeni: article (calc(100%-400px)) + 400px aside (Öne Çıkanlar)
+        $response->assertSee('relative flex flex-wrap md:flex-nowrap w-full');
+        $response->assertSee('md:w-[calc(100%-400px)]');
+        $response->assertSee('md:w-[400px]');
+        $response->assertSee('data-widget-type="table"', false);
+        $response->assertSee('data-widget-type="related-news-type1"', false);
+        $response->assertSee('data-widget-type="highlights"', false);
+        $response->assertSee('İlgili Haberler');
+        $response->assertSee('Öne Çıkanlar');
+        $response->assertSee('Borsa İstanbul yükselişle açıldı');
     }
 
     public function test_tag_page_lists_matching_news(): void
