@@ -2352,6 +2352,30 @@ figure { max-width: 100%; }
 .swiper-button-prev svg,
 .swiper-button-next svg { display: none; }
 
+/* Hero slider ok butonlarının DİKEY konumu — görselin tam ortasında
+   (üst-alt mesafe eşit).
+   Referans app-style.css'te sabit değerler var: `top-32 3xl:top-44` ve
+   üstüne yazan `top-40 3xl:top-56`. Bunlar YALNIZCA referansın kendi kolon
+   genişliğinde tutuyor (610px kolon → 343px görsel → top-40=160px tam orta).
+   Bizde ana kolon 858px (görsel 483px) olduğundan o sabit değerler düğmeyi
+   görselin ortasından 127px yukarıda bırakıyordu.
+
+   Görsel `aspect-video` (16:9) olduğundan görsel yüksekliği = genişlik × 9/16,
+   görsel merkezi = genişlik × 0,28125 = 28.125cqw. Container query birimiyle
+   her genişlikte (mobil/tablet/masaüstü) üst ve alt eşit mesafede ortalanır.
+   `h-6` (24px) nav çubuğunun yarısı (12px) çıkarılır → çubuk görsel merkezine
+   oturur; düğme swiper'ın varsayılan hizasıyla (top:50%, -size/2) çubuğun
+   içinde kalır = referansla aynı görünüm.
+   Kapsam `:has(> .main-slider)` ile sadece hero slider'lar; finance-slider,
+   fast-links, market-tables gibi diğer `.swiper.slider-custom`
+   widget'larının konumu hiç değişmez. */
+.swiper.slider-custom:has(> .main-slider) {
+    container-type: inline-size;
+}
+.swiper.slider-custom:has(> .main-slider) > .main-slider {
+    top: calc(28.125cqw - 12px) !important;
+}
+
 /* Hero slider ok butonları — referans (bloomberght) birebir: 36x36,
    siyah %40 zemin, beyaz ikon, kenardan 4px. swiper-bundle.min.css katmansız
    olduğundan (app.css'ten sonra link ile yüklenir) hem Tailwind utility'leri
@@ -2367,6 +2391,18 @@ figure { max-width: 100%; }
 }
 .main-slider .swiper-button-prev { left: 4px !important; }
 .main-slider .swiper-button-next { right: 4px !important; }
+
+/* Hero slider pagination noktaları — referans (bloomberght) birebir:
+   noktalar NORMAL AKIŞTA (figcaption'ın pt-10 boşluğunda, resim ile başlık
+   arasında), başlık metni onların ALTINDA kalır.
+   swiper-bundle.min.css katmansız (unlayered) olduğundan
+   `.swiper-pagination{position:absolute}` @layer utilities içindeki Tailwind
+   `.relative` utility'sini (CSS layer önceliğiyle) eziyor ve noktalar en alta
+   sabitlenip başlık metnine biniyordu. Katmansız + !important ile referanstaki
+   kazanan kaskad (.relative) geri kazanılıyor. */
+.swiper-pagination.relative {
+    position: relative !important;
+}
 
 /* Hızlı Linkler (fastLinks) okları — referans: w-8 (32px), siyah ikon.
    swiper-bundle.min.css katmansız olduğundan w-8/text-black utility'lerini

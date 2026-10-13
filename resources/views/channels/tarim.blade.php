@@ -86,26 +86,48 @@
             </div>
 
             <div class="w-full md:w-[400px] mb-4 md:mb-0">
-                <div class="bg-[#fefce8] relative">
+                <div class="bg-yellow-50 relative">
                     <div class="mb-4 border-b border-black relative w-full before:absolute before:top-0 before:bottom-0 before:m-auto before:w-[230px] before:h-2.5 before:bg-black"></div>
                     <h2 class="font-unna font-bold text-3xl px-4">{{ __('content.channel_tarim_analiz') }}</h2>
 
+                    {{-- Kart yapısı referans birebir: yazar kartı (avatar + isim) YALNIZCA
+                         ilk kartta görünür; sonraki kartlarda <figure> boş kalır, sadece
+                         yazı başlığı listelenir. person-biography referansta BOŞ'tur. --}}
                     @forelse ($authorOpinions as $opIndex => $item)
                         <div data-widget-type="person-card-type2" class="px-4{{ $loop->last ? '' : ' border-b mb-4 pb-2 border-black' }}">
                             <figure class="person-card-wrapper relative flex items-center gap-4">
-                                <div class="person-image w-24 h-full mb-4 aspect-square">
-                                    <img src="{{ asset($author?->avatar ?: '/img/placeholders/placeholder-1.svg') }}"
-                                         alt="{{ $author?->name }}" class="rounded-full object-fill h-full w-full " decoding="async">
-                                </div>
-                                <figcaption class="relative w-9/12 h-auto">
-                                    <div class="person-name font-unna font-bold text-2xl text-ellipsis line-clamp-3 mb-2">{{ $author?->name }}</div>
-                                    <div class="person-biography mb-2 text-sm text-ellipsis line-clamp-3">{{ $author?->title ?? '' }}</div>
-                                </figcaption>
+                                @if ($loop->first)
+                                    <div class="person-image w-24 h-full mb-4 aspect-square">
+                                        <img data-src="{{ $author?->avatar ? asset($author->avatar) : asset('/img/placeholders/placeholder-1.svg') }}"
+                                             src="{{ \App\Support\Media::transparentGif() }}"
+                                             alt="{{ $item->title }}"
+                                             class="rounded-full object-fill h-full w-full " decoding="async">
+                                    </div>
+                                    <figcaption class="relative w-9/12 h-auto">
+                                        <div class="person-name font-unna font-bold text-2xl text-ellipsis line-clamp-3 mb-2">{{ $author?->name }}</div>
+                                        <div class="person-biography mb-2 text-sm text-ellipsis line-clamp-3"></div>
+                                    </figcaption>
+                                @endif
                             </figure>
                             <a href="{{ $item->url }}" class="block">
                                 <div class="font-unna font-bold text-2xl text-ellipsis line-clamp-2 mb-2 min-h-16 flex flex-col justify-center">{{ $item->title }}</div>
-                                <div class="mb-2 text-base text-ellipsis line-clamp-3"></div>
+                                <div class="mb-2 text-base text-ellipsis line-clamp-3">{{ \Illuminate\Support\Str::limit(strip_tags((string) $item->spot), 170) }}</div>
                             </a>
+                            {{-- Son kartın sonunda yazar arşivi bağlantısı — referans birebir.
+                                 Üç chevron span'i kaynaktaki hover ok animasyonunun parçası. --}}
+                            @if ($loop->last && $author)
+                                <a href="{{ \App\Http\Controllers\AuthorController::archiveUrl($author) }}"
+                                   title="{{ __('ui.all_writings') }}"
+                                   class="relative block w-full py-1 text-black bg-yellow-50 mt-4">
+                                    <span class="relative z-10 pr-2 bg-yellow-50">
+                                        <span class="text-sm mr-2">{{ __('ui.all_writings') }}</span>
+                                        <span class="bloomberght-icon-font-chevron-right text-xs"></span>
+                                        <span class="bloomberght-icon-font-chevron-right text-xs"></span>
+                                        <span class="bloomberght-icon-font-chevron-right text-xs "></span>
+                                    </span>
+                                    <span class="absolute top-3 left-0 border-b border-gray-400 w-full"></span>
+                                </a>
+                            @endif
                         </div>
                     @empty
                         <p class="px-4 py-4 text-gray-400">{{ __('ui.no_news') }}</p>
